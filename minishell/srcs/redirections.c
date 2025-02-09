@@ -19,7 +19,7 @@ int redirect_input(const char *filename)
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 	{
-		perror("Error Opening File\n");
+		perror("Error opening input file");
 		return (-1);
 	}
 	if (dup2(fd, STDIN_FILENO) == -1)
@@ -39,11 +39,10 @@ int redirect_output(const char *filename)
 	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd == -1)
 	{
-		perror("Error Opening File\n");
-		close(fd);
+		perror("Error opening output file");
 		return (-1);
 	}
-	if (dup2(fd, STDIN_FILENO) == -1)
+	if (dup2(fd, STDOUT_FILENO) == -1)
 	{
 		perror("Error redirecting output");
 		close(fd);
@@ -60,11 +59,10 @@ int redirect_output_append(const char *filename)
 	fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (fd == -1)
 	{
-		perror("Error Opening File\n");
-		close(fd);
+		perror("Error opening output file");
 		return (-1);
 	}
-	if (dup2(fd, STDIN_FILENO) == -1)
+	if (dup2(fd, STDOUT_FILENO) == -1)
 	{
 		perror("Error redirecting output");
 		close(fd);
