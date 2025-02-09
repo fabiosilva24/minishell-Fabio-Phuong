@@ -62,6 +62,7 @@ void    double_quotes(char *symbol);
 char    **get_environment(void);
 void    single_quotes(char *symbol);
 void	parse_input(char *input);
+int       handle_redirection(char **arg);
 
 //tokens
 
