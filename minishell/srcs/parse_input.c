@@ -23,7 +23,7 @@ int handle_redirection(char **arg)
 		}
 		return 1;
 	}
-	else if
+	else if (**arg == '<')
 	{
 		filename = *arg + 1;
 		while (*filename == ' ')
