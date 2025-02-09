@@ -52,3 +52,24 @@ int redirect_output(const char *filename)
 	close(fd);
 	return (0);
 }
+
+int redirect_output_append(const char *filename)
+{
+	int fd;
+
+	fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	if (fd == -1)
+	{
+		perror("Error Opening File\n");
+		close(fd);
+		return (-1);
+	}
+	if (dup2(fd, STDIN_FILENO) == -1)
+	{
+		perror("Error redirecting output");
+		close(fd);
+		return (-1);
+	}
+	close(fd);
+	return (0);
+}
