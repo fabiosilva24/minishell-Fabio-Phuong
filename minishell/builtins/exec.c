@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../include/minishell.h"
 
 /*
 int		exec_process(t_cmd *cmd, char **envp);

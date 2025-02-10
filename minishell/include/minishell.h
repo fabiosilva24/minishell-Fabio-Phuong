@@ -13,6 +13,13 @@
 #ifndef MINISHELL_H
 #define MINISHELL_H
 
+#define MAX_PATH_LEN 4096
+#define PWD_ERROR "minishell: pwd: error retrieving current directory\n"
+#define EXIT_NUM_ERROR "exit: numeric argument required\n"
+#define EXIT_MANY_ARGS "exit: too many arguments\n"
+#define EXIT_MSG "exit\n"
+#define ENV_ERROR "minishell: env: error retrieving environment variables\n"
+
 # include <readline/history.h>       // add_history
 # include <readline/readline.h>     // readline, rl_clear_history, rl_on_new_line, rl_replace_line, rl_redisplay, add_history
 # include <stdio.h>                 // printf, perror
@@ -30,6 +37,7 @@
 # include <sys/ioctl.h>             // ioctl
 # include <errno.h>                 // strerror (alternative for error strings)
 # include "../libs/libft/libft.h"
+
 
 extern char **environ;
 
@@ -52,9 +60,14 @@ typedef struct s_token
 typedef struct s_minishell
 {
     char            **environment;
+    char            **envp;
     t_token         *token_list;
 }t_minishell;
 
+typedef struct s_cmd
+{
+    char            **args;
+} t_cmd;
 
 
 void	print_banner();
@@ -74,7 +87,7 @@ void    *free_tokens(t_token *tokens);
 t_token *tokenize_input(char *line);
 char    *ft_strtok(char *str, const char *delimeter);
 
-//handle ctrl c
+//handle ctrl cs
 void    handle_sigint(int sig);
 
 

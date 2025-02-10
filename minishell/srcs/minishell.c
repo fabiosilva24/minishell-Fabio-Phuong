@@ -32,6 +32,7 @@ int main(int argc, char **argv)
 
     shell.environment = get_environment();
     (void)argv;
+    (void)shell;
     if (argc != 1)
     {
         printf("Usage: ./minishell to enter minishell\n");

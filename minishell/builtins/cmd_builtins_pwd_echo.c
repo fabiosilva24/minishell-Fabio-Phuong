@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../include/minishell.h"
 
 /*
 #define MAX_PATH_LEN 4096

@@ -31,7 +31,7 @@ SRCS = ./srcs/minishell.c\
 		./tokens/token.c\
 		./srcs/ft_strtok.c\
 		./srcs/parse_input.c\
-		./srcs/redirections.c
+		./srcs/redirections.c\
 
 OBJS = $(SRCS:.c=.o)
 

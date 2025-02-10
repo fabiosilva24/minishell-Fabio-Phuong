@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../include/minishell.h"
 
 /*
 #define EXIT_NUM_ERROR "exit: numeric argument required\n"
