@@ -6,36 +6,38 @@
 /*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 17:56:31 by fsilva-p          #+#    #+#             */
-/*   Updated: 2025/02/07 12:22:49 by fsilva-p         ###   ########.fr       */
+/*   Updated: 2025/02/11 17:12:27 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int count_tokens(t_token *tokens)
+int	count_tokens(t_token	*tokens)
 {
-    int count;
+	int	count;
 
-    count = 0;
-    while (tokens)
-    {
-        count++;
-        tokens = tokens->next;
-    }
-    return (count);
+	count = 0;
+	while (tokens)
+	{
+		count++;
+		tokens = tokens->next;
+	}
+	return (count);
 }
-static e_token_type token_determinator(char *token, int is_first)
+
+static	e_token_type	token_determinator(char *token, int is_first)
 {
-    if (is_first)
-        return (TOKEN_ARGUMENT);
-    if (strcmp(token, ">") == 0 || strcmp(token, "<") == 0 ||
-        strcmp(token, ">>") == 0 || strcmp(token, "<<") == 0)
-        return (TOKEN_REDIRECT);
-    if (strcmp(token, "|") == 0)
-        return (TOKEN_PIPE);
-    return (TOKEN_ARGUMENT);
+	if (is_first)
+		return (TOKEN_ARGUMENT);
+	if (strcmp(token, ">") == 0 || strcmp(token, "<") == 0
+		|| strcmp(token, ">>") == 0 || strcmp(token, "<<") == 0)
+		return (TOKEN_REDIRECT);
+	if (strcmp(token, "|") == 0)
+		return (TOKEN_PIPE);
+	return (TOKEN_ARGUMENT);
 }
-t_token *create_token(char *value, e_token_type type)
+
+t_token	*create_token(char *value, e_token_type type)
 {
     t_token *new_token = (t_token *)malloc(sizeof(t_token));
     if (!new_token)
@@ -46,46 +48,20 @@ t_token *create_token(char *value, e_token_type type)
     return (new_token);
 }
 
-/*t_token *tokenize_input(char *line)
-{
-    t_token *head;
-    t_token *current;
-    char *token;
-    int is_first;
-
-    head = NULL;
-    current = NULL;
-    is_first = 1;
-
-    while (*line && isspace(*line))
-        line++;
-    token = ft_strtok(line, " \t");
-    while (token)
-    {
-        e_token_type type = token_determinator(token, is_first);
-        t_token *new_token = create_token(token, type);
-        if (!head)
-            head = new_token;
-        else
-            current->next = new_token;
-        current = new_token;
-        token = ft_strtok(NULL, " \t");
-        is_first = 0;
-    }
-    return (head);
-}*/
-
-#include "../include/minishell.h"
-
 t_token *tokenize_input(char *line)
 {
     t_token *head = NULL;
     t_token *current = NULL;
     char *token;
-    int is_first = 1;
-    int in_double_quotes = 0;
-    int in_single_quotes = 0;
-    char *start = line;
+    int is_first;
+    int in_double_quotes;
+    int in_single_quotes;
+    char *start;
+
+    is_first = 1;
+    in_double_quotes = 0;
+    in_single_quotes = 0;
+    start = line
 
     while (*line)
     {
@@ -128,20 +104,17 @@ t_token *tokenize_input(char *line)
             current->next = new_token;
     }
 
-    return head;
+    return (head);
 }
-
-
-
-void *free_tokens(t_token *tokens)
+void	*free_tokens(t_token	*tokens)
 {
-    while (tokens)
-    {
-        t_token *next = tokens->next;
-        free(tokens->value);
-        free(tokens);
-        tokens = next;
-    }
-    return NULL;
-
+	t_token *next;
+	while (tokens)
+	{
+		next = tokens->next;
+		free(tokens->value);
+		free(tokens);
+		tokens = next;
+	}
+	return (NULL);
 }
