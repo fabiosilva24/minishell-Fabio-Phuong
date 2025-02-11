@@ -75,7 +75,7 @@ void    double_quotes(char *symbol);
 char    **get_environment(void);
 void    single_quotes(char *symbol);
 void    parse_input(char *input);
-int    handle_redirection(char **arg);
+int     handle_redirection(char **arg);
 int     redirect_input(const char *filename);
 int     redirect_output(const char *filename);
 int     redirect_output_append(const char *filename);
@@ -86,6 +86,7 @@ t_token *create_token(char *value, e_token_type type);
 void    *free_tokens(t_token *tokens);
 t_token *tokenize_input(char *line);
 char    *ft_strtok(char *str, const char *delimeter);
+int     count_tokens(t_token *tokens);
 
 //handle ctrl cs
 void    handle_sigint(int sig);

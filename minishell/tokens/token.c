@@ -12,6 +12,18 @@
 
 #include "../include/minishell.h"
 
+int count_tokens(t_token *tokens)
+{
+    int count;
+
+    count = 0;
+    while (tokens)
+    {
+        count++;
+        tokens = tokens->next;
+    }
+    return (count);
+}
 static e_token_type token_determinator(char *token, int is_first)
 {
     if (is_first)

@@ -12,6 +12,50 @@
 
 #include "../include/minishell.h"
 
+static char **convert_tokens_to_argv(t_token *tokens, int token_count)
+{
+    char **argv;
+    int i;
+
+    i = 0;
+    argv = malloc((token_count + 1) * sizeof(char *));
+    while (tokens)
+    {
+        argv[i++] = tokens->value;
+        tokens = tokens->next;
+    }
+    argv[i] = NULL;
+    return (argv);
+}
+static void process_command(t_token *tokens)
+{
+    int token_count;
+    char **argv;
+
+    token_count = count_tokens(tokens);
+    argv = convert_tokens_to_argv(tokens, token_count);
+    if (tokens && strcmp(tokens->value, "echo") == 0)
+    {
+        my_echo(token_count, argv);
+        free(argv);
+    }
+
+}
+void initialize_shell(t_minishell *shell, int argc, char **argv)
+{
+    signal(SIGINT, handle_sigint);
+    signal(SIGQUIT, SIG_IGN);
+
+    shell->environment = get_environment();
+    (void)argv;
+    if (argc != 1)
+    {
+        printf("Usage: ./minishell to enter minishell\n");
+        return ;
+    }
+    print_banner();
+
+}
 void    handle_sigint(int sig)
 {
     (void)sig;
@@ -24,21 +68,8 @@ int main(int argc, char **argv)
 {
     t_minishell shell;
     char *line;
-    int i;
-    int token_count;
 
-    signal(SIGINT, handle_sigint);
-    signal(SIGQUIT, SIG_IGN);
-
-    shell.environment = get_environment();
-    (void)argv;
-    (void)shell;
-    if (argc != 1)
-    {
-        printf("Usage: ./minishell to enter minishell\n");
-        return (1);
-    }
-    print_banner();
+    initialize_shell(&shell, argc, argv);
     while (1)
     {
         line = readline("minishell$ ");
@@ -47,29 +78,7 @@ int main(int argc, char **argv)
         if (*line)
             add_history(line);
         t_token *tokens = tokenize_input(line);
-        if (tokens && strcmp(tokens->value, "echo") == 0)
-        {
-            // Convert tokens to argc and argv format
-            token_count = 0;
-            t_token *temp = tokens;
-            while (temp)
-            {
-                token_count++;
-                temp = temp->next;
-            }
-
-            char **argv = malloc((token_count + 1) * sizeof(char *));
-            i = 0;
-            while (tokens)
-            {
-                argv[i++] = tokens->value;
-                tokens = tokens->next;
-            }
-            argv[i] = NULL;
-
-            my_echo(token_count, argv);
-            free(argv);
-        }
+        process_command(tokens);
         free_tokens(tokens);
         free(line);
     }
