@@ -81,71 +81,44 @@ static void handle_dollarsign(char *symbol, int *i, int len)
 	}
 }*/
 
-#include "../include/minishell.h"
-#include <readline/readline.h>
-
 void double_quotes(char *symbol)
-{
-    int len;
-    int i;
-    char *additional_input;
-    char buffer[1024];
-    int buffer_index = 0;
-
-    len = strlen(symbol);
-    i = 1; // Start after the opening quote
-
-    if (symbol[0] == '\"')
-    {
-        while (i < len && symbol[i] != '\"')
-        {
-            if (symbol[i] == '$')
-                handle_dollarsign(symbol, &i, len);
-            else
-                buffer[buffer_index++] = symbol[i];
-            i++;
-        }
-        buffer[buffer_index] = '\0';
-        if (i == len)
-        {
-            // Closing quote not found, prompt for more input
-			printf("> ");
-            additional_input = readline(NULL);
-            if (additional_input)
-            {
-				strcat(buffer, "\n");
-				strcat(buffer, additional_input);
-                double_quotes(additional_input);
-                free(additional_input);
-            }
-        }
-        else
-        {
-            // Print the buffer if closing quote is found
-            printf("%s", buffer);
-        }
-    }
-	else
-    {
-        // Print the input if it doesn't start with a double quote
-        printf("%s", symbol);
-    }
-}
-
-void single_quotes(char *symbol)
 {
 	int len;
 	int i;
 
 	len = strlen(symbol);
 	i = 1;
-	
-	if (symbol[0] == '\'')
+	if (symbol[0] == '\"')
 	{
-		while (i < len && symbol[i] != '\'')
+		while (i < len && symbol[i] != '\"')
+		{
+			if (symbol[i] == '$')
+				handle_dollarsign(symbol, &i, len);
+			else
+				printf("%c", symbol[i]);
+			i++;
+		}
+		if (i == len)
+		printf("> error unclosed quote");
+	}
+}
+
+void single_quotes(char *symbol)
+{
+    int len;
+    int i;
+
+    len = strlen(symbol);
+    i = 1;
+
+    if (symbol[0] == '\'')
+    {
+        while (i < len && symbol[i] != '\'')
 		{
 			printf("%c", symbol[i]);
 			i++;
 		}
+        if (i == len)
+		printf("> Error unclosed quotes");
 	}
 }
