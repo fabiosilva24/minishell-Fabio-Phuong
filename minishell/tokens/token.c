@@ -61,7 +61,7 @@ t_token *tokenize_input(char *line)
     is_first = 1;
     in_double_quotes = 0;
     in_single_quotes = 0;
-    start = line
+    start = line;
 
     while (*line)
     {
