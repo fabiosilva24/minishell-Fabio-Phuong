@@ -66,8 +66,4 @@ void	parse_input(char *input)
 		}
 		arg++;
 	}
-	if (!handled)
-	{
-		printf("%s", input);
-	}
 }

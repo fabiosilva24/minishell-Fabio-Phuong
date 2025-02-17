@@ -6,7 +6,7 @@
 #    By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/28 14:37:09 by fsilva-p          #+#    #+#              #
-#    Updated: 2025/02/07 16:32:32 by fsilva-p         ###   ########.fr        #
+#    Updated: 2025/02/13 17:11:09 by fsilva-p         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRCS = ./srcs/minishell.c\
 		./srcs/ft_strtok.c\
 		./srcs/parse_input.c\
 		./srcs/redirections.c\
+		./srcs/exit_code.c
 
 OBJS = $(SRCS:.c=.o)
 

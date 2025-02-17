@@ -62,6 +62,7 @@ typedef struct s_minishell
     char            **environment;
     char            **envp;
     t_token         *token_list;
+    int		last_exit_status;
 }t_minishell;
 
 typedef struct s_cmd
@@ -75,6 +76,7 @@ void    double_quotes(char *symbol);
 char    **get_environment(void);
 void    single_quotes(char *symbol);
 void    parse_input(char *input);
+void exit_code(t_minishell *minishell, char **command, char **argv);
 int     handle_redirection(char **arg);
 int     redirect_input(const char *filename);
 int     redirect_output(const char *filename);

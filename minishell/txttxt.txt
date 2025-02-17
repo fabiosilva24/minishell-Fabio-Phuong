@@ -1,6 +1,0 @@
-hello 5  txttxt.txt
-hello 5  txttxt.txt
-hello 5  txttxt.txt
-hello 5  txttxt.txt
-hello 5  txttxt.txt
-hello 5  txttxt.txt

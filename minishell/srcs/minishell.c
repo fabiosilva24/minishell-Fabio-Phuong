@@ -47,6 +47,9 @@ static void process_command(t_token *tokens)
     int token_count;
     char **argv;
     t_token *current = tokens;
+    t_minishell *shell;
+
+    shell = NULL;
 
     // Save original stdin and stdout
     int original_stdin = dup(STDIN_FILENO);
@@ -90,11 +93,14 @@ static void process_command(t_token *tokens)
         }
         current = current->next;
     }
-
     // Execute commands after handling redirections
     if (tokens && strcmp(tokens->value, "echo") == 0)
     {
         my_echo(token_count, argv);
+    }
+    else
+    {
+        exit_code(shell, &argv[0], argv);
     }
 
     // Restore original stdin and stdout
@@ -136,6 +142,7 @@ int main(int argc, char **argv)
     t_token *tokens;
 
     initialize_shell(&shell, argc, argv);
+    shell.last_exit_status = 0;
     while (1)
     {
         line = readline("minishell$ ");
