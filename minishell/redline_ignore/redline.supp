@@ -1,0 +1,7 @@
+{
+   ignore_redline_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:*  # Ignore leaks from any function in Redline
+   obj:*redline.so*
+}

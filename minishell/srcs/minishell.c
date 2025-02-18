@@ -98,10 +98,10 @@ static void process_command(t_token *tokens)
     {
         my_echo(token_count, argv);
     }
-    else
+    /*else
     {
         exit_code(shell, &argv[0], argv);
-    }
+    }*/
 
     // Restore original stdin and stdout
     dup2(original_stdin, STDIN_FILENO);
@@ -152,6 +152,7 @@ int main(int argc, char **argv)
             add_history(line);
         tokens = tokenize_input(line);
         process_command(tokens);
+        //print_list(tokens);
         free_tokens(tokens);
         free(line);
     }

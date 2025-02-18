@@ -99,4 +99,7 @@ void    handle_sigint(int sig);
 void    my_echo(int argc, char **argv);
 void    execute_echo(t_token *tokens);
 
+//print to test
+void print_list(t_token *current);
+
 #endif

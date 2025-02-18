@@ -26,7 +26,7 @@ void execute_echo(t_token *tokens)
     args[arg_count++] = "echo";
     while (current)
     {
-        args[arg_count++] = current->value;
+        arg_count++;
         current = current->next;
     }
     args[arg_count] = NULL;
