@@ -45,8 +45,8 @@ static void handle_dollarsign(char *symbol, int *i, int len)
 
 	if (env_value)
 		printf("%s", env_value);
-	else
-		printf("$%s", var_name);
+	//else
+		//printf("$%s", var_name);
 	(*i)--;
 }
 
@@ -93,6 +93,10 @@ void double_quotes(char *symbol)
 		while (i < len && symbol[i] != '\"')
 		{
 			if (symbol[i] == '$')
+			{
+				printf("$");
+			}
+			else if (symbol[i] == '$')
 				handle_dollarsign(symbol, &i, len);
 			else
 				printf("%c", symbol[i]);

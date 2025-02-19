@@ -49,10 +49,10 @@ void my_echo(int argc, char **argv)
     newline = 1;
     i = 1;
 
-    if (argc > 1 && strcmp(argv[1], "-n")== 0)
+    while (argc > 1 && strcmp(argv[i], "-n")== 0)
     {
         newline = 0;
-        i = 2; //when using echo -n it skips the newline
+        i++; //when using echo -n it skips the newline
     }
     while (i < argc)
     {
