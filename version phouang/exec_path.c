@@ -1,5 +1,24 @@
 #include "../minishell.h"
 
+static char    *try_direct_path(char *cmd)
+{
+	char	*dup;
+
+	if (!ft_strchr(cmd, '/'))
+		return (NULL);
+	if (is_executable(cmd))
+	{
+		dup = ft_strdup(cmd);
+		if (!dup)
+    {
+        print_cmd_error("malloc", ": memory allocation failed\n");
+        return (NULL);
+    }
+		return (dup);
+	}
+	return (NULL);
+}
+
 char	**get_path_dirs(char **envp)
 {
 	int		i;
@@ -23,6 +42,38 @@ char	**get_path_dirs(char **envp)
 static int	is_executable(const char *path)
 {
 	return (access(path, F_OK) == 0 && access(path, X_OK) == 0);
+}
+
+char *find_cmd_path(char **path_dirs, char *cmd)
+{
+    char    *full_path;
+    char    *temp;
+    int     i;
+
+    if (!cmd || !path_dirs)
+        return (NULL);
+    full_path = try_direct_path(cmd);
+    if (full_path)
+        return (full_path);
+    i = 0;
+    while (path_dirs[i])
+    {
+        temp = ft_strjoin(path_dirs[i], "/");
+        if (!temp)
+            return (NULL);
+        full_path = ft_strjoin(temp, cmd);
+        free(temp);
+        if (!full_path)
+				{
+            print_cmd_error("malloc", ": memory allocation failed\n");
+            return (NULL);
+        }
+        if (is_executable(full_path))
+            return (full_path);
+        free(full_path);
+        i++;
+    }
+    return (NULL);
 }
 
 char	*get_exec_path(t_cmd *cmd, char **envp)
@@ -52,49 +103,4 @@ char	*get_exec_path(t_cmd *cmd, char **envp)
 		return (NULL);
 	}
 	return (cmd_path);
-}
-
-static char    *try_direct_path(char *cmd)
-{
-	char	*dup;
-
-	if (!ft_strchr(cmd, '/'))
-		return (NULL);
-	if (is_executable(cmd))
-	{
-		dup = ft_strdup(cmd);
-		if (!dup)
-			return (NULL);
-		return (dup);
-	}
-	return (NULL);
-}
-
-char    *find_cmd_path(char **path_dirs, char *cmd)
-{
-    char    *full_path;
-    char    *temp;
-    int        i;
-
-    if (!cmd || !path_dirs)
-        return (NULL);
-    full_path = try_direct_path(cmd);
-    if (full_path)
-        return (full_path);
-		i = 0;
-		while (path_dirs[i])
-{
-    temp = ft_strjoin(path_dirs[i], "/");
-    if (!temp)
-        return (NULL);
-    full_path = ft_strjoin(temp, cmd);
-    free(temp);
-    if (!full_path)
-        return (NULL);
-    if (is_executable(full_path))
-        return (full_path);
-    free(full_path);
-		i++;
-}
-return (NULL);
 }
