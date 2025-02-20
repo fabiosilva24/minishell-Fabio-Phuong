@@ -71,7 +71,8 @@ void builtin_echo(t_cmd *cmd, int *status)
     *status = 0;
     if (!cmd->args[1])
     {
-        write(1, "\n", 1);
+        if (write(1, "\n", 1) == -1)
+            *status = 1;
         return;
     }
     while (cmd->args[i] && has_n_flag(cmd->args[i]))
