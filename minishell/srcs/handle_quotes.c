@@ -113,7 +113,7 @@ void double_quotes(char *symbol)
     		signal(SIGQUIT, SIG_IGN);
 			if (!input)
 				break;
-			free(input)
+			free(input);
 		}
 	}
 }
