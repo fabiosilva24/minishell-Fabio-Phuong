@@ -24,6 +24,12 @@ static void handle_dollarsign(char *symbol, int *i, int len)
 	j = 0;
 
 	(*i)++;
+	if (*i >= len || !(isalnum(symbol[*i]) || symbol[*i] == '_'))
+	{
+		(*i) = 1;
+        printf("$"); // Print '$' if nothing valid comes after it
+        return;
+	}
 	while (*i < len && (isalnum(symbol[*i]) || symbol[*i] == '_'))
 	{
 		if (j < 255)
@@ -88,22 +94,27 @@ void double_quotes(char *symbol)
 
 	len = strlen(symbol);
 	i = 1;
+	char *input;
 	if (symbol[0] == '\"')
 	{
 		while (i < len && symbol[i] != '\"')
 		{
+
 			if (symbol[i] == '$')
-			{
-				printf("$");
-			}
-			else if (symbol[i] == '$')
 				handle_dollarsign(symbol, &i, len);
 			else
 				printf("%c", symbol[i]);
 			i++;
 		}
-		if (i == len)
-		printf("> error unclosed quote");
+		while (i == len)
+		{
+			input = readline("> ");
+			signal(SIGINT, handle_sigint);
+    		signal(SIGQUIT, SIG_IGN);
+			if (!input)
+				break;
+			free(input)
+		}
 	}
 }
 
@@ -123,6 +134,10 @@ void single_quotes(char *symbol)
 			i++;
 		}
         if (i == len)
-		printf("> Error unclosed quotes");
+		{
+		    signal(SIGINT, handle_sigint);
+    		signal(SIGQUIT, SIG_IGN);
+			printf("> Error unclosed quotes");
+		}
 	}
 }
