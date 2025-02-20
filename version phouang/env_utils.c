@@ -1,169 +1,157 @@
 #include "../minishell.h"
 
-static char *find_env_var(char **envp, char *var_name)
+char **add_to_envp(char **envp, char *str, int should_free)
 {
+    char **new_env;
     int i;
 
-    i = 0;
-    while (envp[i])
-    {
-        if (!ft_strncmp(var_name, envp[i],
-            max(len_eq(envp[i]), ft_strlen(var_name))))
-            return (ft_strdup(envp[i] + len_eq(envp[i]) + 1));
-        i++;
-    }
-    return (NULL);
-}
-
-char *get_env_var_value(t_minishell *shell, char *line, int len)
-{
-    char    *var_name;
-    char    *value;
-
-    var_name = malloc(sizeof(char) * (len + 1));
-    if (!var_name)
+    if (!str || !envp)
         return (NULL);
-    ft_strlcpy(var_name, line, len + 1);
-    value = find_env_var(shell->envp, var_name);
-    free(var_name);
-    if (value)
-        return (value);
-    if (!ft_strncmp("?", var_name, 1))
-        return (ft_itoa(shell->status));
-    return (NULL);
-}
-
-int sym_export(t_minishell *shell, char *var)
-{
-    char    *env_var;
-    char    *value;
-    int     result;
-
-    if (!var || !shell)
-        return (-1);
-    env_var = strdup(var);
-    if (!env_var)
-        return (-1);
-    value = strdup("");
-    if (!value)
-    {
-        free(env_var);
-        return (-1);
-    }
-    result = ft_setenv(shell, env_var, value);
-    free(env_var);
-    free(value);
-    return (result);
-}
-
-static char *create_env_entry(const char *key, const char *value)
-{
-    char    *tmp;
-    char    *entry;
-
-    if (!key || !value)
-        return (NULL);
-    tmp = ft_strjoin(key, "=");
-    if (!tmp)
-        return (NULL);
-    entry = ft_strjoin(tmp, value);
-    free(tmp);
-    if (!entry)
-        return (NULL);
-    return (entry);
-}
-
-static int update_existing_env(char **envp, const char *key, const char *new_entry)
-{
-    int    i;
-    int    len;
-
-    if (!envp || !key || !new_entry)
-        return (0);
-    len = ft_strlen(key);
-    i = 0;
-    while (envp[i])
-    {
-        if (!ft_strncmp(envp[i], key, len) && envp[i][len] == '=')
-        {
-            free(envp[i]);
-            envp[i] = ft_strdup(new_entry);
-            if (!envp[i])
-                return (-1);
-            return (1);
-        }
-        i++;
-    }
-    return (0);
-}
-
-static int count_env_vars(char **envp)
-{
-    int i;
-
-    if (!envp)
-        return (0);
-    i = 0;
-    while (envp[i])
-        i++;
-    return (i);
-}
-
-static int add_new_env_entry(t_minishell *shell, char *new_entry)
-{
-    char    **new_env;
-    int     i;
-    int     env_count;
-
-    if (!shell || !new_entry)
-        return (1);
-    env_count = count_env_vars(shell->envp);
-    new_env = malloc(sizeof(char *) * (env_count + 2));
+    new_env = malloc(sizeof(char *) * (size_mass(envp) + 2));
     if (!new_env)
+        return (NULL);
+    i = 0;
+    while (envp[i])
     {
-        free(new_entry);
-        return (1);
-    }
-    i = -1;
-    while (++i < env_count)
-    {
-        new_env[i] = ft_strdup(shell->envp[i]);
+        new_env[i] = ft_strdup(envp[i]);
         if (!new_env[i])
         {
-            while (--i >= 0)
-                free(new_env[i]);
-            free(new_env);
-            free(new_entry);
-            return (1);
+            free_tab(new_env);
+            return (NULL);
         }
+        i++;
     }
-    new_env[i] = new_entry;
+    new_env[i] = ft_strdup(str);
+    if (!new_env[i])
+    {
+        free_tab(new_env);
+        return (NULL);
+    }
     new_env[i + 1] = NULL;
-    free_tab(shell->envp);
-    shell->envp = new_env;
-    return (0);
+    if (should_free)
+        free_tab(envp);
+    return (new_env);
 }
 
-int ft_setenv(t_minishell *shell, char *key, char *value)
+char *find_env_var(char *args, char **envp)
 {
-    char    *new_entry;
-    int     update_result;
+    int     index;
+    char    *var_name;
+    size_t  var_len;
 
-    if (!shell || !key || !value)
-        return (1);
-    new_entry = create_env_entry(key, value);
-    if (!new_entry)
-        return (1);
-    update_result = update_existing_env(shell->envp, key, new_entry);
-    if (update_result == 1)
+    if (!args || !envp)
+        return (NULL);
+    var_len = ft_sym_export(args);
+    var_name = ft_strndup(args, var_len);
+    if (!var_name)
+        return (NULL);
+    index = 0;
+    while (envp[index])
     {
-        free(new_entry);
-        return (0);
+        if (!ft_strncmp(var_name, envp[index], var_len) &&
+            envp[index][var_len] == '=')
+        {
+            free(var_name);
+            return (ft_strdup(envp[index]));
+        }
+        index++;
     }
-    else if (update_result == -1)
+    free(var_name);
+    return (NULL);
+}
+
+char    **replace_env_var(char **envp, char *key, char *new_value)
+{
+    int     i;
+    char    *new_entry;
+    char    *tmp;
+    size_t  key_len;
+
+    if (!envp || !key || !new_value)
+        return (envp);
+    key_len = ft_sym_export(key);
+    i = 0;
+    while (envp[i])
     {
-        free(new_entry);
-        return (1);
+        if (!ft_strncmp(envp[i], key, key_len) && envp[i][key_len] == '=')
+        {
+            tmp = ft_strjoin(key, "=");
+            if (!tmp)
+                return (envp);
+            new_entry = ft_strjoin(tmp, new_value);
+            free(tmp);
+            if (!new_entry)
+                return (envp);
+            free(envp[i]);
+            envp[i] = new_entry;
+            return (envp);
+        }
+        i++;
     }
-    return (add_new_env_entry(shell, new_entry));
+    tmp = ft_strjoin(key, "=");
+    if (!tmp)
+        return (envp);
+    envp = add_to_envp(envp, tmp, 1);
+    free(tmp);
+    return (envp);
+}
+
+char **sort_env_vars(char **envp)
+{
+    int     i;
+    int     k;
+    int     size;
+    char    *tmp;
+
+    if (!envp)
+        return (NULL);
+    size = size_mass(envp);
+    i = 0;
+    while (i < size - 1)
+    {
+        k = 0;
+        while (k < size - i - 1)
+        {
+            if (ft_strcmp(envp[k], envp[k + 1]) > 0)
+            {
+                tmp = envp[k];
+                envp[k] = envp[k + 1];
+                envp[k + 1] = tmp;
+            }
+            k++;
+        }
+        i++;
+    }
+    return (envp);
+}
+
+char **remove_quotes_from_env(char **envp)
+{
+	int		i;
+	int		j;
+	int		pos;
+	char	**new_env;
+
+	if (!envp)
+		return (NULL);
+	new_env = malloc(sizeof(char *) * (size_mass(envp) + 1));
+	if (!new_env)
+		return (NULL);
+	i = 0;
+	while (envp[i])
+	{
+		pos = ft_sym_export(envp[i]);
+    if (pos < 0 || pos >= (int)ft_strlen(envp[i]))
+            pos = 0;
+        j = ft_strlen(envp[i]) - pos;
+        new_env[i] = ft_strndup(envp[i] + pos, j);
+        if (!new_env[i])
+        {
+            free_tab(new_env);
+            return (NULL);
+        }
+        i++;
+    }
+    new_env[i] = NULL;
+    return (new_env);
 }
