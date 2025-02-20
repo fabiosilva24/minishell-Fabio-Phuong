@@ -25,18 +25,18 @@ void builtin_env(char **envp, int *status)
 
 static int is_numeric_arg(const char *arg)
 {
-    int     char_index;
-    size_t  len;
+    int     i;
 
-    if (!arg || !arg[0])
+    if (!arg || !arg[0] || ((arg[0] == '-' || arg[0] == '+') && !arg[1])))
         return (0);
-    char_index = (arg[0] == '-' || arg[0] == '+');
-    len = ft_strlen(arg);
-    if (len == 1 && char_index == 1)
-        return (0);
-    while (arg[char_index] && ft_isdigit(arg[char_index]))
-        char_index++;
-    return ((size_t)char_index == len);
+    i = (arg[0] == '-' || arg[0] == '+');
+    while (arg[i])
+    {
+        if (!ft_isdigit(arg[i]))
+            return (0);
+        i++;
+    }
+    return (1);
 }
 
 void builtin_exit(t_cmd *cmd, t_minishell *shell, int should_exit)
