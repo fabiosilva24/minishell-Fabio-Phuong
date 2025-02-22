@@ -49,8 +49,7 @@ static void process_command(t_token *tokens)
     t_token *current = tokens;
     t_minishell *shell;
 
-    shell = NULL;
-
+     (void)shell;
     // Save original stdin and stdout
     int original_stdin = dup(STDIN_FILENO);
     int original_stdout = dup(STDOUT_FILENO);
@@ -98,6 +97,10 @@ static void process_command(t_token *tokens)
     {
         my_echo(token_count, argv);
     }
+    else
+    {
+        exec_extercmds(argv);
+    }
     /*else
     {
         exit_code(shell, &argv[0], argv);
@@ -140,6 +143,7 @@ int main(int argc, char **argv)
     t_minishell shell;
     char *line;
     t_token *tokens;
+    (void)shell;
 
     initialize_shell(&shell, argc, argv);
     shell.last_exit_status = 0;

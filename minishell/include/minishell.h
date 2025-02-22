@@ -81,6 +81,7 @@ int     handle_redirection(char **arg);
 int     redirect_input(const char *filename);
 int     redirect_output(const char *filename);
 int     redirect_output_append(const char *filename);
+void exec_extercmds(char **argv);
 
 //tokens
 

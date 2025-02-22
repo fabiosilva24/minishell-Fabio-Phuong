@@ -33,7 +33,8 @@ SRCS = ./srcs/minishell.c\
 		./srcs/parse_input.c\
 		./srcs/redirections.c\
 		./srcs/exit_code.c\
-		./srcs/print_test.c
+		./srcs/print_test.c\
+		./srcs/execute_exter_cmds.c
 
 OBJS = $(SRCS:.c=.o)
 

@@ -39,30 +39,32 @@ int handle_redirection(char **arg)
 void	parse_input(char *input)
 {
 	char *arg;
-
+	int handled;
+	
+	handled = 0;
 	arg = input;
 
-	//printf("input : %s\n", input);
+	(void)handled;
+
 	while (*arg)
 	{
 		if (*arg == '\"')
 		{
 			double_quotes(arg);
+			handled = 1;
 			break;
 		}
 		else if (*arg == '\'')
 		{
 			single_quotes(arg);
+			handled = 1;
 			break;
 		}
 		else if (handle_redirection(&arg))
 		{
 			*arg = '\0';
+			handled = 1;
 			continue;
-		}
-		else
-		{
-			printf("%c", *arg);
 		}
 		arg++;
 	}
