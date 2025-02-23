@@ -1,0 +1,69 @@
+# **************************************************************************** #^M$
+#                                                                              #^M$
+#                                                         :::      ::::::::    #^M$
+#    Makefile                                           :+:      :+:    :+:    #^M$
+#                                                     +:+ +:+         +:+      #^M$
+#    By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+         #^M$
+#                                                 +#+#+#+#+#+   +#+            #^M$
+#    Created: 2025/01/28 14:37:09 by fsilva-p          #+#    #+#              #^M$
+#    Updated: 2025/02/13 17:11:09 by fsilva-p         ###   ########.fr        #^M$
+#                                                                              #^M$
+# **************************************************************************** #^M$
+^M$
+LIBFT_PATH = ./libs/libft^M$
+LIBFT = $(LIBFT_PATH)/libft.a^M$
+^M$
+GREEN := \033[0;32m^M$
+PASTEL_GREEN := \033[38;5;120m^M$
+CYAN := \033[0;36m^M$
+NC := \033[0m^M$
+^M$
+NAME = minishell^M$
+CC = cc^M$
+CFLAGS = -Wall -Wextra -Werror^M$
+READLINEFLAG = -lreadline^M$
+^M$
+SRCS = ./srcs/minishell.c\^M$
+		./srcs/print_banner.c\^M$
+		./srcs/handle_quotes.c\^M$
+		./srcs/get_env.c\^M$
+		./builtins/echo.c\^M$
+		./tokens/token.c\^M$
+		./srcs/ft_strtok.c\^M$
+		./srcs/parse_input.c\^M$
+		./srcs/redirections.c\^M$
+		./srcs/exit_code.c\^M$
+		./srcs/print_test.c\^M$
+		./srcs/execute_exter_cmds.c^M$
+^M$
+OBJS = $(SRCS:.c=.o)^M$
+^M$
+COUNT = 0^M$
+TOTAL = $(words $(SRCS))^M$
+^M$
+all: $(LIBFT) $(NAME)^M$
+^M$
+$(NAME): $(OBJS) $(LIBFT)^M$
+	@echo "$(CYAN)Making...$(NC)"^M$
+	@$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBFT) $(READLINEFLAG)^M$
+^M$
+%.o: %.c^M$
+	$(eval COUNT=$(shell echo $$(($(COUNT) + 1))))^M$
+	@echo "$(PASTEL_GREEN)[$(COUNT)/$(TOTAL)] Compiling $<$(NC)"^M$
+	@$(CC) $(CFLAGS) -c $< -o $@^M$
+^M$
+$(LIBFT):^M$
+	@make -C $(LIBFT_PATH)^M$
+^M$
+clean:^M$
+	@echo "$(GREEN)Cleaning...$(NC)"^M$
+	@rm -f $(OBJS)^M$
+	@make clean -C $(LIBFT_PATH)^M$
+^M$
+fclean: clean^M$
+	@rm -f $(NAME)^M$
+	@make fclean -C $(LIBFT_PATH)^M$
+^M$
+re: fclean all^M$
+^M$
+.PHONY: all fclean clean re $(LIBFT)^M$

@@ -40,11 +40,10 @@ void	parse_input(char *input)
 {
 	char *arg;
 	int handled;
-	
+
 	handled = 0;
 	arg = input;
 
-	(void)handled;
 
 	while (*arg)
 	{
@@ -62,10 +61,13 @@ void	parse_input(char *input)
 		}
 		else if (handle_redirection(&arg))
 		{
-			*arg = '\0';
 			handled = 1;
-			continue;
+			break;
 		}
 		arg++;
+	}
+	if (!handled)
+	{
+		printf("%s", input);
 	}
 }

@@ -12,6 +12,17 @@
 
 #include "../include/minishell.h"
 
+static int is_only_that_char(char *str, char c)
+{
+    while (*str)
+    {
+        if (*str != c)
+            return 0;
+        str++;
+    }
+    return 1;
+}
+
 void execute_echo(t_token *tokens)
 {
     int arg_count;
@@ -49,7 +60,7 @@ void my_echo(int argc, char **argv)
     newline = 1;
     i = 1;
 
-    while (argc > 1 && strcmp(argv[i], "-n")== 0)
+    while (argc > 1 && argv[i][0] == '-' && is_only_that_char(argv[i] + 1, 'n'))
     {
         newline = 0;
         i++; //when using echo -n it skips the newline
