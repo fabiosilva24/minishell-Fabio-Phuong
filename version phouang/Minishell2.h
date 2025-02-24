@@ -1,37 +1,33 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "libft.h" OK
-# include <stdlib.h> OK
-# include <unistd.h> OK
-# include <sys/wait.h> OK
-# include <stdio.h> OK
-# include <dirent.h> OK
-# include <sys/types.h>
-# include <string.h>
-# include <fcntl.h>
-# include <errno.h>
+# include "libft.h"
+# include <stdlib.h>
+# include <unistd.h>
+# include <sys/wait.h>
+# include <stdio.h>
+# include <dirent.h>
 
-# define MAX_PATH_LEN 4096 OK
-# define EXIT_NUM_ERROR "exit: numeric argument required\n" OK
-# define EXIT_MANY_ARGS "exit: too many arguments\n" OK
-# define EXIT_MSG "exit\n" OK
-# define ENV_ERROR "minishell: env: error retrieving environment variables\n" OK
-# define PWD_ERROR "minishell: pwd: error retrieving current directory\n" OK
+# define MAX_PATH_LEN 4096
+# define EXIT_NUM_ERROR "exit: numeric argument required\n"
+# define EXIT_MANY_ARGS "exit: too many arguments\n"
+# define EXIT_MSG "exit\n"
+# define ENV_ERROR "minishell: env: error retrieving environment variables\n"
+# define PWD_ERROR "minishell: pwd: error retrieving current directory\n"
 
-typedef struct s_minishell OK
+typedef struct s_minishell
 {
     char    **envp;
     int     status;
     int     exit_status;
 }   t_minishell;
 
-typedef struct s_cmd OK
+typedef struct s_cmd
 {
     char    **args;
 }   t_cmd;
 
-typedef struct s_path OK
+typedef struct s_path
 {
     char    **dirs;
 }   t_path;
