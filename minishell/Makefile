@@ -20,21 +20,35 @@ NC := \033[0m
 
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 READLINEFLAG = -lreadline
 
 SRCS = ./srcs/minishell.c\
-		./srcs/print_banner.c\
-		./srcs/handle_quotes.c\
-		./srcs/get_env.c\
-		./builtins/echo.c\
-		./tokens/token.c\
-		./srcs/ft_strtok.c\
-		./srcs/parse_input.c\
-		./srcs/redirections.c\
-		./srcs/exit_code.c\
-		./srcs/print_test.c\
-		./srcs/execute_exter_cmds.c
+       ./srcs/print_banner.c\
+       ./srcs/handle_quotes.c\
+       ./srcs/get_env.c\
+       ./builtins/echo.c\
+       ./tokens/token.c\
+       ./srcs/ft_strtok.c\
+       ./srcs/parse_input.c\
+       ./srcs/redirections.c\
+       ./srcs/exit_code.c\
+       ./srcs/print_test.c\
+       ./srcs/execute_exter_cmds.c\
+       ./builtins/cd_utils.c \
+       ./builtins/cd.c \
+       ./builtins/cmd_builtins_env_exit.c \
+       ./builtins/cmd_builtins_pwd_echo.c \
+       ./builtins/cmd_builtins_unset.c \
+       ./builtins/env_management.c \
+       ./builtins/env_management2.c \
+       ./builtins/exec_path.c \
+       ./builtins/exec_utils.c \
+       ./builtins/exec.c \
+       ./builtins/exec2.c \
+       ./builtins/export_utils.c \
+       ./builtins/utils.c\
+       ./builtins/cmd_builtins_export.c
 
 OBJS = $(SRCS:.c=.o)
 

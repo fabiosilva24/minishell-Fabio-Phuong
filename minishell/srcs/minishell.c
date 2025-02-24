@@ -47,7 +47,7 @@ static void process_command(t_token *tokens)
     int token_count;
     char **argv;
     t_token *current = tokens;
-    t_minishell *shell;
+    t_minishell shell;
 
      (void)shell;
     // Save original stdin and stdout
@@ -93,14 +93,12 @@ static void process_command(t_token *tokens)
         current = current->next;
     }
     // Execute commands after handling redirections
-    if (tokens && strcmp(tokens->value, "echo") == 0)
-    {
-        my_echo(token_count, argv);
-    }
-    else
-    {
+    t_cmd cmd;
+    cmd.args = argv;
+    handle_builtin(&cmd, &shell);
+    /*{
         exec_extercmds(argv);
-    }
+    }*/
     /*else
     {
         exit_code(shell, &argv[0], argv);

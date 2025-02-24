@@ -60,7 +60,11 @@ ft_putnbr.c\
 ft_putptr.c\
 ft_putstr.c\
 ft_putunsigned.c\
-ft_isspace.c
+ft_isspace.c\
+ft_atol.c\
+ft_strcmp.c\
+ft_strndup.c\
+ft_strncpy.c
 
 BONUS_SRCS = ft_lstnew.c\
 		ft_lstadd_front.c\
