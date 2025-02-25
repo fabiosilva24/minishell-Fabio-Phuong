@@ -64,7 +64,6 @@ typedef struct s_minishell
     int             status;
     int             exit_status;
     t_token         *token_list;
-    int		last_exit_status;
 }t_minishell;
 
 typedef struct s_cmd
@@ -88,8 +87,7 @@ int     handle_redirection(char **arg);
 int     redirect_input(const char *filename);
 int     redirect_output(const char *filename);
 int     redirect_output_append(const char *filename);
-void exec_extercmds(char **argv);
-
+void    exec_extercmds(char **argv);
 //tokens
 
 t_token *create_token(char *value, e_token_type type);
@@ -106,6 +104,7 @@ void    handle_sigint(int sig);
 //built ins
 void    my_echo(int argc, char **argv);
 void    execute_echo(t_token *tokens);
+void    handle_dollarsign(char *symbol, int *i, int len);
 
 //print to test
 void print_list(t_token *current);
@@ -184,5 +183,8 @@ int	  errmsg(char *s1, char *s2, char *s3, int code);
 int	  size_mass(char **envp);
 char	**new_envp(char **envp);
 int   ft_sym_export(char *str);
+//void handle_dollar_questionmark(t_cmd *cmd, t_minishell *shell);
+void check_if_command_exists(t_cmd *cmd, t_minishell *shell);
+char *extract_var_name(char *arg);
 
 #endif

@@ -62,11 +62,14 @@ void builtin_exit(t_cmd *cmd, t_minishell *shell, int should_exit)
         if (!is_numeric_arg(cmd->args[1]))
         {
             write(2, EXIT_NUM_ERROR, ft_strlen(EXIT_NUM_ERROR));
+            shell->exit_status = 255;
             exit(255);
         }
         exit_code = ft_atol(cmd->args[1]);
     }
-    exit((unsigned char)exit_code);
+    shell->exit_status = (unsigned char)(exit_code % 256); //check if exit code is in the range 0-255
+    if (should_exit)
+        exit(shell->exit_status);
 }
 
 /*

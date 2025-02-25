@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-static void handle_dollarsign(char *symbol, int *i, int len)
+void handle_dollarsign(char *symbol, int *i, int len)
 {
 	t_minishell shell;
 	char var_name[256] = {0};

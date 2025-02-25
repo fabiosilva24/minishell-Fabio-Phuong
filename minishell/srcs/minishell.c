@@ -92,17 +92,14 @@ static void process_command(t_token *tokens)
         }
         current = current->next;
     }
+
     // Execute commands after handling redirections
     t_cmd cmd;
     cmd.args = argv;
+    //handle_dollar_questionmark(&cmd, &shell);
     handle_builtin(&cmd, &shell);
-    /*{
+    if (!is_builtin(&cmd))
         exec_extercmds(argv);
-    }*/
-    /*else
-    {
-        exit_code(shell, &argv[0], argv);
-    }*/
 
     // Restore original stdin and stdout
     dup2(original_stdin, STDIN_FILENO);
@@ -144,7 +141,7 @@ int main(int argc, char **argv)
     (void)shell;
 
     initialize_shell(&shell, argc, argv);
-    shell.last_exit_status = 0;
+    shell.exit_status = 0;
     while (1)
     {
         line = readline("minishell$ ");

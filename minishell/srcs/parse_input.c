@@ -40,13 +40,22 @@ void	parse_input(char *input)
 {
 	char *arg;
 	int handled;
+	//int i;
+	//int len;
 
+	//i = 1;
 	handled = 0;
 	arg = input;
-
+	//len = strlen(arg);
 
 	while (*arg)
 	{
+		/*if (*arg == '$')
+		{
+			handle_dollarsign(arg, &i, len);
+			handled = 1;
+			break;
+		}*/	
 		if (*arg == '\"')
 		{
 			double_quotes(arg);

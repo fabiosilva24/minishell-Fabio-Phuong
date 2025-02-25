@@ -1,5 +1,28 @@
 #include "../include/minishell.h"
 
+void check_if_command_exists(t_cmd *cmd, t_minishell *shell)
+{
+    if (!cmd || !cmd->args[0])
+    {
+        print_cmd_error("minishell$", "command not found: ");
+        shell->exit_status = 127;
+        return;
+    }
+
+    if (!is_builtin(cmd))
+    {
+        char *cmd_path = get_exec_path(cmd, shell->envp);
+        if (!cmd_path)
+        {
+            print_cmd_error(cmd->args[0], ": command not found");
+            shell->exit_status = 127;
+        }
+        else
+        {
+            free(cmd_path);
+        }
+    }
+}
 int	is_builtin(t_cmd *cmd)
 {
 	if (!cmd || !cmd->args[0])
