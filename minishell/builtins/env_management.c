@@ -15,6 +15,7 @@ static char **copy_existing_env(char **envp, char **new_env)
         }
         i++;
     }
+    new_env[i] = NULL;
     return (new_env);
 }
 
@@ -25,12 +26,22 @@ char **add_to_envp(char **envp, char *str, int should_free)
 
     if (!str || !envp)
         return (NULL);
+    if (find_env_var(str, envp))
+        return (envp);
     new_env = malloc(sizeof(char *) * (size_mass(envp) + 2));
     if (!new_env)
         return (NULL);
-    if (!(new_env = copy_existing_env(envp, new_env)))
-        return (NULL);
-    i = size_mass(envp);
+    i = 0;
+    while (envp[i])
+    {
+        new_env[i] = ft_strdup(envp[i]);
+        if (!new_env[i])
+        {
+            free_tab(new_env);
+            return (NULL);
+        }
+        i++;
+    }
     new_env[i] = ft_strdup(str);
     if (!new_env[i])
     {
@@ -82,16 +93,22 @@ char **replace_env_var(char **envp, char *key, char *new_value)
 {
     char *tmp;
     size_t key_len;
+    char **result;
 
     if (!envp || !key || !new_value)
         return (envp);
     key_len = ft_sym_export(key);
     if (find_and_replace(envp, key, new_value, key_len))
         return (envp);
-    tmp = ft_strjoin(key, "=");
-    if (!tmp)
+    entry = create_new_entry(key, new_value);
+    if (!entry)
+    {
+        errmsg("minishell: export: memory allocation error", NULL, NULL, -1);
         return (envp);
-    envp = add_to_envp(envp, tmp, 1);
-    free(tmp);
-    return (envp);
+    }
+    result = add_to_envp(envp, entry, 1);
+    free(entry);
+    if (!result)
+        return (envp);
+    return (result);
 }
