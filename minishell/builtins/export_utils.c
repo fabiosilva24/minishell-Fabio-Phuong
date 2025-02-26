@@ -59,8 +59,10 @@ void	update_envp(char *new_value, char *arg, char ***envp)
 		return;
 	if (new_value && ft_strrchr(arg, '='))
 		tmp = replace_env_var(*envp, arg, new_value);
-	else
+	else if (!ft_strchr(arg, '='))
 		tmp = add_to_envp(*envp, arg, 0);
+	else
+		return;
 	if (!tmp)
 	{
 		errmsg("minishell: export: memory allocation error", NULL, NULL, -1);
