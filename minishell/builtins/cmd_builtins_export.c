@@ -101,8 +101,8 @@ char **builtin_export(char **args, char **envp)
             errmsg("minishell: export: `", args[i], "': not a valid identifier", -1);
             continue;
         }
-				if (ft_strchr(args[i], '='))
-				{
+	if (ft_strchr(args[i], '='))
+	{
             new_value = find_env_var(args[i], envp);
             update_envp(new_value, args[i], &envp);
             free(new_value);
