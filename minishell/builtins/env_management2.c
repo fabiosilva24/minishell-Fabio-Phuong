@@ -72,10 +72,10 @@ char **sort_env_vars(char **envp)
 
 char **remove_quotes_from_env(char **envp)
 {
-	int		i;
-	int		pos;
+	int	i;
+	char	*equal_sign;
 	char	**new_env;
-
+	
 	if (!envp)
 		return (NULL);
 	new_env = malloc(sizeof(char *) * (size_mass(envp) + 1));
@@ -84,15 +84,18 @@ char **remove_quotes_from_env(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		pos = ft_sym_export(envp[i]);
-    new_env[i] = ft_strndup(envp[i] + pos, ft_strlen(envp[i]) - pos);
-        if (!new_env[i])
-        {
-            free_tab(new_env);
-            return (NULL);
-        }
-        i++;
-    }
-    new_env[i] = NULL;
-    return (new_env);
+		equal_sign = ft_strchr(envp[i], '=');
+		if (equal_sign)
+			new_env[i] = ft_strdup(equal_sign + 1);
+		else
+			new_env[i] = ft_strdup("");
+		if (!new_env[i])
+		{
+			free_tab(new_env);
+			return (NULL);
+		}
+		i++;
+	}
+	new_env[i] = NULL;
+	return (new_env);
 }
