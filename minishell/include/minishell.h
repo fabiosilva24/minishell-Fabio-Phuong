@@ -183,7 +183,8 @@ int	  errmsg(char *s1, char *s2, char *s3, int code);
 int	  size_mass(char **envp);
 char	**new_envp(char **envp);
 int   ft_sym_export(char *str);
-//void handle_dollar_questionmark(t_cmd *cmd, t_minishell *shell);
+//vd handle_dollar_questionmark(t_cmd *cmd, t_minishell *shell);
+//void handle_dollar_questionmark(char **arg, t_minishell *shell);
 void check_if_command_exists(t_cmd *cmd, t_minishell *shell);
 char *extract_var_name(char *arg);
 

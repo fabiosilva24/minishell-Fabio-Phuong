@@ -1,21 +1,17 @@
 #include "../include/minishell.h"
 
-/*void handle_dollar_questionmark(t_cmd *cmd, t_minishell *shell)
+/*void handle_dollar_questionmark(char **arg, t_minishell *shell)
 {
-	int i;
-	char *status_str;
+    char *status_str;
+    int len;
 
-	i = 0;
+    status_str = ft_itoa(shell->exit_status);
+    if (!status_str)
+        return;
 
-	while (cmd->args[i])
-	{
-		if (ft_strcmp(cmd->args[i], "$?") == 0)
-		{
-			status_str = ft_itoa(shell->exit_status);
-			if (!status_str)
-				free(cmd->args[i]);
-			cmd->args[i] = status_str;
-		}
-		i++;
-	}
+    len = strlen(status_str);
+    memmove(*arg + len, *arg + 2, strlen(*arg) - 1); // Shift the rest of the string
+    memcpy(*arg, status_str, len); // Replace $? with the exit status
+
+    free(status_str);
 }*/

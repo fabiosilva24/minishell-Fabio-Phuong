@@ -40,22 +40,18 @@ void	parse_input(char *input)
 {
 	char *arg;
 	int handled;
-	//int i;
-	//int len;
+	int i;
+	int len;
+	t_minishell shell;
 
-	//i = 1;
+	i = 1;
 	handled = 0;
 	arg = input;
-	//len = strlen(arg);
+	(void)shell;
+	len = strlen(arg);
 
 	while (*arg)
 	{
-		/*if (*arg == '$')
-		{
-			handle_dollarsign(arg, &i, len);
-			handled = 1;
-			break;
-		}*/	
 		if (*arg == '\"')
 		{
 			double_quotes(arg);
@@ -73,10 +69,14 @@ void	parse_input(char *input)
 			handled = 1;
 			break;
 		}
+		else if (*arg == '$')
+		{
+			handle_dollarsign(arg, &i, len);
+			handled = 1;
+			break;
+		}
 		arg++;
 	}
 	if (!handled)
-	{
 		printf("%s", input);
-	}
 }

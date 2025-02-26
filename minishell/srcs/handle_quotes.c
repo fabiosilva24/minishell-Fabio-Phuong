@@ -21,13 +21,17 @@ void handle_dollarsign(char *symbol, int *i, int len)
 	char *env_value;
 	
 	shell.environment = get_environment();
+	env_value = 0;
+	env_index = 0;
 	j = 0;
 
-	(*i)++;
+	//(*i)++;
 	if (*i >= len || !(isalnum(symbol[*i]) || symbol[*i] == '_'))
 	{
-		(*i) = 1;
+		//(*i)++;
         printf("$"); // Print '$' if nothing valid comes after it
+		if (!env_value)
+			printf(" ");
         return;
 	}
 	while (*i < len && (isalnum(symbol[*i]) || symbol[*i] == '_'))
@@ -51,8 +55,8 @@ void handle_dollarsign(char *symbol, int *i, int len)
 
 	if (env_value)
 		printf("%s", env_value);
-	//else
-		//printf("$%s", var_name);
+	else
+		printf("%s", env_value);
 	(*i)--;
 }
 
@@ -101,7 +105,10 @@ void double_quotes(char *symbol)
 		{
 
 			if (symbol[i] == '$')
+			{
+				i++;
 				handle_dollarsign(symbol, &i, len);
+			}
 			else
 				printf("%c", symbol[i]);
 			i++;

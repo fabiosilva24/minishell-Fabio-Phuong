@@ -42,14 +42,13 @@ static char **convert_tokens_to_argv(t_token *tokens, int token_count)
 
 }*/
 
-static void process_command(t_token *tokens)
+static void process_command(t_token *tokens, t_minishell *shell)
 {
     int token_count;
     char **argv;
     t_token *current = tokens;
-    t_minishell shell;
 
-     (void)shell;
+     //(void)shell;
     // Save original stdin and stdout
     int original_stdin = dup(STDIN_FILENO);
     int original_stdout = dup(STDOUT_FILENO);
@@ -96,10 +95,12 @@ static void process_command(t_token *tokens)
     // Execute commands after handling redirections
     t_cmd cmd;
     cmd.args = argv;
+    //int exit_code = 0;
     //handle_dollar_questionmark(&cmd, &shell);
-    handle_builtin(&cmd, &shell);
+    handle_builtin(&cmd, shell);
     if (!is_builtin(&cmd))
         exec_extercmds(argv);
+    
 
     // Restore original stdin and stdout
     dup2(original_stdin, STDIN_FILENO);
@@ -116,6 +117,9 @@ void initialize_shell(t_minishell *shell, int argc, char **argv)
     signal(SIGQUIT, SIG_IGN);
 
     shell->environment = get_environment();
+    
+    shell->exit_status = 0;
+    shell->status = 0;
     (void)argv;
     if (argc != 1)
     {
@@ -138,10 +142,8 @@ int main(int argc, char **argv)
     t_minishell shell;
     char *line;
     t_token *tokens;
-    (void)shell;
 
     initialize_shell(&shell, argc, argv);
-    shell.exit_status = 0;
     while (1)
     {
         line = readline("minishell$ ");
@@ -150,8 +152,8 @@ int main(int argc, char **argv)
         if (*line)
             add_history(line);
         tokens = tokenize_input(line);
-        process_command(tokens);
-        //print_list(tokens);
+        process_command(tokens, &shell);
+        print_list(tokens);
         free_tokens(tokens);
         free(line);
     }
