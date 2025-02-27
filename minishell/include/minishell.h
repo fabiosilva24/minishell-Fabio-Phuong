@@ -87,7 +87,7 @@ int     handle_redirection(char **arg);
 int     redirect_input(const char *filename);
 int     redirect_output(const char *filename);
 int     redirect_output_append(const char *filename);
-void    exec_extercmds(char **argv);
+void    exec_extercmds(char **argv, t_minishell *shell);
 //tokens
 
 t_token *create_token(char *value, e_token_type type);

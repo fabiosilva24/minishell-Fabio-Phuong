@@ -99,7 +99,7 @@ static void process_command(t_token *tokens, t_minishell *shell)
     //handle_dollar_questionmark(&cmd, &shell);
     handle_builtin(&cmd, shell);
     if (!is_builtin(&cmd))
-        exec_extercmds(argv);
+        exec_extercmds(argv, shell);
     
 
     // Restore original stdin and stdout
