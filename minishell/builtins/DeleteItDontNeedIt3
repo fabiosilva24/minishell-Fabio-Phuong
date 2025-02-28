@@ -1,3 +1,5 @@
+/*
+    
 #include "../include/minishell.h"
 
 static int count_args(char **args)
@@ -82,3 +84,4 @@ void handle_exit_status(int status, t_minishell *shell)
     else
         shell->exit_status = 128 + (status % 256);
 }
+*/
