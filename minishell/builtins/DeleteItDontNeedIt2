@@ -1,3 +1,5 @@
+/*
+
 #include "../include/minishell.h"
 
 char *find_env_var(char *args, char **envp)
@@ -99,3 +101,4 @@ char **remove_quotes_from_env(char **envp)
 	new_env[i] = NULL;
 	return (new_env);
 }
+*/
