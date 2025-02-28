@@ -30,8 +30,6 @@ void handle_dollarsign(char *symbol, int *i, int len)
 	{
 		//(*i)++;
         printf("$"); // Print '$' if nothing valid comes after it
-		if (!env_value)
-			printf(" ");
         return;
 	}
 	while (*i < len && (isalnum(symbol[*i]) || symbol[*i] == '_'))

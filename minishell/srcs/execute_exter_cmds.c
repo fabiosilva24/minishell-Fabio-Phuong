@@ -7,9 +7,19 @@ void exec_extercmds(char **argv, t_minishell *shell)
     char *path_env = getenv("PATH");
     char *path;
     char full_path[1024];
+    char path_env_copy[MAX_PATH_LEN];
 
     path_env = getenv("PATH");
-    path = strtok(path_env, ":");
+    //copy the path environment variable instead of calling getenv
+    if (path_env)
+    {
+        ft_strncpy(path_env_copy, path_env, sizeof(path_env_copy));
+    }
+    else
+    {
+        perror("Error: PATH Environment Variable not found");
+    }
+    path = strtok(path_env_copy, ":");
 
     pid = fork();
     if (pid == 0)
