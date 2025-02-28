@@ -1,95 +1,101 @@
+
 #include "../include/minishell.h"
 
-void check_if_command_exists(t_cmd *cmd, t_minishell *shell)
+int exec_builtins(t_cmd *cmd, char ***envp, t_minishell *shell)
 {
-    if (!cmd || !cmd->args[0])
+    if (!ft_strncmp(cmd->args[0], "exit", ft_strlen(cmd->args[0])))
     {
-        print_cmd_error("minishell$", "command not found: ");
-        shell->exit_status = 127;
-        return;
+        builtin_exit(cmd, shell, 1);
+        return (1);
     }
+    else if (!ft_strncmp(cmd->args[0], "echo", ft_strlen(cmd->args[0])))
+        builtin_echo(cmd, &(shell->status));
+    else if (!ft_strncmp(cmd->args[0], "pwd", ft_strlen(cmd->args[0])))
+        builtin_pwd(&(shell->status));
+    else if (!ft_strncmp(cmd->args[0], "env", ft_strlen(cmd->args[0])))
+        builtin_env(*envp, &(shell->status));
+    else if (!ft_strncmp(cmd->args[0], "export", ft_strlen(cmd->args[0])))
+        *envp = builtin_export(cmd->args, *envp, &(shell->status));
+    else if (!ft_strncmp(cmd->args[0], "unset", ft_strlen(cmd->args[0])))
+        *envp = builtin_unset(cmd->args, *envp, &(shell->status));
+    else if (!ft_strncmp(cmd->args[0], "cd", ft_strlen(cmd->args[0])))
+        return (1);
+    else
+        return (0);
+    return (1);
+}
 
-    if (!is_builtin(cmd))
+char **extract_path_directories(char **envp)
+{
+    char **paths;
+    char *tmp;
+    int i;
+
+    i = 0;
+    while (*envp)
     {
-        char *cmd_path = get_exec_path(cmd, shell->envp);
-        if (!cmd_path)
+        if (!ft_strncmp(*envp, "PATH=", 5))
         {
-            print_cmd_error(cmd->args[0], ": command not found");
-            shell->exit_status = 127;
+            paths = ft_split(*envp + 5, ':');
+            while (paths[i])
+            {
+                tmp = ft_strjoin(paths[i], "/");
+                free(paths[i]);
+                paths[i] = ft_strdup(tmp);
+                free(tmp);
+                i++;
+            }
+            return (paths);
         }
+        envp++;
+    }
+    return (NULL);
+}
+
+char *find_executable(char **paths, char **cmd_flags, int *status)
+{
+    char *cmd;
+    int i;
+
+    i = 0;
+    cmd = ft_strdup(cmd_flags[0]);
+    if (!access(cmd_flags[0], F_OK))
+        return (cmd);
+    free(cmd);
+    while (paths[i])
+    {
+        cmd = ft_strjoin(paths[i], cmd_flags[0]);
+        if (!access(cmd, F_OK))
+            return (cmd);
         else
-        {
-            free(cmd_path);
-        }
+            free(cmd);
+        i++;
     }
+    errmsg("minishell: ", cmd_flags[0], ": command not found", -127, status);
+    return (NULL);
 }
-int	is_builtin(t_cmd *cmd)
+
+void execute(t_cmd *cmd, char ***envp, t_minishell *shell)
 {
-	if (!cmd || !cmd->args[0])
-		return (0);
-	if (ft_strcmp(cmd->args[0], "cd") == 0 ||
-		ft_strcmp(cmd->args[0], "echo") == 0 ||
-		ft_strcmp(cmd->args[0], "exit") == 0 ||
-		ft_strcmp(cmd->args[0], "env") == 0 ||
-		ft_strcmp(cmd->args[0], "pwd") == 0 ||
-		ft_strcmp(cmd->args[0], "export") == 0 ||
-		ft_strcmp(cmd->args[0], "unset") == 0)
-		return (1);
-	return (0);
+    char **paths;
+    char *name;
+    pid_t p;
+
+    if (exec_builtins(cmd, envp, shell))
+        return;
+    p = fork();
+    if (!p)
+    {
+        paths = extract_path_directories(*envp);
+        if (!paths)
+            errmsg("minishell: ", cmd->args[0], ": command not found", -127, &(shell->status));
+        name = find_executable(paths, cmd->args, &(shell->status));
+        ft_free(paths);
+        if (execve(name, cmd->args, *envp) == -1)
+            errmsg("minishell: ", cmd->args[0], ": command not found", -127, &(shell->status));
+        free(name);
+    }
+    else
+        waitpid(p, &(shell->status), 0);
 }
 
-int exec_process(t_cmd *cmd, char **envp)
-{
-	char	*cmd_path;
-	int		status;
-	
-	if (!cmd || !envp)
-		return (1);
-	status = check_cmd_validity(cmd);
-	if (status != 0)
-		return (status);
-	cmd_path = get_exec_path(cmd, envp);
-	if (!cmd_path)
-		return (127);
-	if (execve(cmd_path, cmd->args, envp) == -1)
-	{
-		status = handle_execve_error(cmd_path, cmd->args[0]);
-		free(cmd_path);
-		exit(status);
-	}
-	free(cmd_path);
-	return (0);
-}
-
-int exec_cmd(t_cmd *cmd, t_minishell *shell)
-{
-   pid_t   pid;
-   int     status;
-
-   if (!cmd || !shell || !shell->envp)
-       return (-1);
-   if (is_builtin(cmd))
-       return (handle_builtin(cmd, shell));
-   pid = fork();
-   if (pid == -1)
-   {
-       print_cmd_error("fork", ": failed\n");
-       return (-1);
-   }
-   if (pid == 0)
-   {
-       status = exec_process(cmd, shell->envp);
-       exit(status);
-   }
-   waitpid(pid, &status, 0);
-   handle_exit_status(status, shell);
-   return (shell->exit_status);
-}
-
-void wait_for_all_processes(void)
-{
-	int		status;
-
-	while (waitpid(-1, &status, 0) > 0)
-		;
-}
