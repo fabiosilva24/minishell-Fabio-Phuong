@@ -1,106 +1,71 @@
+
 #include "../include/minishell.h"
 
-static int copy_or_skip_var(char **new_envp, char **envp, char *var_name, int *i)
+int is_env_var_present(char *args, char **envp)
 {
-    size_t var_len;
-    char *current_var;
+    int i;
 
-    current_var = envp[*i];
-    var_len = ft_strlen(var_name);
-    if (ft_strncmp(current_var, var_name, var_len) == 0 &&
-        (current_var[var_len] == '=' || current_var[var_len] == '\0'))
-    {
-        return (1);
-    }
-    new_envp[*i] = ft_strdup(current_var);
-    if (!new_envp[*i])
-    {
-        free_tab(new_envp);
-        return (-1);
-    }
-    return (0);
-}
-
-char	**remove_variable_from_env(char *var_name, char **envp)
-{
-	int		i;
-	int		j;
-	char	**new_envp;
-	int		result;
-
-	if (!var_name || !envp)
-		return (envp);
-	new_envp = malloc(sizeof(char *) * size_mass(envp));
-	if (!new_envp)
-		return (envp);
-	i = 0;
-	j = 0;
-	while (envp[i])
-	{
-		result = copy_or_skip_var(new_envp, envp, var_name, &i);
-		if (result == -1)
-		{
-			free_tab(new_envp);
-			return (envp);
-		}
-		if (result == 0)
-			j++;
-		i++;
-	}
-	new_envp[j] = NULL;
-	free_tab(envp);
-	return (new_envp);
-}
-
-int is_variable_set(char *var_name, char **envp)
-{
-    int     i;
-    int     var_len;
-    char    *current_var;
-
-    if (!var_name || !envp)
-        return (0);
-
-    var_len = ft_strlen(var_name);
     i = 0;
     while (envp[i])
     {
-        current_var = envp[i];
-        if (ft_strncmp(current_var, var_name, var_len) == 0 &&
-            (current_var[var_len] == '=' || current_var[var_len] == '\0'))
+        if (ft_strncmp(envp[i], args, ft_strlen(args)) == 0)
             return (1);
         i++;
     }
     return (0);
 }
 
-char **builtin_unset(char **args, char **envp, int *status)
+char **remove_env_var(char *args, char **envp)
 {
     int     i;
-    char    **new_envp;
+    int     j;
+    char    **new_mass;
 
-    if (!args || !envp || !status)
-        return (envp);
-    if (!args[1])
-        return (envp);
+    new_mass = malloc(sizeof(char *) * size_mass(envp));
+    if (!new_mass)
+        return (NULL);
+    i = 0;
+    j = 0;
+    while (envp[j])
+    {
+        if (ft_strncmp(envp[j], args, ft_strlen(args)) == 0)
+            j++;
+        if (!envp[j])
+            break;
+        new_mass[i] = ft_strdup(envp[j]);
+        i++;
+        j++;
+    }
+    new_mass[i] = NULL;
+    ft_free(envp);
+    return (new_mass);
+}
+
+char **builtin_unset(char **args, char **envp, int *status)
+{
+    int i;
+    int j;
+    int k;
+
     i = 0;
     while (args[++i])
     {
-        if (!is_valid_identifier(args[i]))
+        j = 0;
+        k = 0;
+        while (args[i][j])
         {
-            errmsg("minishell: unset: `", args[i], "': not a valid identifier\n", -1);
-            *status = 1;
-            continue;
+            if (args[i][j] == '=')
+            {
+                errmsg("minishell: unset: `", args[i],
+                    "': not a valid identifier", -1, status);
+                k = 1;
+                break;
+            }
+            j++;
         }
-        if (is_variable_set(args[i], envp))
-        {
-            new_envp = remove_variable_from_env(args[i], envp);
-		if (new_envp)
-		{
-			free_tab(envp);
-			envp = new_envp;
-		}
-	}
+        if (k == 0 && is_env_var_present(args[i], envp))
+            envp = remove_env_var(args[i], envp);
     }
-	return (envp);
+    *status = 0;
+    return (envp);
 }
