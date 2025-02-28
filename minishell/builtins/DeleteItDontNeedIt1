@@ -1,6 +1,6 @@
-#include "../include/minishell.h"
+/*#include "../include/minishell.h"
 
-/*static char **copy_existing_env(char **envp, char **new_env)
+static char **copy_existing_env(char **envp, char **new_env)
 {
     int i;
 
@@ -17,7 +17,6 @@
     }
     new_env[i] = NULL;
     return (new_env);
-}*/
 
 char **add_to_envp(char **envp, char *str, int should_free)
 {
@@ -113,3 +112,4 @@ char **replace_env_var(char **envp, char *key, char *new_value)
         return (envp);
     return (result);
 }
+}*/
