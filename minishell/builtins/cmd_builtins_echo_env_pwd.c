@@ -1,20 +1,38 @@
 
 #include "../include/minishell.h"
 
+static int is_only_that_char(char *str, char c)
+{
+    while (*str)
+    {
+        if (*str != c)
+            return 0;
+        str++;
+    }
+    return 1;
+}
+
 void builtin_echo(t_cmd *cmd, int *status)
 {
+    int newline;
     int i;
 
+    newline = 1;
     i = 1;
     *status = 0;
+
     if (!cmd->args[1])
     {
         printf("\n");
         return;
     }
-    while (cmd->args[i] && !ft_strncmp(cmd->args[i], "-n",
-            ft_strlen(cmd->args[i])))
+
+    while (cmd->args[i] && cmd->args[i][0] == '-' && is_only_that_char(cmd->args[i] + 1, 'n'))
+    {
+        newline = 0;
         i++;
+    }
+
     while (cmd->args[i])
     {
         parse_input(cmd->args[i]);
@@ -22,9 +40,13 @@ void builtin_echo(t_cmd *cmd, int *status)
             printf(" ");
         i++;
     }
-    if (ft_strncmp(cmd->args[1], "-n", ft_strlen(cmd->args[1])))
+
+    if (newline)
+    {
         printf("\n");
+    }
 }
+
 
 void builtin_env(char **envp, int *status)
 {

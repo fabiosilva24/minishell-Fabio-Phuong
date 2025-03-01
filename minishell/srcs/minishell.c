@@ -145,7 +145,7 @@ int main(int argc, char **argv)
     initialize_shell(&shell, argc, argv);
     while (1)
     {
-        line = readline("\001\033[1;32m\002✨minishell > \001\033[0m\002");
+        line = readline("\001\033[1;32m\002✨miaoushell > \001\033[0m\002");
         if (!line)
             break;
         if (*line)

@@ -4,7 +4,7 @@ void exec_extercmds(char **argv, t_minishell *shell)
 {
     pid_t pid;
     int status;
-    char *path_env = getenv("PATH");
+    char *path_env;
     char *path;
     char full_path[1024];
     char path_env_copy[MAX_PATH_LEN];
