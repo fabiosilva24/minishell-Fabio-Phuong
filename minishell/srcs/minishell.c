@@ -97,8 +97,7 @@ static void process_command(t_token *tokens, t_minishell *shell)
     cmd.args = argv;
     //int exit_code = 0;
     //handle_dollar_questionmark(&cmd, &shell);
-    handle_builtin(&cmd, shell);
-    if (!is_builtin(&cmd))
+    if (exec_builtins(&cmd, &(shell->environment), shell) == 0)
         exec_extercmds(argv, shell);
     
 
@@ -146,7 +145,7 @@ int main(int argc, char **argv)
     initialize_shell(&shell, argc, argv);
     while (1)
     {
-        line = readline("minishell$ ");
+        line = readline("\001\033[1;32m\002✨minishell > \001\033[0m\002");
         if (!line)
             break;
         if (*line)
