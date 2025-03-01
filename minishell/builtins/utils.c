@@ -1,28 +1,16 @@
+
 #include "../include/minishell.h"
 
-void	free_tab(char **tab)
+void errmsg(char *s1, char *s2, char *s3, int code, int *status)
 {
-	int	i;
-
-	if (!tab)
-		return ;
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		tab[i] = NULL;
-		i++;
-	}
-	free(tab);
-}
-
-int	errmsg(char *s1, char *s2, char *s3, int code)
-{
-	ft_putstr_fd(s1, 2);
-	ft_putstr_fd(s2, 2);
-	ft_putstr_fd(s3, 2);
-	ft_putstr_fd("\n", 2);
-	return (-code);
+    ft_putstr_fd(s1, 2);
+    ft_putstr_fd(s2, 2);
+    ft_putstr_fd(s3, 2);
+    ft_putstr_fd("\n", 2);
+    if (code < 0)
+        *status = -code;
+    else
+        exit(code);
 }
 
 int	size_mass(char **envp)
@@ -47,11 +35,6 @@ char	**new_envp(char **envp)
 	while (envp[i])
 	{
 		new_mass[i] = ft_strdup(envp[i]);
-		if (!new_mass[i])
-		{
-			free_tab(new_mass);
-			return (NULL);
-		}
 		i++;
 	}
 	new_mass[i] = NULL;
@@ -66,4 +49,33 @@ int ft_sym_export(char *str)
     while (str[i] && str[i] != '=')
         i++;
     return (i);
+}
+
+void ft_free(char **mass)
+{
+    int sizemass = 0;
+    while (mass[sizemass])
+    {
+        free(mass[sizemass]);
+        sizemass++;
+    }
+    free(mass);
+}
+
+int	ft_len_eq(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != '=' && str[i] != '\0')
+		i++;
+	return (i);
+}
+
+int max(int a, int b)
+{
+    if (a > b)
+        return (a);
+    else
+        return (b);
 }
