@@ -6,6 +6,7 @@ char **update_pwd_oldpwd(char **envp, char *old_path, int *status)
     char *pwd;
     char cwd[MAX_PATH_LEN];
     char *new_old_path;
+    (void)status;
 
     new_old_path = ft_strjoin("OLDPWD=", old_path);
     free(old_path);
