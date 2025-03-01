@@ -117,10 +117,12 @@ void handle_cd_status(int j, int i, char *args, char *str, int *status);
 void check_directory_exists(char *path, int j, char *old_path, char *args, int *status);
 void process_cd_path(char *path, char *old_path, int is_cd_builtin, int *status);
 
-//cmd_builtins_echo_env_pwd_exit.c
+//cmd_builtins_echo_env_pwd.c
 void builtin_echo(t_cmd *cmd, int *status);
 void builtin_pwd(int *status);
 void builtin_env(char **envp, int *status);
+
+//cmd_builtins_exit.c
 void builtin_exit(t_cmd *cmd, t_minishell *shell, int should_exit);
 
 //cmd_builtins_export.c
