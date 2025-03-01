@@ -17,8 +17,6 @@
 # define EXIT_NUM_ERROR "exit: numeric argument required\n"
 # define EXIT_MANY_ARGS "exit: too many arguments\n"
 # define EXIT_MSG "exit\n"
-# define ENV_ERROR "minishell: env: error retrieving environment variables\n"
-# define PWD_ERROR "minishell: pwd: error retrieving current directory\n"
 
 # include <readline/history.h>       // add_history
 # include <readline/readline.h>     // readline, rl_clear_history, rl_on_new_line, rl_replace_line, rl_redisplay, add_history
@@ -109,80 +107,60 @@ void    handle_dollarsign(char *symbol, int *i, int len);
 //print to test
 void print_list(t_token *current);
 
-//exec.c
-int	is_builtin(t_cmd *cmd);
-int	exec_process(t_cmd *cmd, char **envp);
-int exec_cmd(t_cmd *cmd, t_minishell *shell);
-void wait_for_all_processes(void);
+//cd.c
+char *get_after_char(const char *s, int c);
+char **update_pwd_oldpwd(char **envp, char *old_path, int *status);
+char **change_directory(char **args, int if_is_cd_cmd, char **envp, int *status);
 
-//exec2.c
-int   handle_builtin(t_cmd *cmd, t_minishell *shell);
-void	handle_exit_status(int status, t_minishell *shell);
+//cd_utils.c
+void handle_cd_status(int j, int i, char *args, char *str, int *status);
+void check_directory_exists(char *path, int j, char *old_path, char *args, int *status);
+void process_cd_path(char *path, char *old_path, int is_cd_builtin, int *status);
 
-//exec_utils.c
-void	print_cmd_error(const char *cmd, const char *message);
-int	  check_cmd_validity(t_cmd *cmd);
-int	  handle_execve_error(char *cmd_path, char *cmd);
-
-//exec_path.c
-char	**get_path_dirs(char **envp);
-char *find_cmd_path(char **path_dirs, char *cmd);
-char	*get_exec_path(t_cmd *cmd, char **envp);
-
-//cmd_builtins_pwd_echo.c
-void builtin_pwd(int *status);
+//cmd_builtins_echo_env_pwd_exit.c
 void builtin_echo(t_cmd *cmd, int *status);
-
-//cmd_builtins_env_exit.c
+void builtin_pwd(int *status);
 void builtin_env(char **envp, int *status);
 void builtin_exit(t_cmd *cmd, t_minishell *shell, int should_exit);
 
-//cmd_unset.c
-char	**remove_variable_from_env(char *var_name, char **envp);
-int     is_variable_set(char *var_name, char **envp);
+//cmd_builtins_export.c
+char	**add_env_var(char **envp, char *str, int free_old);
+char	*find_double_var(char *args, char **envp);
+char	**replace_env_var(char **envp, char *args, char *new);
+char	**sort_env_vars(char **mass);
+char	**extract_var_values(char **tmpmass);
+
+//cmd_builtins_export_utils.c
+char **extract_var_names(char **tmpmass);
+void print_sorted_env(char **envp);
+char **change_envp(char *new, char **args, int i, char **envp);
+char **builtin_export(char **args, char **envp, int *status);
+
+//cmd_builtins_unset.c
+char **remove_env_var(char *args, char **envp);
+int is_env_var_present(char *args, char **envp);
 char **builtin_unset(char **args, char **envp, int *status);
 
-//cmd_builtins_export.c
-char **extract_variable_names(char **envp);
-char **prepare_sorted_env(char **envp);
-int     prepare_export_data(char **tmpmass, char ***before, char ***after);
-void    print_export_without_args(char **envp);
-char **builtin_export(char **args, char **envp);
+//exec.c
+char	**extract_path_directories(char **envp);
+char	*find_executable(char **paths, char **cmd_flags, int *status);
+int exec_builtins(t_cmd *cmd, char ***envp, t_minishell *shell);
+void execute(t_cmd *cmd, char ***envp, t_minishell *shell);
 
-//export_utils.c
-char	*get_variable_name(char *env_entry);
-void	free_variable_names(char **variable_names, int i);
-int	  print_env_entry(char *before, char *after, char *entry);
-int	  is_valid_identifier(char *str);
-void	update_envp(char *new_value, char *arg, char ***envp);
+//exit.c
+char    *get_exit_variable_value(char **envp, char *line, int len, int last_exit_status);
+void    replace_exit_status(char **line, int start, int len, char *value, int *i);
+void    extract_and_replace_exit_status(int *i, char **line, char **envp, int last_exit_status);
+void    expand_exit_status(char **line, char **envp, int last_exit_status);
 
-//env_management.c
-char **add_to_envp(char **envp, char *str, int should_free);
-int     find_and_replace(char **envp, char *key, char *new_value, size_t key_len);
-char **replace_env_var(char **envp, char *key, char *new_value);
-
-//env_management2.c
-char *find_env_var(char *args, char **envp);
-char **sort_env_vars(char **envp);
-char **remove_quotes_from_env(char **envp);
-
-//cd.c
-void validate_and_cd(char *path, char *args);
-void builtin_cd(char **args, char ***envp);
-
-//cd_utils.c
-char *get_cd_env_value(char **envp, char *key);
-void update_pwd_variables(char ***envp, char *old_pwd);
-void handle_cd_error(char *path);
-void handle_absolute_path(char *path);
-void handle_relative_path(char **args, char **envp);
-
-//utils2.c
-void	free_tab(char **tab);
-int	  errmsg(char *s1, char *s2, char *s3, int code);
-int	  size_mass(char **envp);
+//utils.c
+void errmsg(char *s1, char *s2, char *s3, int code, int *status);
+int	size_mass(char **envp);
 char	**new_envp(char **envp);
 int   ft_sym_export(char *str);
+void ft_free(char **mass);
+int	ft_len_eq(char *str);
+int max(int a, int b);
 //vd handle_dollar_questionmark(t_cmd *cmd, t_minishell *shell);
 //void handle_dollar_questionmark(char **arg, t_minishell *shell);
 void check_if_command_exists(t_cmd *cmd, t_minishell *shell);
