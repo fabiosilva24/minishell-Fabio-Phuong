@@ -36,25 +36,23 @@ int handle_redirection(char **arg)
 		return (0);
 }
 
-void	parse_input(char *input)
+void	parse_input(char *input, t_minishell *shell)
 {
 	char *arg;
 	int handled;
 	int i;
 	int len;
-	t_minishell shell;
 
 	i = 1;
 	handled = 0;
 	arg = input;
-	(void)shell;
 	len = strlen(arg);
 
 	while (*arg)
 	{
 		if (*arg == '\"')
 		{
-			double_quotes(arg);
+			double_quotes(arg, shell);
 			handled = 1;
 			break;
 		}
@@ -71,7 +69,7 @@ void	parse_input(char *input)
 		}
 		else if (*arg == '$')
 		{
-			handle_dollarsign(arg, &i, len);
+			handle_dollarsign(arg, &i, len, shell);
 			handled = 1;
 			break;
 		}

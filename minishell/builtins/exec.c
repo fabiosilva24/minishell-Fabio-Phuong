@@ -9,7 +9,7 @@ int exec_builtins(t_cmd *cmd, char ***envp, t_minishell *shell)
         return (1);
     }
     else if (!ft_strncmp(cmd->args[0], "echo", ft_strlen(cmd->args[0])))
-        builtin_echo(cmd, &(shell->status));
+        builtin_echo(cmd, &(shell->status), shell);
     else if (!ft_strncmp(cmd->args[0], "pwd", ft_strlen(cmd->args[0])))
         builtin_pwd(&(shell->status));
     else if (!ft_strncmp(cmd->args[0], "env", ft_strlen(cmd->args[0])))

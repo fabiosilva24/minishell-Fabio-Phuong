@@ -12,15 +12,13 @@
 
 #include "../include/minishell.h"
 
-void handle_dollarsign(char *symbol, int *i, int len)
+void handle_dollarsign(char *symbol, int *i, int len, t_minishell *shell)
 {
-	t_minishell shell;
 	char var_name[256] = {0};
 	int j;
 	int env_index;
 	char *env_value;
-	
-	shell.environment = get_environment();
+
 	env_value = 0;
 	env_index = 0;
 	j = 0;
@@ -41,11 +39,11 @@ void handle_dollarsign(char *symbol, int *i, int len)
 	var_name[j] = '\0';
 	env_index = 0;
 	env_value = NULL;
-	while (shell.environment[env_index])
+	while (shell->environment[env_index])
 	{
-		if (strncmp(shell.environment[env_index], var_name, strlen(var_name)) == 0)
+		if (strncmp(shell->environment[env_index], var_name, strlen(var_name)) == 0)
 		{
-			env_value = strchr(shell.environment[env_index], '=') + 1;
+			env_value = strchr(shell->environment[env_index], '=') + 1;
 			break ;
 		}
 		env_index++;
@@ -89,14 +87,14 @@ void handle_dollarsign(char *symbol, int *i, int len)
 	}
 }*/
 
-void double_quotes(char *symbol)
+void double_quotes(char *symbol, t_minishell *shell)
 {
 	int len;
 	int i;
+	char *input;
 
 	len = strlen(symbol);
 	i = 1;
-	char *input;
 	if (symbol[0] == '\"')
 	{
 		while (i < len && symbol[i] != '\"')
@@ -105,7 +103,7 @@ void double_quotes(char *symbol)
 			if (symbol[i] == '$')
 			{
 				i++;
-				handle_dollarsign(symbol, &i, len);
+				handle_dollarsign(symbol, &i, len, shell);
 			}
 			else
 				printf("%c", symbol[i]);

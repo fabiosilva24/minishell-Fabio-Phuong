@@ -12,7 +12,7 @@ static int is_only_that_char(char *str, char c)
     return 1;
 }
 
-void builtin_echo(t_cmd *cmd, int *status)
+void builtin_echo(t_cmd *cmd, int *status, t_minishell *shell)
 {
     int newline;
     int i;
@@ -35,7 +35,7 @@ void builtin_echo(t_cmd *cmd, int *status)
 
     while (cmd->args[i])
     {
-        parse_input(cmd->args[i]);
+        parse_input(cmd->args[i], shell);
         if (cmd->args[i + 1])
             printf(" ");
         i++;

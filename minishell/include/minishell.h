@@ -76,10 +76,10 @@ typedef struct s_path
 
 
 void	print_banner();
-void    double_quotes(char *symbol);
+void    double_quotes(char *symbol, t_minishell *shell);
 char    **get_environment(void);
 void    single_quotes(char *symbol);
-void    parse_input(char *input);
+void    parse_input(char *input, t_minishell *shell);
 void exit_code(t_minishell *minishell, char **command, char **argv);
 int     handle_redirection(char **arg);
 int     redirect_input(const char *filename);
@@ -102,7 +102,7 @@ void    handle_sigint(int sig);
 //built ins
 void    my_echo(int argc, char **argv);
 void    execute_echo(t_token *tokens);
-void    handle_dollarsign(char *symbol, int *i, int len);
+void    handle_dollarsign(char *symbol, int *i, int len, t_minishell *shell);
 
 //print to test
 void print_list(t_token *current);
@@ -118,7 +118,7 @@ void check_directory_exists(char *path, int j, char *old_path, char *args, int *
 void process_cd_path(char *path, char *old_path, int is_cd_builtin, int *status);
 
 //cmd_builtins_echo_env_pwd.c
-void builtin_echo(t_cmd *cmd, int *status);
+void builtin_echo(t_cmd *cmd, int *status, t_minishell *shell);
 void builtin_pwd(int *status);
 void builtin_env(char **envp, int *status);
 

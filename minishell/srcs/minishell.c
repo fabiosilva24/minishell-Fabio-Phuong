@@ -27,21 +27,6 @@ static char **convert_tokens_to_argv(t_token *tokens, int token_count)
     argv[i] = NULL;
     return (argv);
 }
-/*static void process_command(t_token *tokens)
-{
-    int token_count;
-    char **argv;
-
-    token_count = count_tokens(tokens);
-    argv = convert_tokens_to_argv(tokens, token_count);
-    if (tokens && strcmp(tokens->value, "echo") == 0)
-    {
-        my_echo(token_count, argv);
-        free(argv);
-    }
-
-}*/
-
 static void process_command(t_token *tokens, t_minishell *shell)
 {
     int token_count;
@@ -116,7 +101,6 @@ void initialize_shell(t_minishell *shell, int argc, char **argv)
     signal(SIGQUIT, SIG_IGN);
 
     shell->environment = get_environment();
-    
     shell->exit_status = 0;
     shell->status = 0;
     (void)argv;
@@ -152,42 +136,11 @@ int main(int argc, char **argv)
             add_history(line);
         tokens = tokenize_input(line);
         process_command(tokens, &shell);
-        print_list(tokens);
+        //print_list(tokens);
         free_tokens(tokens);
         free(line);
+        
     }
     return 0;
 }
 
-/*int main(int argc, char **argv)
-{
-    t_minishell shell;
-    char *line;
-
-    signal(SIGINT, handle_sigint);
-    signal(SIGQUIT, SIG_IGN);
-
-    shell.environment = get_environment();
-    (void)argv;
-    if (argc != 1)
-    {
-        printf("Usage: ./minishell to enter minishell\n");
-        return (1);
-    }
-    print_banner();
-    while (1)
-    {
-        my_echo(argc, argv);
-        line = readline("minishell$ ");
-        if (!line)
-            break;
-        if (*line)
-            add_history(line);
-        t_token *tokens = tokenize_input(line);
-        if (tokens && strcmp(tokens->value, "echo") == 0)
-            execute_echo(tokens);
-        free_tokens(tokens);
-        free(line);
-    }
-    return 0;
-}*/
