@@ -17,6 +17,7 @@ GREEN := \033[0;32m
 PASTEL_GREEN := \033[38;5;120m
 CYAN := \033[0;36m
 NC := \033[0m
+TICK = ✔
 
 NAME = minishell
 CC = cc
@@ -27,7 +28,6 @@ SRCS = ./srcs/minishell.c\
        ./srcs/print_banner.c\
        ./srcs/handle_quotes.c\
        ./srcs/get_env.c\
-       ./builtins/echo.c\
        ./tokens/token.c\
        ./srcs/ft_strtok.c\
        ./srcs/parse_input.c\
@@ -35,20 +35,15 @@ SRCS = ./srcs/minishell.c\
        ./srcs/exit_code.c\
        ./srcs/print_test.c\
        ./srcs/execute_exter_cmds.c\
-       ./builtins/cd_utils.c \
        ./builtins/cd.c \
-       ./builtins/cmd_builtins_env_exit.c \
-       ./builtins/cmd_builtins_pwd_echo.c \
+       ./builtins/cd_utils.c \
+       ./builtins/cmd_builtins_echo_env_pwd_exit.c \
+       ./builtins/cmd_builtins_export.c \
+       ./builtins/cmd_builtins_export_utils.c \
        ./builtins/cmd_builtins_unset.c \
-       ./builtins/env_management.c \
-       ./builtins/env_management2.c \
-       ./builtins/exec_path.c \
-       ./builtins/exec_utils.c \
        ./builtins/exec.c \
-       ./builtins/exec2.c \
-       ./builtins/export_utils.c \
+       ./builtins/exit.c \
        ./builtins/utils.c\
-       ./builtins/cmd_builtins_export.c\
        #./srcs/handle_dollarwithquestion.c
 
 OBJS = $(SRCS:.c=.o)
@@ -59,7 +54,7 @@ TOTAL = $(words $(SRCS))
 all: $(LIBFT) $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	@echo "$(CYAN)Making...$(NC)"
+	@echo "\n\t$(CYAN)$(TICK) MINISHELL compiled 🥳😺✨ (miaou)$(NC)\n"
 	@$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBFT) $(READLINEFLAG)
 
 %.o: %.c
