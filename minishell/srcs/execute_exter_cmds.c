@@ -43,14 +43,23 @@ void exec_extercmds(char **argv, t_minishell *shell)
         ft_putstr_fd("Error: command not found\n", 2);
         ft_putstr_fd("Error minishell: command not found\n", 2);
         shell->exit_status = 127;
-        exit(1);
+        exit(127);
     }
     else if (pid < 0)
     {
         perror("error with fork");
+        shell->exit_status = 127;
     }
     else
     {
         waitpid(pid, &status, 0);
+        if (WIFEXITED(status))
+        {
+            shell->exit_status = WEXITSTATUS(status);
+        }
+        else
+        {
+            shell->exit_status = 127;
+        }
     }
 }

@@ -21,10 +21,12 @@ int exec_builtins(t_cmd *cmd, char ***envp, t_minishell *shell)
     else if (!ft_strncmp(cmd->args[0], "cd", ft_strlen(cmd->args[0])))
     {
         *envp = change_directory(cmd->args, 1, *envp, &(shell->status));
+        shell->exit_status = shell->status;
         return (1);
     }
     else
         return (0);
+    shell->exit_status = shell->status;
     return (1);
 }
 

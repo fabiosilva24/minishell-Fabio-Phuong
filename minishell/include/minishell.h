@@ -96,6 +96,8 @@ int     count_tokens(t_token *tokens);
 
 //handle ctrl cs
 void    handle_sigint(int sig);
+void    setup_signal_handler(t_minishell *shell); // handle exit code for ctrlc;
+void    handle_sigint_with_shell(int sig, siginfo_t *info, void *context); // handle exit code for ctrlc;
 
 
 
