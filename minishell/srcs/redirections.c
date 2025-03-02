@@ -12,6 +12,10 @@
 
 #include "../include/minishell.h"
 
+/*void handle_heredoc(char *delimeter)
+{
+
+}*/
 int redirect_input(const char *filename)
 {
 	int fd;

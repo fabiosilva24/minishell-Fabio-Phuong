@@ -95,7 +95,10 @@ void execute(t_cmd *cmd, char ***envp, t_minishell *shell)
         name = find_executable(paths, cmd->args, &(shell->status));
         ft_free(paths);
         if (execve(name, cmd->args, *envp) == -1)
+        {
             errmsg("minishell: ", cmd->args[0], ": command not found", -127, &(shell->status));
+            exit(shell->exit_status);
+        }
         free(name);
     }
     else

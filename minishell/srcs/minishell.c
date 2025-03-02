@@ -136,7 +136,7 @@ int main(int argc, char **argv)
             add_history(line);
         tokens = tokenize_input(line);
         process_command(tokens, &shell);
-        //print_list(tokens);
+        print_list(tokens);
         free_tokens(tokens);
         free(line);
         

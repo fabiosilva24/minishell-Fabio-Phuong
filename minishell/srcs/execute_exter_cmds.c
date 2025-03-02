@@ -19,7 +19,7 @@ void exec_extercmds(char **argv, t_minishell *shell)
     {
         perror("Error: PATH Environment Variable not found");
     }
-    path = strtok(path_env_copy, ":");
+    path = ft_strtok(path_env_copy, ":");
 
     pid = fork();
     if (pid == 0)
@@ -35,7 +35,7 @@ void exec_extercmds(char **argv, t_minishell *shell)
             {
                 break;
             }
-            path = strtok(NULL, ":");
+            path = ft_strtok(NULL, ":");
         }
 
         // If execve fails for all paths
