@@ -6,7 +6,10 @@ void handle_cd_status(int j, int i, char *args, char *str, int *status)
     if (j == 1 && i)
         chdir(str);
     else if (j != 1)
+    {
         errmsg("minishell: cd: ", args, ": No such file or directory", -1, status);
+        *status = 1;
+    }
     else if (j == 1 && !i)
         errmsg("minishell: cd: ", args, ": Not a directory", -1, status);
 }
