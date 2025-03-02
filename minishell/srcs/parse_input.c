@@ -69,9 +69,18 @@ void	parse_input(char *input, t_minishell *shell)
 		}
 		else if (*arg == '$')
 		{
-			handle_dollarsign(arg, &i, len, shell);
-			handled = 1;
-			break;
+			if (*(arg + 1) == '?')
+			{
+				expand_exit_status(&arg, shell->environment, shell->exit_status);
+				handled = 1;
+				break;
+			}
+			else
+			{
+				handle_dollarsign(arg, &i, len, shell);
+				handled = 1;
+				break;
+			}
 		}
 		arg++;
 	}

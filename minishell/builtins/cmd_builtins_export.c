@@ -47,7 +47,7 @@ char	**replace_env_var(char **envp, char *args, char *new)
 		j++;
 	}
 	new_env[j] = NULL;
-	ft_free(envp);
+	//ft_free(envp);
 	return (new_env);
 }
 

@@ -52,7 +52,7 @@ char **change_directory(char **args, int if_is_cd_cmd, char **envp, int *status)
             free(path);
         }
         else
-						status = 0;
+						*status = 0;
             process_cd_path(args[1], old_path, if_is_cd_cmd, status);
     }
     else if (if_is_cd_cmd && !ft_strncmp(args[1], "..", ft_strlen("..")))

@@ -39,7 +39,6 @@ void check_directory_exists(char *path, int j, char *old_path, char *args, int *
     if ((j != 1 || !i) || !if_is_cd_cmd)
         chdir(old_path);
 }
-
 void process_cd_path(char *args, char *old_path, int is_cd_builtin, int *status)
 {
     char    **str;

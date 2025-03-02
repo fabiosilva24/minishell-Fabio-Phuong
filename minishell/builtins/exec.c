@@ -19,7 +19,10 @@ int exec_builtins(t_cmd *cmd, char ***envp, t_minishell *shell)
     else if (!ft_strncmp(cmd->args[0], "unset", ft_strlen(cmd->args[0])))
         *envp = builtin_unset(cmd->args, *envp, &(shell->status));
     else if (!ft_strncmp(cmd->args[0], "cd", ft_strlen(cmd->args[0])))
+    {
+        *envp = change_directory(cmd->args, 1, *envp, &(shell->status));
         return (1);
+    }
     else
         return (0);
     return (1);
