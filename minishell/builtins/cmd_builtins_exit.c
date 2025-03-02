@@ -25,8 +25,8 @@ static void handle_exit_with_arg(t_cmd *cmd, t_minishell *shell, int should_exit
     if (!valid_exit_code(cmd->args[1]))
     {
         printf("%s", EXIT_NUM_ERROR);
-        shell->exit_status = 100;
-        exit(100);
+        shell->exit_status = 156;
+        exit(156);
     }
     exit_code = ft_atol(cmd->args[1]);
     shell->exit_status = (unsigned char)exit_code;
@@ -46,7 +46,7 @@ void builtin_exit(t_cmd *cmd, t_minishell *shell, int should_exit)
     if (cmd->args[1] && cmd->args[2])
     {
         printf("%s", EXIT_MANY_ARGS);
-        shell->status = 1;
+        shell->exit_status = 1;
         return;
     }
     if (cmd->args[1])
