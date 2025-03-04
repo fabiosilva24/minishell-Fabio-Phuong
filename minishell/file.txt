@@ -1,0 +1,12 @@
+builtins
+filen
+file.txt
+include
+libs
+ligma
+Makefile
+minishell
+minishell_tester
+redline_ignore
+srcs
+tokens

@@ -66,14 +66,14 @@ static void process_command(t_token *tokens, t_minishell *shell)
                 if (redirect_output(filename) == -1)
                     break;
             }
+            else if (redir_symbol[0] == '<' && redir_symbol[1] == '<')
+            {
+                if (handle_heredoc(filename) == -1)
+                    break;
+            }
             else if (redir_symbol[0] == '<')  // Handle '<'
             {
                 if (redirect_input(filename) == -1)
-                    break;
-            }
-            else if (strncmp(redir_symbol, "<<", 2) == 0)
-            {
-                if (handle_heredoc(filename) == - 1)
                     break;
             }
 
