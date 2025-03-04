@@ -1,16 +1,10 @@
 #include "../include/minishell.h"
 
-int pipes(char *cmd[1], char *cmd[2])
+static void child_process(t_token *tokens, t_minishell *shell, int fd[2])
 {
-    int pid1;
-    int pid2;
-
-    pid1 = fork()
-
-    if (pid1 < 0)
+    if (pipe(fd) == - 1)
     {
-        perror("error");
+        printf("Error opening the pipes\n");
+        return (1);
     }
-
-
 }

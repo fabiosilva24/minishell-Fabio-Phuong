@@ -71,6 +71,11 @@ static void process_command(t_token *tokens, t_minishell *shell)
                 if (redirect_input(filename) == -1)
                     break;
             }
+            else if (strncmp(redir_symbol, "<<", 2) == 0)
+            {
+                if (handle_heredoc(filename) == - 1)
+                    break;
+            }
 
             current = current->next;  // Skip the filename token
         }
@@ -109,7 +114,7 @@ void initialize_shell(t_minishell *shell, int argc, char **argv)
         printf("Usage: ./minishell to enter minishell\n");
         return ;
     }
-    //print_banner();
+    print_banner();
 
 }
 void    handle_sigint(int sig)
@@ -137,7 +142,7 @@ int main(int argc, char **argv)
             add_history(line);
         tokens = tokenize_input(line);
         process_command(tokens, &shell);
-        //print_list(tokens);
+        print_list(tokens);
         free_tokens(tokens);
         free(line);
         

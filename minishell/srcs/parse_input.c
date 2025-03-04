@@ -25,16 +25,31 @@ int handle_redirection(char **arg)
 	else if (**arg == '<')
 	{
 		(*arg)++;
+		if (**arg == '<')
+		{
+			(*arg)++;
+			while (**arg == ' ')
+				(*arg)++;
+			filename = *arg;
+			while (**arg && **arg != ' ' && **arg != '\n')
+				(*arg)++;
+			**arg = '\0';
+			if (*filename == '\0')
+				return (-1);
+			return (handle_heredoc(filename));
+		}
 		while (**arg == ' ')
 			(*arg)++;
 		filename = *arg;
-		if (*filename == '\0')
-			return (-1);
+		while (**arg && **arg != ' ' && **arg != '\n')
+			(*arg)++;
+		**arg = '\0';
 		redirect_input(filename);
 		return (1);
 	}
-		return (0);
+	return (0);
 }
+
 
 void	parse_input(char *input, t_minishell *shell)
 {

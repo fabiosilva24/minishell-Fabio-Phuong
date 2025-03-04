@@ -9,6 +9,12 @@ void exec_extercmds(char **argv, t_minishell *shell)
     char full_path[1024];
     char path_env_copy[MAX_PATH_LEN];
 
+    int i = 0;
+    while (argv[i])
+    {
+        printf("test argv: %s\n", argv[i++]);
+    }
+    
     path_env = getenv("PATH");
     //copy the path environment variable instead of calling getenv
     if (path_env)

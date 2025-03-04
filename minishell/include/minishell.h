@@ -17,6 +17,7 @@
 # define EXIT_NUM_ERROR "exit: numeric argument required\n"
 # define EXIT_MANY_ARGS "exit: too many arguments\n"
 # define EXIT_MSG "exit\n"
+# define TMP_FILE ".heredoc_tmp"
 
 # include <readline/history.h>       // add_history
 # include <readline/readline.h>     // readline, rl_clear_history, rl_on_new_line, rl_replace_line, rl_redisplay, add_history
@@ -80,12 +81,14 @@ void    double_quotes(char *symbol, t_minishell *shell);
 char    **get_environment(void);
 void    single_quotes(char *symbol);
 void    parse_input(char *input, t_minishell *shell);
-void exit_code(t_minishell *minishell, char **command, char **argv);
+void    exit_code(t_minishell *minishell, char **command, char **argv);
 int     handle_redirection(char **arg);
 int     redirect_input(const char *filename);
 int     redirect_output(const char *filename);
 int     redirect_output_append(const char *filename);
+int     redirect_heredoc_input();
 void    exec_extercmds(char **argv, t_minishell *shell);
+int     handle_heredoc(const char *delimiter);
 //tokens
 
 t_token *create_token(char *value, e_token_type type);

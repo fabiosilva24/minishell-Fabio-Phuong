@@ -12,10 +12,52 @@
 
 #include "../include/minishell.h"
 
-/*void handle_heredoc(char *delimeter)
+int redirect_heredoc_input()
 {
+	int fd;
 
-}*/
+	fd = open(TMP_FILE, O_RDONLY);
+	if (fd < 0)
+	{
+		perror("open");
+		return (-1);
+	}
+
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+	unlink(TMP_FILE);
+	return (0);
+}
+int handle_heredoc(const char *delimeter)
+{
+	int fd;
+	char *line;
+
+	fd = open(TMP_FILE, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fd < 0)
+	{
+		perror("open");
+		return (-1);
+	}
+
+	while (1)
+	{
+		line = readline("heredoc> ");
+		if (!line)
+			break;
+		
+		if (ft_strcmp(line, delimeter) == 0)
+		{
+			free(line);
+			break;
+		}
+		write(fd, line, strlen(line));
+		write(fd, "\n", 1);
+		free(line);
+	}
+	close(fd);
+	return (redirect_heredoc_input());
+}
 int redirect_input(const char *filename)
 {
 	int fd;
