@@ -44,6 +44,7 @@ SRCS = ./srcs/minishell.c\
        ./builtins/exec.c \
        ./builtins/exit.c \
        ./builtins/utils.c\
+       ./srcs/pipes.c
        #./srcs/handle_dollarwithquestion.c
 
 OBJS = $(SRCS:.c=.o)

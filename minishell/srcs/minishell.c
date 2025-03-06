@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-static char **convert_tokens_to_argv(t_token *tokens, int token_count)
+char **convert_tokens_to_argv(t_token *tokens, int token_count)
 {
     char **argv;
     int i;
@@ -32,6 +32,7 @@ static void process_command(t_token *tokens, t_minishell *shell)
     int token_count;
     char **argv;
     t_token *current = tokens;
+    t_token *pipe_check = tokens;
 
      //(void)shell;
     // Save original stdin and stdout
@@ -41,6 +42,16 @@ static void process_command(t_token *tokens, t_minishell *shell)
     token_count = count_tokens(tokens);
     argv = convert_tokens_to_argv(tokens, token_count);
 
+    while (pipe_check)
+    {
+        if (pipe_check->type == TOKEN_PIPE)
+        {
+            process_pipes(tokens, shell);
+            free(argv);
+            return;
+        }
+        pipe_check = pipe_check->next;
+    }
     // Handle redirections before executing the command
     while (current)
     {
@@ -79,7 +90,10 @@ static void process_command(t_token *tokens, t_minishell *shell)
 
             current = current->next;  // Skip the filename token
         }
-        current = current->next;
+        else
+        {
+            current = current->next;
+        }
     }
 
     // Execute commands after handling redirections
@@ -147,6 +161,7 @@ int main(int argc, char **argv)
         free(line);
         
     }
+    rl_clear_history();
     return 0;
 }
 

@@ -85,7 +85,7 @@ void exec_extercmds(char **argv, t_minishell *shell)
     {
         // Skip redirection operators and their arguments
         if ((strcmp(argv[i], "<") == 0 || strcmp(argv[i], "<<") == 0 ||
-             strcmp(argv[i], ">") == 0 || strcmp(argv[i], ">>") == 0) && argv[i+1])
+             strcmp(argv[i], ">") == 0 || strcmp(argv[i], ">>") == 0 || strcmp(argv[i], "|") == 0) && argv[i+1])
         {
             i += 2; // Skip the operator and its argument
             continue;
