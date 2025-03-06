@@ -32,7 +32,6 @@ static void process_command(t_token *tokens, t_minishell *shell)
     int token_count;
     char **argv;
     t_token *current = tokens;
-    t_token *pipe_check = tokens;
 
      //(void)shell;
     // Save original stdin and stdout
@@ -42,20 +41,17 @@ static void process_command(t_token *tokens, t_minishell *shell)
     token_count = count_tokens(tokens);
     argv = convert_tokens_to_argv(tokens, token_count);
 
-    while (pipe_check)
+
+   // Handle redirections before executing the command
+    while (current)
     {
-        if (pipe_check->type == TOKEN_PIPE)
+        if (current->type == TOKEN_PIPE)
         {
             process_pipes(tokens, shell);
             free(argv);
             return;
         }
-        pipe_check = pipe_check->next;
-    }
-    // Handle redirections before executing the command
-    while (current)
-    {
-        if (current->type == TOKEN_REDIRECT)
+        else if (current->type == TOKEN_REDIRECT)
         {
             if (!current->next)
             {
