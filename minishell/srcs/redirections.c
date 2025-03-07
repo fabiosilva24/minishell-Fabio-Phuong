@@ -2,9 +2,12 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
+/*                                                    +:+ +:+
+	+:+     */
+/*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+
+	+#+        */
+/*                                                +#+#+#+#+#+
+	+#+           */
 /*   Created: 2025/02/09 15:26:22 by fsilva-p          #+#    #+#             */
 /*   Updated: 2025/02/09 15:26:22 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
@@ -12,7 +15,7 @@
 
 #include "../include/minishell.h"
 
-int redirect_heredoc_input()
+int	redirect_heredoc_input(void)
 {
 	int fd;
 
@@ -28,7 +31,7 @@ int redirect_heredoc_input()
 	unlink(TMP_FILE);
 	return (0);
 }
-int handle_heredoc(const char *delimeter)
+int	handle_heredoc(const char *delimeter)
 {
 	int fd;
 	char *line;
@@ -44,12 +47,12 @@ int handle_heredoc(const char *delimeter)
 	{
 		line = readline("heredoc> ");
 		if (!line)
-			break;
-		
+			break ;
+
 		if (ft_strcmp(line, delimeter) == 0)
 		{
 			free(line);
-			break;
+			break ;
 		}
 		write(fd, line, strlen(line));
 		write(fd, "\n", 1);
@@ -58,7 +61,7 @@ int handle_heredoc(const char *delimeter)
 	close(fd);
 	return (redirect_heredoc_input());
 }
-int redirect_input(const char *filename)
+int	redirect_input(const char *filename)
 {
 	int fd;
 
@@ -78,7 +81,7 @@ int redirect_input(const char *filename)
 	return (0);
 }
 
-int redirect_output(const char *filename)
+int	redirect_output(const char *filename)
 {
 	int fd;
 
@@ -98,7 +101,7 @@ int redirect_output(const char *filename)
 	return (0);
 }
 
-int redirect_output_append(const char *filename)
+int	redirect_output_append(const char *filename)
 {
 	int fd;
 

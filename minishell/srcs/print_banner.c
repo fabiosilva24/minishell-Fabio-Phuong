@@ -2,9 +2,12 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   print_banner.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
+/*                                                    +:+ +:+        
+	+:+     */
+/*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+      
+	+#+        */
+/*                                                +#+#+#+#+#+  
+	+#+           */
 /*   Created: 2025/01/28 17:38:56 by fsilva-p          #+#    #+#             */
 /*   Updated: 2025/02/07 14:41:22 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
@@ -12,7 +15,7 @@
 
 #include "../include/minishell.h"
 
-void	print_banner()
+void	print_banner(void)
 {
 	printf("\e[0;32m");
 	printf("   *    (       ) (   (       )     (    (     \n");

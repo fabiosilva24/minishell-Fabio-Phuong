@@ -1,6 +1,7 @@
 #include "../include/minishell.h"
 
-int handle_redirection(char **arg)
+
+int	handle_redirection(char **arg)
 {
 	char *filename;
 
@@ -8,7 +9,7 @@ int handle_redirection(char **arg)
 	{
 		(*arg)++;
 		if (**arg == '>')
-		(*arg)++;
+			(*arg)++;
 
 		while (**arg == ' ')
 			(*arg)++;
@@ -17,7 +18,7 @@ int handle_redirection(char **arg)
 		if (*filename == '\0')
 			return (-1);
 		if (*(*arg - 1) == '>')
-		redirect_output_append(filename);
+			redirect_output_append(filename);
 		else
 			redirect_output(filename);
 		return (1);
@@ -50,7 +51,6 @@ int handle_redirection(char **arg)
 	return (0);
 }
 
-
 void	parse_input(char *input, t_minishell *shell)
 {
 	char *arg;
@@ -70,24 +70,24 @@ void	parse_input(char *input, t_minishell *shell)
 		{
 			double_quotes(arg, shell);
 			handled = 1;
-			break;
+			break ;
 		}
 		else if (*arg == '\'')
 		{
 			single_quotes(arg);
 			handled = 1;
-			break;
+			break ;
 		}
 		else if (handle_redirection(&arg))
 		{
 			handled = 1;
-			break;
+			break ;
 		}
 		else if (*arg == '$')
 		{
 			handle_dollarsign(arg, &i, len, shell);
 			handled = 1;
-			break;
+			break ;
 		}
 		arg++;
 	}
