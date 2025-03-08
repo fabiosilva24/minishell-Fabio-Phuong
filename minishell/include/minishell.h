@@ -184,5 +184,6 @@ char	**convert_tokens_to_argv_until_pipe(t_token *tokens, int token_count);
 
 
 int apply_redirection(char *redir_symbol, char *filename);
+int is_redirection(char *token);
 
 #endif
