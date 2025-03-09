@@ -2,11 +2,11 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+        
+/*                                                    +:+ +:+
 	+:+     */
-/*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+      
+/*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+
 	+#+        */
-/*                                                +#+#+#+#+#+  
+/*                                                +#+#+#+#+#+
 	+#+           */
 /*   Created: 2025/03/07 15:25:19 by fsilva-p          #+#    #+#             */
 /*   Updated: 2025/03/07 15:25:19 by fsilva-p         ###   ########.fr       */
@@ -98,15 +98,14 @@ char	**convert_tokens_to_argv_until_pipe(t_token *tokens, int token_count)
 {
 	char **argv;
 	int i = 0;
-	t_token *current = tokens;
+	t_token *current;
 
 	if (!tokens || token_count <= 0)
 		return (NULL);
-
+	current = tokens;
 	argv = malloc(sizeof(char *) * (token_count + 1));
 	if (!argv)
 		return (NULL);
-
 	while (current && i < token_count && current->type != TOKEN_PIPE)
 	{
 		argv[i] = ft_strdup(current->value);
@@ -114,7 +113,6 @@ char	**convert_tokens_to_argv_until_pipe(t_token *tokens, int token_count)
 		current = current->next;
 	}
 	argv[i] = NULL;
-
 	return (argv);
 }
 
@@ -216,4 +214,3 @@ void	process_pipes(t_token *tokens, t_minishell *shell)
 	close(original_stdin);
 	close(original_stdout);
 }
-

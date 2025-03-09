@@ -15,45 +15,35 @@
 
 #include "../include/minishell.h"
 
+static void	handle_unclousedquote(int len)
+{
+	char	*input;
+	int		i;
+
+	i = len;
+	while (i == len)
+	{
+		input = readline("> ");
+		signal(SIGINT, handle_sigint);
+		if (!input)
+			break ;
+		free(input);
+	}
+}
 
 void	handle_dollarsign(char *symbol, int *i, int len, t_minishell *shell)
 {
-	char var_name[256] = {0};
-	int j;
-	int env_index;
-	char *env_value;
+	char	var_name[256];
+	char	*env_value;
 
-	env_value = 0;
-	env_index = 0;
-	j = 0;
-
-	//(*i)++;
+	memset(var_name, 0, sizeof(var_name));
 	if (*i >= len || !(isalnum(symbol[*i]) || symbol[*i] == '_'))
 	{
-		//(*i)++;
-		printf("$"); // Print '$' if nothing valid comes after it
+		printf("$");
 		return ;
 	}
-	while (*i < len && (isalnum(symbol[*i]) || symbol[*i] == '_'))
-	{
-		if (j < 255)
-			var_name[j++] = symbol[*i];
-		(*i)++;
-	}
-	var_name[j] = '\0';
-	env_index = 0;
-	env_value = NULL;
-	while (shell->environment[env_index])
-	{
-		if (strncmp(shell->environment[env_index], var_name,
-				strlen(var_name)) == 0)
-		{
-			env_value = strchr(shell->environment[env_index], '=') + 1;
-			break ;
-		}
-		env_index++;
-	}
-
+	extract_variable_name(symbol, i, len, var_name);
+	env_value = find_env_value(var_name, shell->environment);
 	if (env_value)
 		printf("%s", env_value);
 	else
@@ -61,42 +51,10 @@ void	handle_dollarsign(char *symbol, int *i, int len, t_minishell *shell)
 	(*i)--;
 }
 
-/*void double_quotes(char *symbol)
-{
-	int len;
-	int i;
-	char *aditional_input;
-
-	len = strlen(symbol);
-	i = 1;
-	if (symbol[0] == '\"')
-	{
-		while (i < len && symbol[i] != '\"')
-		{
-			if (symbol[i] == '$')
-				handle_dollarsign(symbol, &i, len);
-			else
-				printf("%c", symbol[i]);
-			i++;
-		}
-		if (i == len)
-		{
-			printf("\n> ");
-			aditional_input = readline(NULL);
-			if (aditional_input)
-			{
-				//double_quotes(aditional_input);
-				free(aditional_input);
-			}
-		}
-	}
-}*/
-
 void	double_quotes(char *symbol, t_minishell *shell)
 {
-	int len;
-	int i;
-	char *input;
+	int	len;
+	int	i;
 
 	len = strlen(symbol);
 	i = 1;
@@ -113,26 +71,17 @@ void	double_quotes(char *symbol, t_minishell *shell)
 				printf("%c", symbol[i]);
 			i++;
 		}
-		while (i == len)
-		{
-			input = readline("> ");
-			signal(SIGINT, handle_sigint);
-			signal(SIGQUIT, SIG_IGN);
-			if (!input)
-				break ;
-			free(input);
-		}
+		handle_unclousedquote(len);
 	}
 }
 
 void	single_quotes(char *symbol)
 {
-	int len;
-	int i;
+	int	len;
+	int	i;
 
 	len = strlen(symbol);
 	i = 1;
-
 	if (symbol[0] == '\'')
 	{
 		while (i < len && symbol[i] != '\'')
@@ -140,11 +89,6 @@ void	single_quotes(char *symbol)
 			printf("%c", symbol[i]);
 			i++;
 		}
-		if (i == len)
-		{
-			signal(SIGINT, handle_sigint);
-			signal(SIGQUIT, SIG_IGN);
-			printf("> Error unclosed quotes");
-		}
+		handle_unclousedquote(len);
 	}
 }

@@ -82,20 +82,20 @@ char	**get_environment(void);
 void	single_quotes(char *symbol);
 void	parse_input(char *input, t_minishell *shell);
 void	exit_code(t_minishell *minishell, char **command, char **argv);
-int	handle_redirection(char **arg);
-int	redirect_input(const char *filename);
-int	redirect_output(const char *filename);
-int	redirect_output_append(const char *filename);
-int	redirect_heredoc_input(void);
+int		handle_redirection(char **arg);
+int		redirect_input(const char *filename);
+int		redirect_output(const char *filename);
+int		redirect_output_append(const char *filename);
+int		redirect_heredoc_input(void);
 void	exec_extercmds(char **argv, t_minishell *shell);
-int	handle_heredoc(const char *delimiter);
+int		handle_heredoc(const char *delimiter);
 // tokens
 
 t_token	*create_token(char *value, e_token_type type);
 void	*free_tokens(t_token *tokens);
 t_token	*tokenize_input(char *line);
 char	*ft_strtok(char *str, const char *delimeter);
-int	count_tokens(t_token *tokens);
+int		count_tokens(t_token *tokens);
 
 // handle ctrl cs
 void	handle_sigint(int sig);
@@ -148,13 +148,13 @@ char	**builtin_export(char **args, char **envp, int *status);
 
 // cmd_builtins_unset.c
 char	**remove_env_var(char *args, char **envp);
-int	is_env_var_present(char *args, char **envp);
+int		is_env_var_present(char *args, char **envp);
 char	**builtin_unset(char **args, char **envp, int *status);
 
 // exec.c
 char	**extract_path_directories(char **envp);
 char	*find_executable(char **paths, char **cmd_flags, int *status);
-int	exec_builtins(t_cmd *cmd, char ***envp, t_minishell *shell);
+int		exec_builtins(t_cmd *cmd, char ***envp, t_minishell *shell);
 void	execute(t_cmd *cmd, char ***envp, t_minishell *shell);
 
 // exit.c
@@ -168,22 +168,24 @@ void	expand_exit_status(char **line, char **envp, int last_exit_status);
 
 // utils.c
 void	errmsg(char *s1, char *s2, char *s3, int code, int *status);
-int	size_mass(char **envp);
+int		size_mass(char **envp);
 char	**new_envp(char **envp);
-int	ft_sym_export(char *str);
+int		ft_sym_export(char *str);
 void	ft_free(char **mass);
-int	ft_len_eq(char *str);
-int	max(int a, int b);
+int		ft_len_eq(char *str);
+int		max(int a, int b);
 void	check_if_command_exists(t_cmd *cmd, t_minishell *shell);
 char	*extract_var_name(char *arg);
 
 void	process_pipes(t_token *tokens, t_minishell *shell);
 char	**convert_tokens_to_argv(t_token *tokens, int token_count);
-int	count_tokens_until_pipe(t_token *tokens);
+int		count_tokens_until_pipe(t_token *tokens);
 char	**convert_tokens_to_argv_until_pipe(t_token *tokens, int token_count);
 
 
-int apply_redirection(char *redir_symbol, char *filename);
-int is_redirection(char *token);
+int 	apply_redirection(char *redir_symbol, char *filename);
+int 	is_redirection(char *token);
+void	extract_variable_name(const char *symbol, int *i, int len, char *var_name);
+char	*find_env_value(const char *var_name, char **environment);
 
 #endif
