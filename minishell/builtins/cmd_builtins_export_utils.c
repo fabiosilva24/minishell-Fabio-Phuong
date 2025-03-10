@@ -1,4 +1,3 @@
-
 #include "../include/minishell.h"
 
 char **extract_var_names(char **env_copy_tmp)
@@ -14,7 +13,8 @@ char **extract_var_names(char **env_copy_tmp)
     while (env_copy_tmp[++i])
     {
         j = -1;
-        var_names[i] = malloc(sizeof(char) * (ft_sym_export(env_copy_tmp[i]) + 1));
+        var_names[i] = malloc(sizeof(char) * 
+                (ft_sym_export(env_copy_tmp[i]) + 1));
         if (!var_names[i])
             return (NULL);
         if (!ft_strchr(env_copy_tmp[i], '='))
@@ -57,11 +57,21 @@ void print_sorted_env(char **envp)
 
 char **change_envp(char *new_value, char **args, int i, char **envp)
 {
+    char **env_copy;
+    
     if (new_value && ft_strrchr(args[i], '='))
-        envp = replace_env_var(envp, args[i], new_value);
+    {
+        env_copy = new_envp(envp);
+        env_copy = replace_env_var(env_copy, args[i], new_value);
+        return (env_copy);
+    }
     else if (!new_value)
-        envp = add_env_var(envp, args[i], 1);
-    return envp;
+    {
+        env_copy = new_envp(envp);
+        env_copy = add_env_var(env_copy, args[i], 1);
+        return (env_copy);
+    }
+    return (envp);
 }
 
 char **builtin_export(char **args, char **envp, int *status)
@@ -81,7 +91,8 @@ char **builtin_export(char **args, char **envp, int *status)
         {
             if (!ft_isalpha(args[i][0]) || args[i][0] == '=')
                 errmsg("minishell: export: `", args[i],
-                    "': not a valid identifier", -1, status);
+                        "': not a valid identifier",
+                        -1, status);
             else
                 envp = change_envp(new_value, args, i, envp);
             break;
