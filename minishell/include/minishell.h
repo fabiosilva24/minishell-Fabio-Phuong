@@ -150,7 +150,7 @@ char	**builtin_export(char **args, char **envp, int *status);
 // cmd_builtins_unset.c
 char	**remove_env_var(char *args, char **envp);
 int		is_env_var_present(char *args, char **envp);
-char	**builtin_unset(char **args, char **envp, int *status);
+void builtin_unset(char **args, char ***envp, int *status);
 
 // exec.c
 char	**extract_path_directories(char **envp);
