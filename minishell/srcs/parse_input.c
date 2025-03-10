@@ -57,13 +57,18 @@ void	parse_input(char *input, t_minishell *shell)
 	int handled;
 	int i;
 	int len;
+	char *input_copy;
 
 	i = 1;
 	handled = 0;
-	arg = input;
-	len = strlen(arg);
+	input_copy = ft_strdup(input);
+	if (!input_copy)
+		return;
 
 	expand_exit_status(&input, shell->environment, shell->exit_status);
+	arg = input_copy;
+	len = ft_strlen(arg);
+	
 	while (*arg)
 	{
 		if (*arg == '\"')
@@ -92,5 +97,6 @@ void	parse_input(char *input, t_minishell *shell)
 		arg++;
 	}
 	if (!handled)
-		printf("%s", input);
+		printf("%s", input_copy);
+	free(input_copy);
 }
