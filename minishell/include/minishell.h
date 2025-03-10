@@ -39,6 +39,7 @@
 # include <sys/wait.h>          // wait, waitpid, wait3, wait4
 # include <termios.h>           // tcsetattr, tcgetattr
 # include <unistd.h>            // write, access, fork, getcwd, chdir, unlink,
+# include <ctype.h>
 
 extern char **environ;
 
