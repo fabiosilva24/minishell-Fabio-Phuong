@@ -1,69 +1,81 @@
 #include "../include/minishell.h"
 
-static int	is_only_that_char(char *str, char c)
+static int	valid_exit_code(const char *arg)
 {
-	while (*str)
+	int		i;
+	int		len;
+	char	*max_long;
+
+	if (!arg || !arg[0] || ((arg[0] == '-' || arg[0] == '+') && !arg[1]))
+		return (0);
+	i = (arg[0] == '-' || arg[0] == '+');
+	len = 0;
+	while (arg[i])
 	{
-		if (*str != c)
+		if (!ft_isdigit(arg[i]))
 			return (0);
-		str++;
+		len++;
+		i++;
+	}
+	max_long = "9223372036854775807";
+	if (len > 19)
+		return (0);
+	if (len == 19)
+	{
+		if (arg[0] == '-')
+			max_long = "9223372036854775808";
+		if (ft_strncmp(
+				arg + (arg[0] == '-' || arg[0] == '+'), 
+				max_long,
+				19) > 0)
+			return (0);
 	}
 	return (1);
 }
 
-void	builtin_echo(t_cmd *cmd, int *status, t_minishell *shell)
+static void	handle_exit_with_arg(t_cmd *cmd, t_minishell *shell, int should_exit)
 {
-	int	newline;
-	int	i;
+	long	exit_code;
 
-	newline = 1;
-	i = 1;
-	*status = 0;
-	if (!cmd->args[1])
+	if (!valid_exit_code(cmd->args[1]))
 	{
-		printf("\n");
+		printf("exit\n");
+		printf("minishell: exit: %s: numeric argument required\n", cmd->args[1]);
+		shell->exit_status = 2;
 		return ;
 	}
-	while (cmd->args[i] && cmd->args[i][0] == '-'
-		&& is_only_that_char(cmd->args[i] + 1, 'n'))
+	exit_code = ft_atol(cmd->args[1]);
+	shell->exit_status = (unsigned char)exit_code;
+	if (should_exit)
 	{
-		newline = 0;
-		i++;
+		printf("exit\n");
+		exit(shell->exit_status);
 	}
-	while (cmd->args[i])
-	{
-		parse_input(cmd->args[i], shell);
-		if (cmd->args[i + 1])
-			printf(" ");
-		i++;
-	}
-	if (newline)
-		printf("\n");
 }
 
-void	builtin_env(char **envp, int *status)
+void	builtin_exit(t_cmd *cmd, t_minishell *shell, int should_exit)
 {
-	int	i;
-
-	i = 0;
-	while (envp[i])
+	if (!cmd)
 	{
-		if (!ft_strchr(envp[i], '='))
-			i++;
-		else
+		shell->status = 1;
+		return ;
+	}
+	if (cmd->args[1] && cmd->args[2])
+	{
+		printf("exit\n");
+		printf("minishell: exit: too many arguments\n");
+		shell->exit_status = 1;
+		return ;
+	}
+	if (cmd->args[1])
+		handle_exit_with_arg(cmd, shell, should_exit);
+	else
+	{
+		shell->exit_status = 0;
+		if (should_exit)
 		{
-			printf("%s\n", envp[i]);
-			i++;
+			printf("exit\n");
+			exit(0);
 		}
 	}
-	*status = 0;
-}
-
-void	builtin_pwd(int *status)
-{
-	char	cwd[4096];
-
-	getcwd(cwd, 4097);
-	printf("%s\n", cwd);
-	*status = 0;
 }
