@@ -1,5 +1,16 @@
 #include "../include/minishell.h"
 
+static int is_only_that_char(char *str, char c)
+{
+    while (*str)
+    {
+        if (*str != c)
+            return 0;
+        str++;
+    }
+    return 1;
+}
+
 void builtin_echo(t_cmd *cmd, int *status, t_minishell *shell)
 {
     int newline;
