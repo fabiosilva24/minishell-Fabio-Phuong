@@ -1,4 +1,3 @@
-
 #include "../include/minishell.h"
 
 char	*find_double_var(char *args, char **envp)
@@ -19,8 +18,8 @@ char	*find_double_var(char *args, char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		if (!ft_strncmp(name_tmp, envp[i], max(ft_strlen(name_tmp),
-					ft_sym_export(envp[i]))))
+		if (!ft_strncmp(name_tmp, envp[i],
+				max(ft_strlen(name_tmp), ft_sym_export(envp[i]))))
 			return (name_tmp);
 		i++;
 	}
@@ -39,38 +38,52 @@ char	**replace_env_var(char **envp, char *args, char *new)
 		return (NULL);
 	while (envp[j])
 	{
-		if (ft_strncmp(envp[j], new, max(ft_strlen(new),
-					ft_sym_export(envp[j]))))
+		if (ft_strncmp(envp[j], new,
+				max(ft_strlen(new), ft_sym_export(envp[j]))))
 			new_env[j] = ft_strdup(envp[j]);
 		else
 			new_env[j] = ft_strdup(args);
 		j++;
 	}
 	new_env[j] = NULL;
-	//ft_free(envp);
 	return (new_env);
 }
 
 char	**add_env_var(char **envp, char *str, int free_old)
 {
-	char	**new_env;
-	int		j;
+	int		len;
+	char	**new_envp;
+	int		i;
 
-	new_env = malloc(sizeof(char *) * (size_mass(envp) + 2));
-	if (!new_env)
+	len = size_mass(envp);
+	new_envp = (char **)malloc((len + 2) * sizeof(char *));
+	if (!new_envp)
 		return (NULL);
-	j = 0;
-	while (envp[j])
+	i = 0;
+	while (envp[i])
 	{
-		new_env[j] = ft_strdup(envp[j]);
-		j++;
+		new_envp[i] = ft_strdup(envp[i]);
+		if (!new_envp[i])
+		{
+			while (--i >= 0)
+				free(new_envp[i]);
+			free(new_envp);
+			return (envp);
+		}
+		i++;
 	}
-	new_env[j] = ft_strdup(str);
-	j++;
-	new_env[j] = NULL;
-	if (free_old)
+	new_envp[i] = ft_strdup(str);
+	if (!new_envp[i])
+	{
+		while (--i >= 0)
+			free(new_envp[i]);
+		free(new_envp);
+		return (envp);
+	}
+	new_envp[i + 1] = NULL;
+	if (free_old && envp)
 		ft_free(envp);
-	return (new_env);
+	return (new_envp);
 }
 
 char	**extract_var_values(char **tmpmass)
@@ -100,7 +113,6 @@ char	**extract_var_values(char **tmpmass)
 	return (after);
 }
 
-
 char	**sort_env_vars(char **mass)
 {
 	int		i;
@@ -115,7 +127,8 @@ char	**sort_env_vars(char **mass)
 		k = -1;
 		while (++k < (j - i - 1))
 		{
-			if (ft_strncmp(mass[k], mass[k + 1], ft_sym_export(mass[k])) > 0)
+			if (ft_strncmp(mass[k], mass[k + 1],
+					ft_sym_export(mass[k])) > 0)
 			{
 				tmp = ft_strdup(mass[k]);
 				free(mass[k]);
