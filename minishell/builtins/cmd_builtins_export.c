@@ -49,41 +49,24 @@ char	**replace_env_var(char **envp, char *args, char *new)
 	return (new_env);
 }
 
-char	**add_env_var(char **envp, char *str, int free_old)
+char **add_env_var(char **envp, char *str, int free_old)
 {
-	int		len;
-	char	**new_envp;
-	int		i;
+    char **new_env;
+    int j;
 
-	len = size_mass(envp);
-	new_envp = (char **)malloc((len + 2) * sizeof(char *));
-	if (!new_envp)
-		return (NULL);
-	i = 0;
-	while (envp[i])
-	{
-		new_envp[i] = ft_strdup(envp[i]);
-		if (!new_envp[i])
-		{
-			while (--i >= 0)
-				free(new_envp[i]);
-			free(new_envp);
-			return (envp);
-		}
-		i++;
-	}
-	new_envp[i] = ft_strdup(str);
-	if (!new_envp[i])
-	{
-		while (--i >= 0)
-			free(new_envp[i]);
-		free(new_envp);
-		return (envp);
-	}
-	new_envp[i + 1] = NULL;
-	if (free_old && envp)
-		ft_free(envp);
-	return (new_envp);
+    new_env = malloc(sizeof(char *) * (size_mass(envp) + 2));
+    if (!new_env)
+        return (NULL);
+    j = 0;
+    while (envp && envp[j])
+    {
+        new_env[j] = ft_strdup(envp[j]);
+        j++;
+    }
+    new_env[j] = ft_strdup(str);
+    j++;
+    new_env[j] = NULL;
+    return (new_env);
 }
 
 char	**extract_var_values(char **tmpmass)
