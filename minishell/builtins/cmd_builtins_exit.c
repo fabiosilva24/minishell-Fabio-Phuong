@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmd_builtins_exit.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: phoang <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/11 14:59:37 by phoang            #+#    #+#             */
+/*   Updated: 2025/03/11 16:05:12 by phoang           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../include/minishell.h"
 
@@ -25,23 +36,23 @@ static int	valid_exit_code(const char *arg)
 	{
 		if (arg[0] == '-')
 			max_long = "9223372036854775808";
-		if (ft_strncmp(
-				arg + (arg[0] == '-' || arg[0] == '+'), 
-				max_long,
-				19) > 0)
+		if (ft_strncmp(arg + (arg[0] == '-'
+					|| arg[0] == '+'), max_long, 19) > 0)
 			return (0);
 	}
 	return (1);
 }
 
-static void	handle_exit_with_arg(t_cmd *cmd, t_minishell *shell, int should_exit)
+static void	handle_exit_with_arg(t_cmd *cmd, t_minishell *shell,
+		int should_exit)
 {
 	long	exit_code;
 
 	if (!valid_exit_code(cmd->args[1]))
 	{
 		printf("exit\n");
-		printf("minishell: exit: %s: numeric argument required\n", cmd->args[1]);
+		printf("minishell: exit: %s: numeric argument required\n",
+			cmd->args[1]);
 		shell->exit_status = 2;
 		return ;
 	}
