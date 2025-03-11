@@ -38,6 +38,7 @@ void print_sorted_env(char **envp)
     char    **var_names;
     char    **var_values;
 
+    env_copy_tmp = NULL;
     i = 0;
     if (!env_copy_tmp)
         return;
