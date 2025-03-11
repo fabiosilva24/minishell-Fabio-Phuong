@@ -71,6 +71,7 @@ void	double_quotes(char *symbol, t_minishell *shell)
 				printf("%c", symbol[i]);
 			i++;
 		}
+	if (i == len)
 		handle_unclousedquote(len);
 	}
 }
@@ -89,6 +90,7 @@ void	single_quotes(char *symbol)
 			printf("%c", symbol[i]);
 			i++;
 		}
+	if (i == len)
 		handle_unclousedquote(len);
 	}
 }
