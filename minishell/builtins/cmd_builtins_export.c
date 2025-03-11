@@ -51,6 +51,7 @@ char	**replace_env_var(char **envp, char *args, char *new)
 
 char **add_env_var(char **envp, char *str, int free_old)
 {
+	(void)free_old;
     char **new_env;
     int j;
 
