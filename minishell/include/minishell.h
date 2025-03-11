@@ -116,7 +116,7 @@ void	print_list(t_token *current);
 // cd.c
 char	*get_after_char(const char *s, int c);
 char	**update_pwd_oldpwd(char **envp, char *old_path, int *status);
-char	**change_directory(char **args, int if_is_cd_cmd, char **envp,
+char	**change_directory(char **args, int if_cdcmd, char **envp,
 		int *status);
 
 // cd_utils.c
