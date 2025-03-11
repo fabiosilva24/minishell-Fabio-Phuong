@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmd_builtins_export.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: phoang <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/11 15:02:29 by phoang            #+#    #+#             */
+/*   Updated: 2025/03/11 15:07:41 by phoang           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 char	*find_double_var(char *args, char **envp)
@@ -49,25 +61,25 @@ char	**replace_env_var(char **envp, char *args, char *new)
 	return (new_env);
 }
 
-char **add_env_var(char **envp, char *str, int free_old)
+char	**add_env_var(char **envp, char *str, int free_old)
 {
-	(void)free_old;
-    char **new_env;
-    int j;
+	char	**new_env;
+	int		j;
 
-    new_env = malloc(sizeof(char *) * (size_mass(envp) + 2));
-    if (!new_env)
-        return (NULL);
-    j = 0;
-    while (envp && envp[j])
-    {
-        new_env[j] = ft_strdup(envp[j]);
-        j++;
-    }
-    new_env[j] = ft_strdup(str);
-    j++;
-    new_env[j] = NULL;
-    return (new_env);
+	(void)free_old;
+	new_env = malloc(sizeof(char *) * (size_mass(envp) + 2));
+	if (!new_env)
+		return (NULL);
+	j = 0;
+	while (envp && envp[j])
+	{
+		new_env[j] = ft_strdup(envp[j]);
+		j++;
+	}
+	new_env[j] = ft_strdup(str);
+	j++;
+	new_env[j] = NULL;
+	return (new_env);
 }
 
 char	**extract_var_values(char **tmpmass)
