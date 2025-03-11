@@ -65,7 +65,7 @@ void	parse_input(char *input, t_minishell *shell)
 	if (!input_copy)
 		return;
 
-	expand_exit_status(&input, shell->environment, shell->exit_status);
+	expand_exit_status(&input_copy, shell->environment, shell->exit_status);
 	arg = input_copy;
 	len = ft_strlen(arg);
 	
