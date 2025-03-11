@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: phoang <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/11 14:37:15 by phoang            #+#    #+#             */
+/*   Updated: 2025/03/11 14:45:16 by phoang           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 char	**update_pwd_oldpwd(char **envp, char *old_path, int *status)
@@ -34,15 +46,15 @@ char	*get_after_char(const char *s, int c)
 	return (NULL);
 }
 
-char	**change_directory(char **args, int if_is_cd_cmd, char **envp, int *status)
+char	**change_directory(char **args, int if_cdcmd, char **envp, int *status)
 {
 	char	*path;
 	char	*old_path;
 	char	cwd[MAX_PATH_LEN];
 
 	old_path = ft_strdup(getcwd(cwd, 4097));
-	if (if_is_cd_cmd && (!args[1] || 
-			!ft_strncmp(args[1], "~", ft_strlen(args[1]))))
+	if (if_cdcmd && (!args[1]
+			|| !ft_strncmp(args[1], "~", ft_strlen(args[1]))))
 		chdir(getenv("HOME"));
 	else if (args[1])
 	{
@@ -50,19 +62,18 @@ char	**change_directory(char **args, int if_is_cd_cmd, char **envp, int *status)
 		{
 			chdir(getenv("HOME"));
 			path = ft_strdup(get_after_char(args[1], '/'));
-			process_cd_path(path, old_path, if_is_cd_cmd, status);
+			process_cd_path(path, old_path, if_cdcmd, status);
 			free(path);
 		}
 		else
 		{
 			*status = 0;
-			process_cd_path(args[1], old_path, if_is_cd_cmd, status);
+			process_cd_path(args[1], old_path, if_cdcmd, status);
 		}
 	}
-	else if (if_is_cd_cmd && !ft_strncmp(args[1], "..", ft_strlen("..")))
+	else if (if_cdcmd && !ft_strncmp(args[1], "..", ft_strlen("..")))
 		chdir("..");
-	if (if_is_cd_cmd)
+	if (if_cdcmd)
 		envp = update_pwd_oldpwd(envp, old_path, status);
 	return (envp);
 }
-
