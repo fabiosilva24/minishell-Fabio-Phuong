@@ -15,6 +15,24 @@
 
 #include "../include/minishell.h"
 
+static void	process_inside_quotes(char *symbol, int *i, int len,
+		t_minishell *shell)
+{
+	while (*i < len && symbol[*i] != '\"')
+	{
+		if (symbol[*i] == '$')
+		{
+			(*i)++;
+			handle_dollarsign(symbol, i, len, shell);
+		}
+		else
+		{
+			printf("%c", symbol[*i]);
+		}
+		(*i)++;
+	}
+}
+
 static void	handle_unclousedquote(int len)
 {
 	char	*input;
@@ -55,24 +73,27 @@ void	double_quotes(char *symbol, t_minishell *shell)
 {
 	int	len;
 	int	i;
+	int	quote_closed;
 
 	len = strlen(symbol);
 	i = 1;
+	quote_closed = 0;
 	if (symbol[0] == '\"')
 	{
-		while (i < len && symbol[i] != '\"')
+		process_inside_quotes(symbol, &i, len, shell);
+		if (i < len && symbol[i] == '\"')
 		{
-			if (symbol[i] == '$')
-			{
-				i++;
-				handle_dollarsign(symbol, &i, len, shell);
-			}
-			else
-				printf("%c", symbol[i]);
 			i++;
+			quote_closed = 1;
 		}
-	if (i == len)
-		handle_unclousedquote(len);
+		if (quote_closed && i < len)
+		{
+			printf("%s", &symbol[i]);
+		}
+		else if (!quote_closed)
+		{
+			handle_unclousedquote(len);
+		}
 	}
 }
 
@@ -90,7 +111,7 @@ void	single_quotes(char *symbol)
 			printf("%c", symbol[i]);
 			i++;
 		}
-	if (i == len)
-		handle_unclousedquote(len);
+		if (i == len)
+			handle_unclousedquote(len);
 	}
 }
