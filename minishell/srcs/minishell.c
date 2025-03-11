@@ -101,7 +101,7 @@ static void	process_command(t_token *tokens, t_minishell *shell)
 		exec_extercmds(argv, shell);
 	
 
-	//free_argv(cmd.args);
+	free_argv(cmd.args);
 	free_argv(argv);
 	//eargv = NULL;
 	dup2(original_stdin, STDIN_FILENO);

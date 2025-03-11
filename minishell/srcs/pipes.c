@@ -73,8 +73,7 @@ static void	execute_piped_command(t_token *cmd_tokens, t_minishell *shell,
 		// Execute the command
 		if (exec_builtins(&cmd, &(shell->environment), shell) == 0)
 			exec_extercmds(arg, shell);
-		//ft_free(arg);
-		//ft_free(cmd.args);
+
 		free_argv(arg);
 		free_tokens(head);
 		rl_clear_history();
