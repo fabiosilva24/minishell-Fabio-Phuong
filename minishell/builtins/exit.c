@@ -65,7 +65,7 @@ void	replace_exit_status(char **line, int start,
 		ft_strlcpy(new_line + start, value, ft_strlen(value) + 1);
 	ft_strlcpy(new_line + start + value_len, old_line + start + len,
 		ft_strlen(old_line + start + len) + 1);
-	free(old_line);
+	//free(old_line);
 	*line = new_line;
 	(*i) = start;
 	if (value)

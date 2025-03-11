@@ -53,7 +53,7 @@ char **convert_tokens_to_argv(t_token *tokens, int token_count)
 static void	process_command(t_token *tokens, t_minishell *shell)
 {
 	int token_count;
-	char **argv;
+	char **argv = 0;
 	t_token *current = tokens;
 
 	//(void)shell;
@@ -62,14 +62,13 @@ static void	process_command(t_token *tokens, t_minishell *shell)
 	int original_stdout = dup(STDOUT_FILENO);
 
 	token_count = count_tokens(tokens);
-	argv = convert_tokens_to_argv(tokens, token_count);
 	// Handle redirections before executing the command
 	while (current)
 	{
 		if (current->type == TOKEN_PIPE)
 		{
-            process_pipes(tokens, shell, &argv);
-			free_argv(argv);
+            process_pipes(tokens, shell);
+			//free_argv(argv);
 			return;
 		}
 		else if (current->type == TOKEN_REDIRECT)
@@ -77,7 +76,7 @@ static void	process_command(t_token *tokens, t_minishell *shell)
 			if (!current->next)
 			{
 				perror("Syntax error: missing file for redirection");
-				free_argv(argv);
+				//free_argv(argv);
 				argv = NULL;
 				return ;
 			}
@@ -97,11 +96,12 @@ static void	process_command(t_token *tokens, t_minishell *shell)
 	}
 	t_cmd cmd;
 
-	cmd.args = argv;
+	cmd.args = convert_tokens_to_argv(tokens, token_count);
 	if (exec_builtins(&cmd, &(shell->environment), shell) == 0)
 		exec_extercmds(argv, shell);
 	
 
+	//free_argv(cmd.args);
 	free_argv(argv);
 	//eargv = NULL;
 	dup2(original_stdin, STDIN_FILENO);

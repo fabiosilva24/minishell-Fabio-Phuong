@@ -1,25 +1,0 @@
-hi  testiggg
-33.txt
-Makefile
-builtins
-include
-libs
-ligma
-minishell
-minishell_tester
-redline.supp
-srcs
-test
-test4.txt
-testiggg
-tokens
-Linked list:  echo ->  hi ->  >> ->  testiggg ->  | ->  ls -> 
-[?2004h[1;32m✨miaoushell > [0m
-[?2004l[?2004h[1;32m✨miaoushell > [0m
-[?2004l[?2004h[1;32m✨miaoushell > [0m
-[?2004l[?2004h[1;32m✨miaoushell > [0m
-[?2004l[?2004h[1;32m✨miaoushell > [0m
-[?2004l[?2004h[1;32m✨miaoushell > [0m
-[?2004l[?2004h[1;32m✨miaoushell > [0m^C[?2004l
-[1;32m✨miaoushell > [0m[?2004h[?2004l
-exit

@@ -120,7 +120,7 @@ char	**convert_tokens_to_argv_until_pipe(t_token *tokens, int token_count)
 	return (argv);
 }
 
-void	process_pipes(t_token *tokens, t_minishell *shell, char ***argv_ref)
+void	process_pipes(t_token *tokens, t_minishell *shell)
 {
 	int pipe_fd[2];
 	int prev_pipe;
@@ -135,7 +135,6 @@ void	process_pipes(t_token *tokens, t_minishell *shell, char ***argv_ref)
 	char **arg;
 	t_cmd cmd;
 	int i;
-	char **argv = *argv_ref;
 
 	i = 0;
 	original_stdin = dup(STDIN_FILENO);
@@ -198,9 +197,7 @@ void	process_pipes(t_token *tokens, t_minishell *shell, char ***argv_ref)
 				if (exec_builtins(&cmd, &(shell->environment), shell) == 0)
 					exec_extercmds(arg, shell);
 
-				free_argv(cmd.args);
-				free_argv(argv);
-				*argv_ref = NULL;
+				free_argv(arg);
 				free_tokens(tokens);
 				rl_clear_history();
 				exit(shell->exit_status);
@@ -217,9 +214,6 @@ void	process_pipes(t_token *tokens, t_minishell *shell, char ***argv_ref)
 		}
 	}
 
-	// Restore original stdin and stdout
-	//free_argv(argv);
-	*argv_ref = NULL;
 	dup2(original_stdin, STDIN_FILENO);
 	dup2(original_stdout, STDOUT_FILENO);
 	close(original_stdin);

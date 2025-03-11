@@ -178,7 +178,7 @@ int		max(int a, int b);
 void	check_if_command_exists(t_cmd *cmd, t_minishell *shell);
 char	*extract_var_name(char *arg);
 
-void	process_pipes(t_token *tokens, t_minishell *shell, char ***argv_ref);
+void	process_pipes(t_token *tokens, t_minishell *shell);
 char	**convert_tokens_to_argv(t_token *tokens, int token_count);
 int		count_tokens_until_pipe(t_token *tokens);
 char	**convert_tokens_to_argv_until_pipe(t_token *tokens, int token_count);
