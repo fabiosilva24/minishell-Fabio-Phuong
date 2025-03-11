@@ -14,10 +14,10 @@ char    *get_exit_variable_value(char **envp, char *line, int len, int last_exit
     while (envp[++i])
     {
         eq_pos = ft_len_eq(envp[i]);
-        if (!ft_strncmp(var_name, envp[i], max(eq_pos, ft_strlen(var_name))))
+        if (eq_pos == (int)ft_strlen(envp[i]) || !ft_strncmp(var_name, envp[i], max(eq_pos, ft_strlen(var_name))))
         {
             free(var_name);
-            if (eq_pos == ft_strlen(envp[i]))
+            if (eq_pos == (int)ft_strlen(envp[i]))
                 return (ft_strdup(""));
             return (ft_strdup(envp[i] + eq_pos + 1));
         }
