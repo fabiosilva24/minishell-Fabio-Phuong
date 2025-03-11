@@ -42,7 +42,7 @@ t_token	*create_token(char *value, e_token_type type)
     t_token *new_token = (t_token *)malloc(sizeof(t_token));
     if (!new_token)
         return (NULL);
-    new_token->value = strdup(value);
+    new_token->value = ft_strdup(value);
     new_token->type = type;
     new_token->next = NULL;
     return (new_token);

@@ -178,7 +178,7 @@ int		max(int a, int b);
 void	check_if_command_exists(t_cmd *cmd, t_minishell *shell);
 char	*extract_var_name(char *arg);
 
-void	process_pipes(t_token *tokens, t_minishell *shell);
+void	process_pipes(t_token *tokens, t_minishell *shell, char ***argv_ref);
 char	**convert_tokens_to_argv(t_token *tokens, int token_count);
 int		count_tokens_until_pipe(t_token *tokens);
 char	**convert_tokens_to_argv_until_pipe(t_token *tokens, int token_count);
@@ -188,5 +188,7 @@ int 	apply_redirection(char *redir_symbol, char *filename);
 int 	is_redirection(char *token);
 void	extract_variable_name(const char *symbol, int *i, int len, char *var_name);
 char	*find_env_value(const char *var_name, char **environment);
+
+void	free_argv(char **argv);
 
 #endif
