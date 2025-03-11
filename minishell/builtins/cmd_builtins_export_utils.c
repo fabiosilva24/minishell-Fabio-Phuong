@@ -51,11 +51,10 @@ void	print_sorted_env(char **envp)
 	char	**var_names;
 	char	**var_values;
 
-	env_copy_tmp = NULL;
+	env_copy_tmp = new_envp(envp);
 	i = 0;
 	if (!env_copy_tmp)
 		return ;
-	env_copy_tmp = new_envp(envp);
 	env_copy_tmp = sort_env_vars(env_copy_tmp);
 	var_names = extract_var_names(env_copy_tmp);
 	var_values = extract_var_values(env_copy_tmp);
