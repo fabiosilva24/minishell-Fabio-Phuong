@@ -115,8 +115,8 @@ void	expand_exit_status(char **line, char **envp, int last_exit_status)
 			double_quote_count++;
 		if ((*line)[i] == '\'')
 			single_quote_count++;
-		if ((single_quote_count % 2 == 0 || double_quote_count % 2 == 1)
-			&& (*line)[i] == '$')
+        if ((single_quote_count % 2 == 0 || double_quote_count % 2 == 1)
+            && (*line)[i] == '$' && (*line)[i + 1] == '?')
 			extract_and_replace_exit_status(&i, line, envp, last_exit_status);
 		else
 			i++;

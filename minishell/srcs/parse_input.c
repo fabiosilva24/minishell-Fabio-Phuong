@@ -88,6 +88,12 @@ void	parse_input(char *input, t_minishell *shell)
 			handled = 1;
 			break ;
 		}
+		else if (*arg == '$' && *(arg + 1) == '$')
+		{
+			printf("SHELL PID: %d\n", ft_getpid());
+			handled = 1;
+			break;
+		}
 		else if (*arg == '$')
 		{
 			handle_dollarsign(arg, &i, len, shell);
