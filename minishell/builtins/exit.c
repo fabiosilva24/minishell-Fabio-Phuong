@@ -6,7 +6,7 @@
 /*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 15:38:47 by phoang            #+#    #+#             */
-/*   Updated: 2025/03/12 19:40:18 by fsilva-p         ###   ########.fr       */
+/*   Updated: 2025/03/12 20:24:10 by phoang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,10 @@ void	replace_exit_status(char **line, t_replace *rep)
 		return ;
 	ft_strlcpy(new_line, old_line, rep->start + 1);
 	if (rep->value)
-		ft_strlcpy(new_line + rep->start, rep->value, ft_strlen(rep->value) + 1);
-	ft_strlcpy(new_line + rep->start + value_len, old_line + rep->start + rep->len,
+		ft_strlcpy(new_line + rep->start, rep->value,
+			ft_strlen(rep->value) + 1);
+	ft_strlcpy(new_line + rep->start + value_len,
+		old_line + rep->start + rep->len,
 		ft_strlen(old_line + rep->start + rep->len) + 1);
 	*line = new_line;
 	*(rep->i) = rep->start;
@@ -36,9 +38,9 @@ void	replace_exit_status(char **line, t_replace *rep)
 		free(rep->value);
 }
 
-static int count_variable_length(char *line, int *i)
+static int	count_variable_length(char *line, int *i)
 {
-	int count;
+	int	count;
 
 	count = 0;
 	(*i)++;
@@ -70,7 +72,6 @@ void	extract_and_replace_exit_status(int *i, char **line, char **envp,
 	count = count_variable_length(*line, i);
 	value = get_exit_variable_value(envp, *line + (*i - count), count + 1,
 			last_exit_status);
-
 	rep.start = (*i) - count - 1;
 	rep.len = count + 1;
 	rep.value = value;

@@ -6,7 +6,7 @@
 /*   By: phoang <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 14:37:15 by phoang            #+#    #+#             */
-/*   Updated: 2025/03/11 14:45:16 by phoang           ###   ########.fr       */
+/*   Updated: 2025/03/12 19:44:32 by phoang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ static void	handle_home_directory(void)
 	chdir(getenv("HOME"));
 }
 
-static void	handle_home_path(char *args, char *old_path, int if_cdcmd, int *status)
+static void	handle_home_path(char *args, char *old_path,
+	int if_cdcmd, int *status)
 {
 	char	*path;
 

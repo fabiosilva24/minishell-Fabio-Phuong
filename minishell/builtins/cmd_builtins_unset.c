@@ -6,13 +6,13 @@
 /*   By: phoang <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 15:20:31 by phoang            #+#    #+#             */
-/*   Updated: 2025/03/11 15:29:08 by phoang           ###   ########.fr       */
+/*   Updated: 2025/03/12 20:08:47 by phoang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int		is_env_var_present(char *args, char **envp)
+int	is_env_var_present(char *args, char **envp)
 {
 	int	i;
 

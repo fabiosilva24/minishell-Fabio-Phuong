@@ -1,17 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: phoang <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/12 20:18:45 by phoang            #+#    #+#             */
+/*   Updated: 2025/03/12 20:28:25 by phoang           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
-static char *handle_exit_status(char *var_name, int last_exit_status)
+static char	*handle_exit_status(char *var_name, int last_exit_status)
 {
-	//free(var_name);
 	if (!ft_strncmp("?", var_name, 1))
 		return (ft_itoa(last_exit_status));
 	return (ft_strdup(""));
 }
 
-static char *find_env_variable(char **envp, char *var_name)
+static char	*find_env_variable(char **envp, char *var_name)
 {
-	int i;
-	int eq_pos;
+	int	i;
+	int	eq_pos;
 
 	i = -1;
 	while (envp[++i])
@@ -39,7 +50,6 @@ char	*get_exit_variable_value(char **envp, char *line,
 	if (!var_name)
 		return (0);
 	ft_strlcpy(var_name, line, len);
-
 	env_value = find_env_variable(envp, var_name);
 	if (env_value)
 		return (env_value);

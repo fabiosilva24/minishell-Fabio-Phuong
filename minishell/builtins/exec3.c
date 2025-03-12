@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec3.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: phoang <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/12 20:15:45 by phoang            #+#    #+#             */
+/*   Updated: 2025/03/12 20:21:31 by phoang           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
-static void print_command_error(char **cmd_flags, int *status)
+static void	print_command_error(char **cmd_flags, int *status)
 {
-	t_error err;
+	t_error	err;
 
 	err.s1 = "minishell: ";
 	err.s2 = cmd_flags[0];
@@ -12,14 +24,14 @@ static void print_command_error(char **cmd_flags, int *status)
 	errmsg(&err);
 }
 
-static char *try_direct_access(char **cmd_flags)
+static char	*try_direct_access(char **cmd_flags)
 {
 	if (!access(cmd_flags[0], F_OK))
 		return (ft_strdup(cmd_flags[0]));
 	return (NULL);
 }
 
-static char *try_path_combinations(char **paths, char *cmd)
+static char	*try_path_combinations(char **paths, char *cmd)
 {
 	char	*full_cmd;
 	char	*path_with_slash;
@@ -47,11 +59,9 @@ char	*find_executable(char **paths, char **cmd_flags, int *status)
 	direct_path = try_direct_access(cmd_flags);
 	if (direct_path)
 		return (direct_path);
-
 	path_result = try_path_combinations(paths, cmd_flags[0]);
 	if (path_result)
 		return (path_result);
-
 	print_command_error(cmd_flags, status);
 	return (NULL);
 }
