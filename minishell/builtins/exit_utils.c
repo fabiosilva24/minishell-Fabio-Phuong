@@ -2,7 +2,7 @@
 
 static char *handle_exit_status(char *var_name, int last_exit_status)
 {
-	free(var_name);
+	//free(var_name);
 	if (!ft_strncmp("?", var_name, 1))
 		return (ft_itoa(last_exit_status));
 	return (ft_strdup(""));

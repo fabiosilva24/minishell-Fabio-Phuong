@@ -55,7 +55,8 @@ SRCS = ./srcs/minishell.c\
        ./srcs/pipes.c\
        ./srcs/apply_redir.c\
        ./srcs/split_dollarsign.c\
-       ./srcs/free_argv.c
+       ./srcs/free_argv.c\
+       ./srcs/ft_getpid.c
 
 OBJS = $(SRCS:.c=.o)
 

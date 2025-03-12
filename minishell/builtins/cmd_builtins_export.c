@@ -108,33 +108,3 @@ char	**extract_var_values(char **tmpmass)
 	after[i] = NULL;
 	return (after);
 }
-
-char	**sort_env_vars(char **mass)
-{
-	int		i;
-	int		k;
-	int		j;
-	char	*tmp;
-
-	i = -1;
-	j = size_mass(mass);
-	while (++i < (j - 1))
-	{
-		k = -1;
-		while (++k < (j - i - 1))
-		{
-			if (ft_strncmp(mass[k], mass[k + 1],
-					ft_sym_export(mass[k])) > 0)
-			{
-				tmp = ft_strdup(mass[k]);
-				free(mass[k]);
-				mass[k] = ft_strdup(mass[k + 1]);
-				free(mass[k + 1]);
-				mass[k + 1] = ft_strdup(tmp);
-				free(tmp);
-			}
-		}
-	}
-	mass[i + 1] = NULL;
-	return (mass);
-}

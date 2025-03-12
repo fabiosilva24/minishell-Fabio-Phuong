@@ -12,74 +12,95 @@
 
 #include "../include/minishell.h"
 
-void	handle_cd_status(int j, int i, char *args, char *str, int *status)
+void	handle_cd_status(t_cd *cd)
 {
-	if (j == 1 && i)
-		chdir(str);
-	else if (j != 1)
+	t_error	err;
+
+	if (cd->j == 0)
 	{
-		errmsg("minishell: cd: ", args,
-			": No such file or directory",
-			-1, status);
-		*status = 1;
+		if (cd->i == 0)
+		{
+			err.s1 = "minishell: cd: ";
+			err.s2 = cd->args;
+			err.s3 = ": No such file or directory";
+			err.code = -1;
+			err.status = cd->status;
+			errmsg(&err);
+		}
+		else
+		{
+			err.s1 = "minishell: cd: ";
+			err.s2 = cd->str;
+			err.s3 = ": No such file or directory";
+			err.code = -1;
+			err.status = cd->status;
+			errmsg(&err);
+		}
 	}
-	else if (j == 1 && !i)
-		errmsg("minishell: cd: ", args,
-			": Not a directory",
-			-1, status);
 }
 
-void	check_directory_exists(char *path, int j, char *old_path,
-	char *args, int *status)
+void	check_directory_exists(t_cd *cd)
 {
 	DIR				*dir;
 	struct dirent	*entry;
 	struct stat		status_file;
-	int				if_is_cd_cmd;
-	int				i;
+	int				found;
 
-	if_is_cd_cmd = j;
-	entry = NULL;
-	dir = opendir("./");
-	entry = readdir(dir);
-	j = 0;
-	while (entry != NULL)
+	dir = opendir(".");
+	if (!dir)
+		return ;
+	found = 0;
+	while ((entry = readdir(dir)))
 	{
-		if (ft_strncmp(path, entry->d_name, ft_strlen(entry->d_name)) == 0)
+		if (!ft_strncmp(entry->d_name, cd->path, ft_strlen(cd->path) + 1))
 		{
-			stat(path, &status_file);
-			j = 1;
+			found = 1;
+			stat(entry->d_name, &status_file);
+			cd->i = S_ISDIR(status_file.st_mode);
+			break ;
 		}
-		entry = readdir(dir);
 	}
 	closedir(dir);
-	i = S_ISDIR(status_file.st_mode);
-	handle_cd_status(j, i, args, path, status);
-	if ((j != 1 || !i) || !if_is_cd_cmd)
-		chdir(old_path);
+	if (!found)
+		cd->i = 0;
+	if (!cd->i)
+		handle_cd_status(cd);
 }
 
-void	process_cd_path(char *args, char *old_path, int is_cd_builtin,
-	int *status)
+void	process_cd_path(char *path, char *old_path, int is_cd_builtin, int *status)
 {
-	char	**str;
-	int		i;
-	int		j;
+	t_cd	cd;
 
-	j = 0;
-	i = ft_strlen(args);
-	while (args[j] && args[j] != '/')
-		j++;
-	if (j != i)
-		str = ft_split(args, '/');
+	cd.path = path;
+	cd.old_path = old_path;
+	cd.args = path;
+	cd.str = NULL;
+	cd.status = status;
+	cd.j = chdir(path);
+	cd.i = 1;
+
+	if (cd.j == -1)
+		check_directory_exists(&cd);
+	if (!cd.j && is_cd_builtin)
+		*status = 0;
+}
+
+char	**update_pwd_oldpwd(char **envp, char *old_path, int *status)
+{
+	char	*pwd;
+	char	cwd[MAX_PATH_LEN];
+	char	*new_old_path;
+
+	(void)status;
+	new_old_path = ft_strjoin("OLDPWD=", old_path);
+	free(old_path);
+	pwd = ft_strjoin("PWD=", getcwd(cwd, 4096));
+	envp = replace_env_var(envp, pwd, "PWD=");
+	if (is_env_var_present("OLDPWD=", envp))
+		envp = replace_env_var(envp, new_old_path, "OLDPWD=");
 	else
-		str = ft_split(args, '\0');
-	i = 0;
-	while (str[i])
-	{
-		j = is_cd_builtin;
-		check_directory_exists(str[i], j, old_path, args, status);
-		i++;
-	}
-	ft_free(str);
+		envp = add_env_var(envp, new_old_path, 1);
+	free(new_old_path);
+	free(pwd);
+	return (envp);
 }

@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-int	is_env_var_present(char *args, char **envp)
+int		is_env_var_present(char *args, char **envp)
 {
 	int	i;
 
@@ -27,23 +27,36 @@ int	is_env_var_present(char *args, char **envp)
 	return (0);
 }
 
+static int	should_remove_var(char *env_var, char *args)
+{
+	return (!ft_strncmp(env_var, args, ft_strlen(args))
+		&& env_var[ft_strlen(args)] == '=');
+}
+
+static char	**allocate_new_env(int size)
+{
+	char	**new_mass;
+
+	new_mass = malloc(sizeof(char *) * size);
+	if (!new_mass)
+		return (NULL);
+	return (new_mass);
+}
+
 char	**remove_env_var(char *args, char **envp)
 {
 	int		i;
 	int		j;
-	int		size;
 	char	**new_mass;
 
 	i = 0;
 	j = 0;
-	size = size_mass(envp);
-	new_mass = malloc(sizeof(char *) * size);
+	new_mass = allocate_new_env(size_mass(envp));
 	if (!new_mass)
 		return (NULL);
 	while (envp[j])
 	{
-		if (!ft_strncmp(envp[j], args, ft_strlen(args))
-			&& envp[j][ft_strlen(args)] == '=')
+		if (should_remove_var(envp[j], args))
 		{
 			free(envp[j]);
 			j++;
@@ -58,15 +71,20 @@ char	**remove_env_var(char *args, char **envp)
 
 void	builtin_unset(char **args, char ***envp, int *status)
 {
-	int	i;
+	int		i;
+	t_error	err;
 
 	i = 1;
+	err.code = -1;
+	err.status = status;
 	while (args[i])
 	{
 		if (ft_strchr(args[i], '='))
 		{
-			errmsg("minishell: unset: `", args[i],
-				"': not a valid identifier", -1, status);
+			err.s1 = "minishell: unset: `";
+			err.s2 = args[i];
+			err.s3 = "': not a valid identifier";
+			errmsg(&err);
 		}
 		else if (is_env_var_present(args[i], *envp))
 		{

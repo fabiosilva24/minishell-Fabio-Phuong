@@ -12,16 +12,15 @@
 
 #include "../include/minishell.h"
 
-void	errmsg(char *s1, char *s2, char *s3, int code, int *status)
+void	errmsg(t_error *err)
 {
-	ft_putstr_fd(s1, 2);
-	ft_putstr_fd(s2, 2);
-	ft_putstr_fd(s3, 2);
-	ft_putstr_fd("\n", 2);
-	if (code < 0)
-		*status = -code;
+	if (err->code < 0)
+	{
+		printf("%s%s%s\n", err->s1, err->s2, err->s3);
+		*(err->status) = 1;
+	}
 	else
-		exit(code);
+		*(err->status) = err->code;
 }
 
 int	size_mass(char **envp)

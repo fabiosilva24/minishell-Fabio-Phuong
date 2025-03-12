@@ -158,7 +158,7 @@ char	**change_directory(char **args, int if_cdcmd, char **envp,
 		int *status);
 
 // cd_utils.c
-void	handle_cd_status(int j, int i, char *args, char *str, int *status);
+void	handle_cd_status(t_cd *cd);
 void	check_directory_exists(t_cd *cd);
 void	process_cd_path(char *path, char *old_path, int is_cd_builtin,
 		int *status);

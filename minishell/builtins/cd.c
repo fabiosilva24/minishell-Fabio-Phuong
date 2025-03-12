@@ -12,26 +12,6 @@
 
 #include "../include/minishell.h"
 
-char	**update_pwd_oldpwd(char **envp, char *old_path, int *status)
-{
-	char	*pwd;
-	char	cwd[MAX_PATH_LEN];
-	char	*new_old_path;
-
-	(void)status;
-	new_old_path = ft_strjoin("OLDPWD=", old_path);
-	free(old_path);
-	pwd = ft_strjoin("PWD=", getcwd(cwd, 4096));
-	envp = replace_env_var(envp, pwd, "PWD=");
-	if (is_env_var_present("OLDPWD=", envp))
-		envp = replace_env_var(envp, new_old_path, "OLDPWD=");
-	else
-		envp = add_env_var(envp, new_old_path, 1);
-	free(new_old_path);
-	free(pwd);
-	return (envp);
-}
-
 char	*get_after_char(const char *s, int c)
 {
 	int	i;
@@ -46,30 +26,42 @@ char	*get_after_char(const char *s, int c)
 	return (NULL);
 }
 
-char	**change_directory(char **args, int if_cdcmd, char **envp, int *status)
+static void	handle_home_directory(void)
+{
+	chdir(getenv("HOME"));
+}
+
+static void	handle_home_path(char *args, char *old_path, int if_cdcmd, int *status)
 {
 	char	*path;
+
+	chdir(getenv("HOME"));
+	path = ft_strdup(get_after_char(args, '/'));
+	process_cd_path(path, old_path, if_cdcmd, status);
+	free(path);
+}
+
+static void	handle_regular_path(char *args, char *old_path,
+	int if_cdcmd, int *status)
+{
+	*status = 0;
+	process_cd_path(args, old_path, if_cdcmd, status);
+}
+
+char	**change_directory(char **args, int if_cdcmd, char **envp, int *status)
+{
 	char	*old_path;
 	char	cwd[MAX_PATH_LEN];
 
 	old_path = ft_strdup(getcwd(cwd, 4097));
-	if (if_cdcmd && (!args[1]
-			|| !ft_strncmp(args[1], "~", ft_strlen(args[1]))))
-		chdir(getenv("HOME"));
+	if (if_cdcmd && (!args[1] || !ft_strncmp(args[1], "~", ft_strlen(args[1]))))
+		handle_home_directory();
 	else if (args[1])
 	{
 		if (ft_strncmp(args[1], "~/", 2) == 0)
-		{
-			chdir(getenv("HOME"));
-			path = ft_strdup(get_after_char(args[1], '/'));
-			process_cd_path(path, old_path, if_cdcmd, status);
-			free(path);
-		}
+			handle_home_path(args[1], old_path, if_cdcmd, status);
 		else
-		{
-			*status = 0;
-			process_cd_path(args[1], old_path, if_cdcmd, status);
-		}
+			handle_regular_path(args[1], old_path, if_cdcmd, status);
 	}
 	else if (if_cdcmd && !ft_strncmp(args[1], "..", ft_strlen("..")))
 		chdir("..");

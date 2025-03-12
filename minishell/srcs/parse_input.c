@@ -90,7 +90,7 @@ void	parse_input(char *input, t_minishell *shell)
 		}
 		else if (*arg == '$' && *(arg + 1) == '$')
 		{
-			printf("SHELL PID: %d\n", ft_getpid());
+			printf("SHELL PID: %d", ft_getpid());
 			handled = 1;
 			break;
 		}
