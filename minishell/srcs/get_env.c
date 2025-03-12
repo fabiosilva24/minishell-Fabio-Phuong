@@ -2,11 +2,11 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   get_env.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+        
+/*                                                    +:+ +:+
 	+:+     */
-/*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+      
+/*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+
 	+#+        */
-/*                                                +#+#+#+#+#+  
+/*                                                +#+#+#+#+#+
 	+#+           */
 /*   Created: 2025/01/30 17:56:57 by fsilva-p          #+#    #+#             */
 /*   Updated: 2025/01/30 17:57:11 by fsilva-p         ###   ########.fr       */
@@ -17,6 +17,8 @@
 
 char	**get_environment(void)
 {
-	char **env = environ;
+	char	**env;
+
+	env = environ;
 	return (env);
 }

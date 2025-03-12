@@ -15,18 +15,15 @@
 
 #include "../include/minishell.h"
 
-
 char	*ft_strtok(char *str, const char *delimeter)
 {
-	char *token_start;
-	static char *next_token = NULL;
+	char			*token_start;
+	static char		*next_token = NULL;
 
 	if (str)
 		next_token = str;
-
 	if (!next_token)
 		return (NULL);
-
 	while (*next_token == *delimeter)
 	{
 		next_token++;

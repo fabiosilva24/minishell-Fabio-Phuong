@@ -103,7 +103,6 @@ t_token *tokenize_input(char *line)
         else
             current->next = new_token;
     }
-
     return (head);
 }
 void	*free_tokens(t_token	*tokens)
