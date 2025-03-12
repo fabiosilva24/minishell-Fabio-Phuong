@@ -98,7 +98,7 @@ static void	process_command(t_token *tokens, t_minishell *shell)
 
 	cmd.args = convert_tokens_to_argv(tokens, token_count);
 	if (exec_builtins(&cmd, &(shell->environment), shell) == 0)
-		exec_extercmds(argv, shell);
+		exec_extercmds(cmd.args, shell);
 	
 
 	free_argv(cmd.args);
