@@ -16,7 +16,7 @@ void	handle_cd_status(t_cd *cd)
 {
 	t_error	err;
 
-	if (cd->j == 0)
+	if (cd->j != 0)
 	{
 		if (cd->i == 0)
 		{
