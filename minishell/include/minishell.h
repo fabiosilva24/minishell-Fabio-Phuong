@@ -77,6 +77,44 @@ typedef struct s_path
 	char **dirs;
 } t_path;
 
+typedef struct s_error
+{
+	const char	*s1;
+	const char	*s2;
+	const char	*s3;
+	int			code;
+	int			*status;
+}	t_error;
+
+typedef struct s_cd
+{
+	char	*path;
+	char	*args;
+	char	*old_path;
+	char	*str;
+	int		j;
+	int		i;
+	int		*status;
+}	t_cd;
+
+typedef struct s_export
+{
+	int		i;
+	int		j;
+	char	*new_value;
+	char	**env_copy;
+	char	**names;
+	char	**values;
+}	t_export;
+
+typedef struct s_replace
+{
+	int		start;
+	int		len;
+	char	*value;
+	int		*i;
+}	t_replace;
+
 void	print_banner(void);
 void	double_quotes(char *symbol, t_minishell *shell);
 char	**get_environment(void);
@@ -120,9 +158,8 @@ char	**change_directory(char **args, int if_cdcmd, char **envp,
 		int *status);
 
 // cd_utils.c
-void	handle_cd_status(int j, int i, char *args, char *str, int *status);
-void	check_directory_exists(char *path, int j, char *old_path, char *args,
-		int *status);
+void	handle_cd_status(t_cd *cd);
+void	check_directory_exists(t_cd *cd);
 void	process_cd_path(char *path, char *old_path, int is_cd_builtin,
 		int *status);
 
@@ -133,7 +170,8 @@ void	builtin_env(char **envp, int *status);
 
 // cmd_builtins_exit.c
 void	builtin_exit(t_cmd *cmd, t_minishell *shell, int should_exit);
-
+void	handle_exit_with_arg(t_cmd *cmd, t_minishell *shell,
+		int should_exit);
 // cmd_builtins_export.c
 char	**add_env_var(char **envp, char *str, int free_old);
 char	*find_double_var(char *args, char **envp);
@@ -143,14 +181,14 @@ char	**extract_var_values(char **tmpmass);
 
 // cmd_builtins_export_utils.c
 char	**extract_var_names(char **tmpmass);
-void	print_sorted_env(char **envp);
+void	print_sorted_env(char **envp, int *status);
 char	**change_envp(char *new, char **args, int i, char **envp);
 char	**builtin_export(char **args, char **envp, int *status);
 
 // cmd_builtins_unset.c
 char	**remove_env_var(char *args, char **envp);
 int		is_env_var_present(char *args, char **envp);
-void builtin_unset(char **args, char ***envp, int *status);
+void	builtin_unset(char **args, char ***envp, int *status);
 
 // exec.c
 char	**extract_path_directories(char **envp);
@@ -161,14 +199,13 @@ void	execute(t_cmd *cmd, char ***envp, t_minishell *shell);
 // exit.c
 char	*get_exit_variable_value(char **envp, char *line, int len,
 		int last_exit_status);
-void	replace_exit_status(char **line, int start, int len, char *value,
-		int *i);
+void	replace_exit_status(char **line, t_replace *rep);
 void	extract_and_replace_exit_status(int *i, char **line, char **envp,
 		int last_exit_status);
 void	expand_exit_status(char **line, char **envp, int last_exit_status);
 
 // utils.c
-void	errmsg(char *s1, char *s2, char *s3, int code, int *status);
+void	errmsg(t_error *err);
 int		size_mass(char **envp);
 char	**new_envp(char **envp);
 int		ft_sym_export(char *str);
