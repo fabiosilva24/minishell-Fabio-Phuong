@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../include/minishell.h"
+
 int	ft_len_eq(char *str)
 {
 	int	i;
@@ -26,4 +28,28 @@ int	max(int a, int b)
 		return (a);
 	else
 		return (b);
+}
+
+void	free_envp(char **envp)
+{
+	int	i;
+
+	if (envp)
+	{
+		i = 0;
+		while (envp[i])
+		{
+			free(envp[i]);
+			i++;
+		}
+		free(envp);
+	}
+}
+
+void	cleanup_shell(t_minishell *shell)
+{
+	if (shell->environment)
+	{
+		ft_free(shell->environment);
+	}
 }
