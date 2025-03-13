@@ -126,7 +126,7 @@ int		redirect_input(const char *filename);
 int		redirect_output(const char *filename);
 int		redirect_output_append(const char *filename);
 int		redirect_heredoc_input(void);
-void	exec_extercmds(char **argv, t_minishell *shell);
+void 	exec_extercmds(char **argv, t_minishell *shell, t_token *tokens);
 int		handle_heredoc(const char *delimiter);
 // tokens
 

@@ -94,7 +94,7 @@ static void	process_command(t_token *tokens, t_minishell *shell)
 
 	cmd.args = convert_tokens_to_argv(tokens, token_count);
 	if (exec_builtins(&cmd, &(shell->environment), shell) == 0)
-		exec_extercmds(cmd.args, shell);
+		exec_extercmds(cmd.args, shell, tokens);
 	
 
 	free_argv(cmd.args);
@@ -141,7 +141,7 @@ int	main(int argc, char **argv)
 		line = readline("\001\033[1;32m\002✨miaoushell > \001\033[0m\002");
 		if (!line)
         {
-            printf("exit\n");
+            ft_printf("exit\n");
 			break ;
         }
 		if (*line)

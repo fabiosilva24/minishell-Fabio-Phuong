@@ -72,7 +72,7 @@ static void	execute_piped_command(t_token *cmd_tokens, t_minishell *shell,
 
 		// Execute the command
 		if (exec_builtins(&cmd, &(shell->environment), shell) == 0)
-			exec_extercmds(arg, shell);
+			exec_extercmds(arg, shell, head);
 
 		free_argv(arg);
 		free_tokens(head);
@@ -194,7 +194,7 @@ void	process_pipes(t_token *tokens, t_minishell *shell)
 					i++;
 				}
 				if (exec_builtins(&cmd, &(shell->environment), shell) == 0)
-					exec_extercmds(arg, shell);
+					exec_extercmds(arg, shell, tokens);
 
 				free_argv(arg);
 				free_tokens(tokens);

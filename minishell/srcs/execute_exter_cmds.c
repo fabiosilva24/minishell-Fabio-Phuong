@@ -76,7 +76,7 @@
     }
 }*/
 
-void exec_extercmds(char **argv, t_minishell *shell)
+void exec_extercmds(char **argv, t_minishell *shell, t_token *tokens)
 {
     pid_t pid;
     int status;
@@ -130,6 +130,8 @@ void exec_extercmds(char **argv, t_minishell *shell)
                 execve(argv[0], argv, shell->environment);
             }
             perror("Error accessing command");
+            free_argv(argv);
+            free_tokens(tokens);
             exit(127);
         }
         
@@ -160,6 +162,8 @@ void exec_extercmds(char **argv, t_minishell *shell)
         {
             perror("Error with execve");
         }
+        free_argv(argv);
+        free_tokens(tokens);
         exit(127);
     }
     else if (pid < 0)
