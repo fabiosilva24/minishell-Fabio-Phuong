@@ -142,6 +142,7 @@ int	main(int argc, char **argv)
 		if (!line)
         {
             ft_printf("exit\n");
+		cleanup_shell(&shell);
 			break ;
         }
 		if (*line)
