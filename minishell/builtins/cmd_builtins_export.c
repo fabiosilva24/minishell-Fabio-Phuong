@@ -65,8 +65,8 @@ char	**add_env_var(char **envp, char *str, int free_old)
 {
 	char	**new_env;
 	int		j;
+	int		i;
 
-	(void)free_old;
 	new_env = malloc(sizeof(char *) * (size_mass(envp) + 2));
 	if (!new_env)
 		return (NULL);
@@ -74,11 +74,41 @@ char	**add_env_var(char **envp, char *str, int free_old)
 	while (envp && envp[j])
 	{
 		new_env[j] = ft_strdup(envp[j]);
+		if (!new_env[j])
+		{
+			while (j > 0)
+			{
+				free(new_env[j - 1]);
+				j--;
+			}
+			free(new_env);
+			return (NULL);
+		}
 		j++;
 	}
 	new_env[j] = ft_strdup(str);
+	if (!new_env[j])
+	{
+		while (j > 0)
+		{
+			free(new_env[j - 1]);
+			j--;
+		}
+		free(new_env);
+		return (NULL);
+	}
 	j++;
 	new_env[j] = NULL;
+	if (free_old && envp)
+	{
+		i = 0;
+		while (envp[i])
+		{
+			free(envp[i]);
+			i++;
+		}
+		free(envp);
+	}
 	return (new_env);
 }
 
