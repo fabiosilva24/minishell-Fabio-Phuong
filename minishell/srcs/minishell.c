@@ -118,7 +118,7 @@ void	initialize_shell(t_minishell *shell, int argc, char **argv)
 		printf("Usage: ./minishell to enter minishell\n");
 		return ;
 	}
-	print_banner();
+	//print_banner();
 }
 void	handle_sigint(int sig)
 {
