@@ -115,6 +115,12 @@ typedef struct s_replace
 	int		*i;
 }	t_replace;
 
+typedef struct s_replace_data
+{
+	int		j;
+	char	*new;
+}	t_replace_data;
+
 void	print_banner(void);
 void	double_quotes(char *symbol, t_minishell *shell);
 char	**get_environment(void);
@@ -230,5 +236,14 @@ char	*find_env_value(const char *var_name, char **environment);
 
 void	free_argv(char **argv);
 int   ft_getpid();
+
+void	free_new_mass_on_error(char **new_mass, int i);
+int		copy_env_var(char **new_mass, char **envp, int i, int j);
+int		copy_or_replace_var(char **new_env, char **envp, char *args, t_replace_data *data);
+int		copy_existing_vars(char **new_env, char **envp, int *j);
+int		add_new_var(char **new_env, char *str, int j);
+char	*create_oldpwd_var(char *old_path);
+char	*create_pwd_var(void);
+char	**update_env_vars(char **envp, char *pwd_var, char *oldpwd_var);
 
 #endif
