@@ -54,9 +54,10 @@ void	parse_input(char *input, t_minishell *shell)
 	while (*arg && !handled)
 	{
 		handle_parse_things(&arg, &handled, shell);
-		arg++;
+		if (!handled)
+			arg++;
 	}
 	if (!handled)
-		ft_printf("%s", input_copy);
+		printf("%s", input_copy);
 	free(input_copy);
 }

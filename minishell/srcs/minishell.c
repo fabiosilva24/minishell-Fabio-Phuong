@@ -2,68 +2,66 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fsilva-p <fsilva-p@student.42luxembourg.>  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
+/*                                                    +:+ +:+        
+	+:+     */
+/*   By: fsilva-p <fsilva-p@student.42luxembourg.>  +#+  +:+      
+	+#+        */
+/*                                                +#+#+#+#+#+  
+	+#+           */
 /*   Created: 2025/03/14 15:52:49 by fsilva-p          #+#    #+#             */
-/*   Updated: 2025/03/14 16:00:36 by fsilva-p         ###   ########.fr       */
+/*   Updated: 2025/03/14 20:15:36 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char **convert_tokens_to_argv(t_token *tokens, int token_count)
+char	**convert_tokens_to_argv(t_token *tokens, int token_count)
 {
-    char **argv;
-    int i;
+	char	**argv;
+	int		i;
 
-    if (!tokens || token_count <= 0)
-        return (NULL);
-
-    argv = malloc(sizeof(char *) * (token_count + 1));
-    if (!argv)
-        return (NULL);
-
-    i = 0;
-    while (tokens && i < token_count)
-    {
-        argv[i] = ft_strdup(tokens->value);
-        if (!argv[i])
-        {
-            while (--i >= 0)
-            {
-                free(argv[i]);
-                argv[i] = NULL; // Prevent dangling pointers
-            }
-            free(argv);
-            return (NULL);
-        }
-        tokens = tokens->next;
-        i++;
-    }
-	//free_argv(argv);
-    argv[i] = NULL; // Ensure last element is NULL
-    return argv;
+	if (!tokens || token_count <= 0)
+		return (NULL);
+	argv = malloc(sizeof(char *) * (token_count + 1));
+	if (!argv)
+		return (NULL);
+	i = 0;
+	while (tokens && i < token_count)
+	{
+		argv[i] = ft_strdup(tokens->value);
+		if (!argv[i])
+		{
+			while (--i >= 0)
+			{
+				free(argv[i]);
+				argv[i] = NULL;
+			}
+			free(argv);
+			return (NULL);
+		}
+		tokens = tokens->next;
+		i++;
+	}
+	argv[i] = NULL;
+	return (argv);
 }
 
 static void	process_command(t_token *tokens, t_minishell *shell)
 {
-	int token_count;
-	t_token *current = tokens;
+	int		token_count;
+	t_token *current;
 
-	//(void)shell;
-	// Save original stdin and stdout
+	current = tokens;
 	int original_stdin = dup(STDIN_FILENO);
 	int original_stdout = dup(STDOUT_FILENO);
 
 	token_count = count_tokens(tokens);
-	// Handle redirections before executing the command
 	while (current)
 	{
 		if (current->type == TOKEN_PIPE)
 		{
-            process_pipes(tokens, shell);
-			return;
+			process_pipes(tokens, shell);
+			return ;
 		}
 		else if (current->type == TOKEN_REDIRECT)
 		{
@@ -77,9 +75,9 @@ static void	process_command(t_token *tokens, t_minishell *shell)
 			char *filename = current->next->value;
 
 			if (apply_redirection(redir_symbol, filename) == -1)
-				break;
+				break ;
 
-			current = current->next; // Skip the filename token
+			current = current->next;
 		}
 		else
 		{
@@ -91,7 +89,6 @@ static void	process_command(t_token *tokens, t_minishell *shell)
 	cmd.args = convert_tokens_to_argv(tokens, token_count);
 	if (exec_builtins(&cmd, &(shell->environment), shell) == 0)
 		exec_extercmds(cmd.args, shell, tokens);
-	
 
 	free_argv(cmd.args);
 	dup2(original_stdin, STDIN_FILENO);
@@ -114,7 +111,7 @@ void	initialize_shell(t_minishell *shell, int argc, char **argv)
 		printf("Usage: ./minishell to enter minishell\n");
 		return ;
 	}
-	//print_banner();
+	print_banner();
 }
 void	handle_sigint(int sig)
 {
@@ -130,29 +127,26 @@ int	main(int argc, char **argv)
 	t_minishell shell;
 	char *line;
 	t_token *tokens;
-
 	initialize_shell(&shell, argc, argv);
 	while (1)
 	{
 		line = readline("\001\033[1;32m\002✨miaoushell > \001\033[0m\002");
 		if (!line)
-        {
-            ft_printf("exit\n");
-		cleanup_shell(&shell);
+		{
+			printf("exit\n");
+			cleanup_shell(&shell);
 			break ;
-        }
+		}
 		if (*line)
 			add_history(line);
 		tokens = tokenize_input(line);
-        if (!tokens)
-        {
-            free(line);
-            continue;
-        }
+		if (!tokens)
+		{
+			free(line);
+			continue ;
+		}
 		process_command(tokens, &shell);
-		//print_list(tokens);
-		free_tokens(tokens);
-		free(line);
+		free_line_andtoken(tokens, line, &shell);
 	}
 	rl_clear_history();
 	return (0);

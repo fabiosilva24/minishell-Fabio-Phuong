@@ -59,7 +59,9 @@ SRCS = ./srcs/minishell.c\
        ./srcs/split_dollarsign.c\
        ./srcs/free_argv.c\
        ./srcs/ft_getpid.c\
-       ./srcs/handle_redirection.c
+       ./srcs/handle_redirection.c\
+       ./srcs/pipes_utils.c\
+       ./srcs/call_functions.c
 OBJS = $(SRCS:.c=.o)
 
 COUNT = 0

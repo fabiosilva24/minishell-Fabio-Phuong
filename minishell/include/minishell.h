@@ -23,22 +23,22 @@
 # define TMP_FILE ".heredoc_tmp"
 
 # include "../libs/libft/libft.h"
-# include <curses.h>            // tgetent, tgetflag, tgetnum, tgetstr, tgoto,
-# include <dirent.h>            // opendir, readdir, closedir
-# include <errno.h>             // strerror (alternative for error strings)
-# include <fcntl.h>             // open
-# include <readline/history.h>  // add_history
-# include <readline/readline.h> // readline, rl_clear_history, rl_on_new_line,
-# include <signal.h>            // signal, sigaction, sigemptyset, sigaddset,
-# include <stdio.h>             // printf, perror
-# include <stdlib.h>            // malloc, free, exit
-# include <string.h>            // strerror
-# include <sys/ioctl.h>         // ioctl
-# include <sys/stat.h>          // stat, lstat, fstat
-# include <sys/types.h>         // fork, wait, waitpid, wait3, wait4, stat,
-# include <sys/wait.h>          // wait, waitpid, wait3, wait4
-# include <termios.h>           // tcsetattr, tcgetattr
-# include <unistd.h>            // write, access, fork, getcwd, chdir, unlink,
+# include <curses.h>        
+# include <dirent.h>
+# include <errno.h>
+# include <fcntl.h>
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <signal.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <sys/ioctl.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <termios.h>
+# include <unistd.h>
 # include <ctype.h>
 
 extern char **environ;
@@ -245,5 +245,11 @@ int		add_new_var(char **new_env, char *str, int j);
 char	*create_oldpwd_var(char *old_path);
 char	*create_pwd_var(void);
 char	**update_env_vars(char **envp, char *pwd_var, char *oldpwd_var);
+void 	setup_pipe_io(int pipe_in, int pipe_out);
+void	handle_redirectionss(char **arg, int token_count);
+void	execute_child_process1(t_token *cmd_tokens, t_minishell *shell, int pipe_in, int pipe_out);
+void	execute_piped_command(t_token *cmd_tokens, t_minishell *shell, int pipe_in, int pipe_out);
+void    free_line_andtoken(t_token *tokens, char *line, t_minishell *shell);
+
 
 #endif
