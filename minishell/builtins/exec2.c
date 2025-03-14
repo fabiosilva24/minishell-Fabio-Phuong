@@ -6,20 +6,19 @@
 /*   By: phoang <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 20:11:06 by phoang            #+#    #+#             */
-/*   Updated: 2025/03/12 20:20:27 by phoang           ###   ########.fr       */
+/*   Updated: 2025/03/14 21:19:52 by phoang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../include/minishell.h"
 
 static int	handle_basic_builtins(t_cmd *cmd, char **envp, t_minishell *shell)
 {
-	if (!ft_strncmp(cmd->args[0], "echo", ft_strlen(cmd->args[0])))
+	if (!ft_strcmp(cmd->args[0], "echo"))
 		builtin_echo(cmd, &(shell->status), shell);
-	else if (!ft_strncmp(cmd->args[0], "pwd", ft_strlen(cmd->args[0])))
+	else if (!ft_strcmp(cmd->args[0], "pwd"))
 		builtin_pwd(&(shell->status));
-	else if (!ft_strncmp(cmd->args[0], "env", ft_strlen(cmd->args[0])))
+	else if (!ft_strcmp(cmd->args[0], "env"))
 		builtin_env(envp, &(shell->status));
 	else
 		return (0);
@@ -28,11 +27,11 @@ static int	handle_basic_builtins(t_cmd *cmd, char **envp, t_minishell *shell)
 
 static int	handle_env_builtins(t_cmd *cmd, char ***envp, t_minishell *shell)
 {
-	if (!ft_strncmp(cmd->args[0], "export", ft_strlen(cmd->args[0])))
+	if (!ft_strcmp(cmd->args[0], "export"))
 		*envp = builtin_export(cmd->args, *envp, &(shell->status));
-	else if (!ft_strncmp(cmd->args[0], "unset", ft_strlen(cmd->args[0])))
+	else if (!ft_strcmp(cmd->args[0], "unset"))
 		builtin_unset(cmd->args, envp, &(shell->status));
-	else if (!ft_strncmp(cmd->args[0], "cd", ft_strlen(cmd->args[0])))
+	else if (!ft_strcmp(cmd->args[0], "cd"))
 	{
 		*envp = change_directory(cmd->args, 1, *envp, &(shell->status));
 		shell->exit_status = shell->status;
@@ -45,7 +44,7 @@ static int	handle_env_builtins(t_cmd *cmd, char ***envp, t_minishell *shell)
 
 int	exec_builtins(t_cmd *cmd, char ***envp, t_minishell *shell)
 {
-	if (!ft_strncmp(cmd->args[0], "exit", ft_strlen(cmd->args[0])))
+	if (!ft_strcmp(cmd->args[0], "exit"))
 	{
 		builtin_exit(cmd, shell, 1);
 		return (1);

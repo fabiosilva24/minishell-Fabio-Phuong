@@ -48,13 +48,17 @@ char	**convert_tokens_to_argv(t_token *tokens, int token_count)
 
 static void	process_command(t_token *tokens, t_minishell *shell)
 {
+	t_token	*current;
 	int		token_count;
-	t_token *current;
+	int		original_stdin;
+	int		original_stdout;
+	char	*redir_symbol;
+	char	*filename;
+	t_cmd	cmd;
 
 	current = tokens;
-	int original_stdin = dup(STDIN_FILENO);
-	int original_stdout = dup(STDOUT_FILENO);
-
+	original_stdin = dup(STDIN_FILENO);
+	original_stdout = dup(STDOUT_FILENO);
 	token_count = count_tokens(tokens);
 	while (current)
 	{
@@ -70,13 +74,10 @@ static void	process_command(t_token *tokens, t_minishell *shell)
 				perror("Syntax error: missing file for redirection");
 				return ;
 			}
-
-			char *redir_symbol = current->value;
-			char *filename = current->next->value;
-
+			redir_symbol = current->value;
+			filename = current->next->value;
 			if (apply_redirection(redir_symbol, filename) == -1)
 				break ;
-
 			current = current->next;
 		}
 		else
@@ -84,12 +85,9 @@ static void	process_command(t_token *tokens, t_minishell *shell)
 			current = current->next;
 		}
 	}
-	t_cmd cmd;
-
 	cmd.args = convert_tokens_to_argv(tokens, token_count);
 	if (exec_builtins(&cmd, &(shell->environment), shell) == 0)
 		exec_extercmds(cmd.args, shell, tokens);
-
 	free_argv(cmd.args);
 	dup2(original_stdin, STDIN_FILENO);
 	dup2(original_stdout, STDOUT_FILENO);
@@ -101,7 +99,6 @@ void	initialize_shell(t_minishell *shell, int argc, char **argv)
 {
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
-
 	shell->environment = get_environment();
 	shell->exit_status = 0;
 	shell->status = 0;
@@ -113,10 +110,10 @@ void	initialize_shell(t_minishell *shell, int argc, char **argv)
 	}
 	print_banner();
 }
+
 void	handle_sigint(int sig)
 {
 	(void)sig;
-
 	write(STDOUT_FILENO, "\n", 1);
 	rl_on_new_line();
 	rl_redisplay();
@@ -124,9 +121,10 @@ void	handle_sigint(int sig)
 
 int	main(int argc, char **argv)
 {
-	t_minishell shell;
-	char *line;
-	t_token *tokens;
+	t_minishell	shell;
+	char		*line;
+	t_token		*tokens;
+
 	initialize_shell(&shell, argc, argv);
 	while (1)
 	{

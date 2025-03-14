@@ -6,7 +6,7 @@
 /*   By: phoang <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 20:07:34 by phoang            #+#    #+#             */
-/*   Updated: 2025/03/12 20:07:38 by phoang           ###   ########.fr       */
+/*   Updated: 2025/03/14 21:18:25 by phoang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ char	**sort_env_vars(char **mass)
 	mass[i + 1] = NULL;
 	return (mass);
 }
-
 
 char	**add_env_var(char **envp, char *str, int free_old)
 {

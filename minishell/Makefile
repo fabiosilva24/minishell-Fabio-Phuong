@@ -32,7 +32,6 @@ SRCS = ./srcs/minishell.c\
        ./srcs/ft_strtok.c\
        ./srcs/parse_input.c\
        ./srcs/redirections.c\
-       ./srcs/print_test.c\
        ./srcs/execute_exter_cmds.c\
        ./builtins/cd.c \
        ./builtins/cd_utils.c \

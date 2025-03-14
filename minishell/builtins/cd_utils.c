@@ -41,33 +41,35 @@ void	handle_cd_status(t_cd *cd)
 
 void	check_directory_exists(t_cd *cd)
 {
+	if (!search_directory(cd))
+		cd->i = 0;
+	if (!cd->i)
+		handle_cd_status(cd);
+}
+
+int	search_directory(t_cd *cd)
+{
 	DIR				*dir;
 	struct dirent	*entry;
 	struct stat		status_file;
-	int				found;
 
 	dir = opendir(".");
 	if (!dir)
-		return ;
-	found = 0;
+		return (0);
 	entry = readdir(dir);
 	while (entry)
 	{
-		if (!ft_strncmp(entry->d_name, cd->path,
-				ft_strlen(cd->path) + 1))
+		if (!ft_strncmp(entry->d_name, cd->path, ft_strlen(cd->path) + 1))
 		{
-			found = 1;
 			stat(entry->d_name, &status_file);
 			cd->i = S_ISDIR(status_file.st_mode);
-			break ;
+			closedir(dir);
+			return (1);
 		}
 		entry = readdir(dir);
 	}
 	closedir(dir);
-	if (!found)
-		cd->i = 0;
-	if (!cd->i)
-		handle_cd_status(cd);
+	return (0);
 }
 
 void	process_cd_path(char *path, char *old_path,
