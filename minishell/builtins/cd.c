@@ -55,6 +55,8 @@ char	**change_directory(char **args, int if_cdcmd, char **envp, int *status)
 	char	cwd[MAX_PATH_LEN];
 
 	old_path = ft_strdup(getcwd(cwd, 4097));
+	if (!old_path)
+		return (envp);
 	if (if_cdcmd && (!args[1] || !ft_strncmp(args[1], "~", ft_strlen(args[1]))))
 		handle_home_directory();
 	else if (args[1])
@@ -68,5 +70,7 @@ char	**change_directory(char **args, int if_cdcmd, char **envp, int *status)
 		chdir("..");
 	if (if_cdcmd)
 		envp = update_pwd_oldpwd(envp, old_path, status);
+	else
+		free(old_path);
 	return (envp);
 }
