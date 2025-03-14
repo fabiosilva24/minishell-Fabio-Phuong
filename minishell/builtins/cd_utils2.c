@@ -2,10 +2,10 @@
 
 char	*create_pwd_var(void)
 {
-	char	cwd[MAX_PATH_LEN];
+	char	cwd[MAX_PATH_LEN + 1];
 	char	*pwd;
 
-	pwd = ft_strjoin("PWD=", getcwd(cwd, 4096));
+	pwd = ft_strjoin("PWD=", getcwd(cwd, sizeof(cwd)));
 	return (pwd);
 }
 
