@@ -36,29 +36,30 @@ SRCS = ./srcs/minishell.c\
        ./srcs/execute_exter_cmds.c\
        ./builtins/cd.c \
        ./builtins/cd_utils.c \
+			 ./builtins/cd_utils2.c \
        ./builtins/cmd_builtins_env_pwd.c \
-	./builtins/cmd_builtins_echo.c \
+			 ./builtins/cmd_builtins_echo.c \
        ./builtins/cmd_builtins_exit.c \
-	./builtins/cmd_builtins_exit_utils.c \
+			 ./builtins/cmd_builtins_exit_utils.c \
        ./builtins/cmd_builtins_export.c \
        ./builtins/cmd_builtins_export_utils.c \
-	./builtins/cmd_builtins_export_utilsb.c \
-	./builtins/cmd_builtins_export_utils2.c \
+			 ./builtins/cmd_builtins_export_utilsb.c \
+			 ./builtins/cmd_builtins_export_utils2.c \
+			 ./builtins/cmd_builtins_unset_utils.c \
        ./builtins/cmd_builtins_unset.c \
        ./builtins/exec.c \
-	./builtins/exec2.c \
-	./builtins/exec3.c \
+			 ./builtins/exec2.c \
+			 ./builtins/exec3.c \
        ./builtins/exit.c \
-	./builtins/exit_utils.c \
+			 ./builtins/exit_utils.c \
        ./builtins/utils.c\
-	./builtins/utils2.c\
+			 ./builtins/utils2.c\
        ./srcs/pipes.c\
        ./srcs/apply_redir.c\
        ./srcs/split_dollarsign.c\
        ./srcs/free_argv.c\
        ./srcs/ft_getpid.c\
        ./srcs/handle_redirection.c
-
 OBJS = $(SRCS:.c=.o)
 
 COUNT = 0
