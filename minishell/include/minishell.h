@@ -2,14 +2,11 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+
-	+:+     */
-/*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+
-	+#+        */
-/*                                                +#+#+#+#+#+
-	+#+           */
-/*   Created: 2025/01/30 17:56:36 by fsilva-p          #+#    #+#             */
-/*   Updated: 2025/02/07 12:03:59 by fsilva-p         ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: phoang <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/15 00:50:53 by phoang            #+#    #+#             */
+/*   Updated: 2025/03/15 00:51:05 by phoang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +51,7 @@ enum e_token_type
 typedef struct s_token
 {
 	char			*value;
-	e_token_type	type;
+	enum e_token_type	type;
 	struct s_token	*next;
 }	t_token;
 
@@ -135,7 +132,7 @@ int		redirect_heredoc_input(void);
 void	exec_extercmds(char **argv, t_minishell *shell, t_token *tokens);
 int		handle_heredoc(const char *delimiter);
 
-t_token	*create_token(char *value, e_token_type type);
+t_token	*create_token(char *value, enum e_token_type type);
 void	*free_tokens(t_token *tokens);
 t_token	*tokenize_input(char *line);
 char	*ft_strtok(char *str, const char *delimeter);

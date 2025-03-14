@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: phoang <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/30 17:56:31 by fsilva-p          #+#    #+#             */
-/*   Updated: 2025/03/14 23:46:15 by phoang           ###   ########.fr       */
+/*   Created: 2025/03/15 00:49:59 by phoang            #+#    #+#             */
+/*   Updated: 2025/03/15 00:50:01 by phoang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	count_tokens(t_token *tokens)
 	return (count);
 }
 
-static	e_token_type	token_determinator(char *token, int is_first)
+static	enum e_token_type	token_determinator(char *token, int is_first)
 {
 	if (is_first)
 		return (TOKEN_ARGUMENT);
@@ -37,7 +37,7 @@ static	e_token_type	token_determinator(char *token, int is_first)
 	return (TOKEN_ARGUMENT);
 }
 
-t_token	*create_token(char *value, e_token_type type)
+t_token	*create_token(char *value, enum e_token_type type)
 {
 	t_token	*new_token;
 
@@ -54,7 +54,7 @@ t_token	*tokenize_input(char *line)
 {
 	t_token	*head;
 	t_token	*current;
-	e_token_type		type;
+	enum e_token_type		type;
 	t_token	*new_token;
 	char	*token;
 	int		is_first;
@@ -101,7 +101,7 @@ t_token	*tokenize_input(char *line)
 	{
 		token = start;
 		type = token_determinator(token, is_first);
-		*new_token = create_token(token, type);
+		new_token = create_token(token, type);
 		if (!head)
 			head = new_token;
 		else
