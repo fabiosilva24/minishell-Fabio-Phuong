@@ -39,102 +39,65 @@ char	*find_double_var(char *args, char **envp)
 	return (NULL);
 }
 
+int	copy_or_replace_var(char **new_env, char **envp, char *args,
+	t_replace_data *data)
+{
+	if (ft_strncmp(envp[data->j], data->new,
+			max(ft_strlen(data->new), ft_sym_export(envp[data->j]))))
+		new_env[data->j] = ft_strdup(envp[data->j]);
+	else
+		new_env[data->j] = ft_strdup(args);
+	if (!new_env[data->j])
+		return (0);
+	return (1);
+}
+
 char	**replace_env_var(char **envp, char *args, char *new)
 {
-	char	**new_env;
-	int		j;
+	char			**new_env;
+	t_replace_data	data;
 
-	j = 0;
+	data.j = 0;
+	data.new = new;
 	new_env = malloc(sizeof(char *) * (size_mass(envp) + 1));
 	if (!new_env)
 		return (NULL);
-	while (envp[j])
+	while (envp[data.j])
 	{
-		if (ft_strncmp(envp[j], new,
-				max(ft_strlen(new), ft_sym_export(envp[j]))))
-			new_env[j] = ft_strdup(envp[j]);
-		else
-			new_env[j] = ft_strdup(args);
-		j++;
+		if (!copy_or_replace_var(new_env, envp, args, &data))
+		{
+			free_new_mass_on_error(new_env, data.j);
+			return (NULL);
+		}
+		data.j++;
 	}
-	new_env[j] = NULL;
+	new_env[data.j] = NULL;
+	ft_free(envp);
 	return (new_env);
 }
 
-char	**add_env_var(char **envp, char *str, int free_old)
+int	copy_existing_vars(char **new_env, char **envp, int *j)
 {
-	char	**new_env;
-	int		j;
-	int		i;
-
-	new_env = malloc(sizeof(char *) * (size_mass(envp) + 2));
-	if (!new_env)
-		return (NULL);
-	j = 0;
-	while (envp && envp[j])
+	while (envp && envp[*j])
 	{
-		new_env[j] = ft_strdup(envp[j]);
-		if (!new_env[j])
+		new_env[*j] = ft_strdup(envp[*j]);
+		if (!new_env[*j])
 		{
-			while (j > 0)
-			{
-				free(new_env[j - 1]);
-				j--;
-			}
-			free(new_env);
-			return (NULL);
+			free_new_mass_on_error(new_env, *j);
+			return (0);
 		}
-		j++;
+		(*j)++;
 	}
+	return (1);
+}
+
+int	add_new_var(char **new_env, char *str, int j)
+{
 	new_env[j] = ft_strdup(str);
 	if (!new_env[j])
 	{
-		while (j > 0)
-		{
-			free(new_env[j - 1]);
-			j--;
-		}
-		free(new_env);
-		return (NULL);
+		free_new_mass_on_error(new_env, j);
+		return (0);
 	}
-	j++;
-	new_env[j] = NULL;
-	if (free_old && envp)
-	{
-		i = 0;
-		while (envp[i])
-		{
-			free(envp[i]);
-			i++;
-		}
-		free(envp);
-	}
-	return (new_env);
-}
-
-char	**extract_var_values(char **tmpmass)
-{
-	int		i;
-	int		j;
-	int		k;
-	char	**after;
-
-	after = malloc(sizeof(char *) * (size_mass(tmpmass) + 1));
-	if (!after)
-		return (NULL);
-	i = -1;
-	while (tmpmass[++i])
-	{
-		k = 0;
-		after[i] = malloc(sizeof(char) * (ft_strlen(tmpmass[i])
-					- ft_sym_export(tmpmass[i]) + 1));
-		if (!after[i])
-			return (NULL);
-		j = ft_sym_export(tmpmass[i]);
-		while (tmpmass[i][++j] != '\0')
-			after[i][k++] = tmpmass[i][j];
-		after[i][k] = '\0';
-	}
-	after[i] = NULL;
-	return (after);
+	return (1);
 }
