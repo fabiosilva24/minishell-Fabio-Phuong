@@ -88,22 +88,15 @@ void	process_cd_path(char *path, char *old_path,
 		*status = 0;
 }
 
-char	**update_pwd_oldpwd(char **envp, char *old_path, int *status)
+char	*create_oldpwd_var(char *old_path)
 {
-	char	*pwd;
-	char	cwd[MAX_PATH_LEN];
 	char	*new_old_path;
 
-	(void)status;
 	new_old_path = ft_strjoin("OLDPWD=", old_path);
-	free(old_path);
-	pwd = ft_strjoin("PWD=", getcwd(cwd, 4096));
-	envp = replace_env_var(envp, pwd, "PWD=");
-	if (is_env_var_present("OLDPWD=", envp))
-		envp = replace_env_var(envp, new_old_path, "OLDPWD=");
-	else
-		envp = add_env_var(envp, new_old_path, 1);
-	free(new_old_path);
-	free(pwd);
-	return (envp);
+	if (!new_old_path)
+	{
+		free(old_path);
+		return (NULL);
+	}
+	return (new_old_path);
 }
