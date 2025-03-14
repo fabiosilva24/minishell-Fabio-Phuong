@@ -65,7 +65,7 @@ void	handle_dollarsign(char *symbol, int *i, int len, t_minishell *shell)
 	if (env_value)
 		printf("%s", env_value);
 	else
-		printf("%s", env_value);
+		printf("invalid variable name);
 	(*i)--;
 }
 
