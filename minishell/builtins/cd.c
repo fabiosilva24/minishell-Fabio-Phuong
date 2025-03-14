@@ -52,9 +52,9 @@ static void	handle_regular_path(char *args, char *old_path,
 char	**change_directory(char **args, int if_cdcmd, char **envp, int *status)
 {
 	char	*old_path;
-	char	cwd[MAX_PATH_LEN];
+	char	cwd[MAX_PATH_LEN + 1];
 
-	old_path = ft_strdup(getcwd(cwd, 4097));
+	old_path = ft_strdup(getcwd(cwd, sizeof(cwd)));
 	if (!old_path)
 		return (envp);
 	if (if_cdcmd && (!args[1] || !ft_strncmp(args[1], "~", ft_strlen(args[1]))))
