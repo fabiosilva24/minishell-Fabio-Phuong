@@ -12,21 +12,6 @@
 
 #include "../include/minishell.h"
 
-int	is_env_var_present(char *args, char **envp)
-{
-	int	i;
-
-	i = 0;
-	while (envp[i])
-	{
-		if (!ft_strncmp(envp[i], args, ft_strlen(args))
-			&& envp[i][ft_strlen(args)] == '=')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 static int	should_remove_var(char *env_var, char *args)
 {
 	return (!ft_strncmp(env_var, args, ft_strlen(args))
@@ -41,6 +26,27 @@ static char	**allocate_new_env(int size)
 	if (!new_mass)
 		return (NULL);
 	return (new_mass);
+}
+
+void	free_new_mass_on_error(char **new_mass, int i)
+{
+	while (i > 0)
+	{
+		free(new_mass[i - 1]);
+		i--;
+	}
+	free(new_mass);
+}
+
+int	copy_env_var(char **new_mass, char **envp, int i, int j)
+{
+	new_mass[i] = ft_strdup(envp[j]);
+	if (!new_mass[i])
+	{
+		free_new_mass_on_error(new_mass, i);
+		return (0);
+	}
+	return (1);
 }
 
 char	**remove_env_var(char *args, char **envp)
@@ -58,39 +64,15 @@ char	**remove_env_var(char *args, char **envp)
 	{
 		if (should_remove_var(envp[j], args))
 		{
-			free(envp[j]);
 			j++;
 			continue ;
 		}
-		new_mass[i++] = ft_strdup(envp[j++]);
+		if (!copy_env_var(new_mass, envp, i, j))
+			return (NULL);
+		i++;
+		j++;
 	}
 	new_mass[i] = NULL;
-	free(envp);
+	ft_free(envp);
 	return (new_mass);
-}
-
-void	builtin_unset(char **args, char ***envp, int *status)
-{
-	int		i;
-	t_error	err;
-
-	i = 1;
-	err.code = -1;
-	err.status = status;
-	while (args[i])
-	{
-		if (ft_strchr(args[i], '='))
-		{
-			err.s1 = "minishell: unset: `";
-			err.s2 = args[i];
-			err.s3 = "': not a valid identifier";
-			errmsg(&err);
-		}
-		else if (is_env_var_present(args[i], *envp))
-		{
-			*envp = remove_env_var(args[i], *envp);
-		}
-		i++;
-	}
-	*status = 0;
 }
