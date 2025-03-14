@@ -32,7 +32,7 @@ void	builtin_env(char **envp, int *status)
 
 void	builtin_pwd(int *status)
 {
-	char	cwd[PATH_MAX + 1];
+	char	cwd[MAX_PATH_LEN + 1];
 
 	getcwd(cwd, sizeof(cwd));
 	printf("%s\n", cwd);
