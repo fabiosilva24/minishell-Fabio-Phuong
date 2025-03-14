@@ -78,8 +78,11 @@ char	**change_envp(char *new_value, char **args, int i, char **envp)
 	if (!envp)
 		return (NULL);
 	if (new_value && ft_strrchr(args[i], '='))
+	{
 		envp = replace_env_var(envp, args[i], new_value);
+		free(new_value);
+	}
 	else if (!new_value)
-		envp = add_env_var(envp, args[i], 0);
+		envp = add_env_var(envp, args[i], 1);
 	return (envp);
 }
