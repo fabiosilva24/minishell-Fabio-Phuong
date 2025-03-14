@@ -2,19 +2,15 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+
-	+:+     */
-/*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+
-	+#+        */
-/*                                                +#+#+#+#+#+
-	+#+           */
-/*   Created: 2025/03/07 15:25:19 by fsilva-p          #+#    #+#             */
-/*   Updated: 2025/03/07 15:25:19 by fsilva-p         ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fsilva-p <fsilva-p@student.42luxembourg.>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/14 15:52:49 by fsilva-p          #+#    #+#             */
+/*   Updated: 2025/03/14 16:03:30 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
 
 int	is_redirection(char *token)
 {
