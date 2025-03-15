@@ -12,36 +12,6 @@
 
 #include "../include/minishell.h"
 
-void	setup_pipe_io(int pipe_in, int pipe_out)
-{
-	if (pipe_in != STDIN_FILENO)
-	{
-		dup2(pipe_in, STDIN_FILENO);
-		close(pipe_in);
-	}
-	if (pipe_out != STDOUT_FILENO)
-	{
-		dup2(pipe_out, STDOUT_FILENO);
-		close(pipe_out);
-	}
-}
-
-void	handle_redirectionss(char **arg, int token_count)
-{
-	int	i;
-
-	i = 0;
-	while (i < token_count)
-	{
-		if (is_redirection(arg[i]))
-		{
-			apply_redirection(arg[i], arg[i + 1]);
-			i++;
-		}
-		i++;
-	}
-}
-
 static void	cleanup_and_exit(char **arg, t_token *head,
 		t_minishell *shell, int exit_status)
 {

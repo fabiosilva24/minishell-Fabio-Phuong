@@ -280,6 +280,16 @@ void	handle_redirection_error(t_token *current);
 int	setup_redirection(t_token *current);
 void	restore_io(int original_stdin, int original_stdout);
 void	execute_command(t_token *tokens, t_minishell *shell, int token_count);
+void	handle_child_process(t_token *current, t_minishell *shell,
+		int prev_pipe, t_pipe_data *pd);
+void	handle_parent_process(t_pipe_data *pd, int *prev_pipe);
+int	create_pipe(t_pipe_data *pd);
+void	init_pipe_data(t_pipe_data *pd, t_token *tokens);
+void	cleanup_pipes(t_pipe_data *pd);
+void	wait_for_children(t_minishell *shell);
+int	handle_pipe_creation(t_pipe_data *pd, t_token *current);
+int	handle_fork_process(t_pipe_data *pd, t_token *current,
+		t_minishell *shell, int *prev_pipe);
 
 
 
