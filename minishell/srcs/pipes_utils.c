@@ -42,6 +42,29 @@ void	handle_redirectionss(char **arg, int token_count)
 	}
 }
 
+static void	cleanup_and_exit(char **arg, t_token *head,
+		t_minishell *shell, int exit_status)
+{
+	if (arg)
+		free_argv(arg);
+	if (head)
+		free_tokens(head);
+	if (shell)
+	{
+		rl_clear_history();
+		cleanup_shell(shell);
+	}
+	exit(exit_status);
+}
+
+static void	cleanup_pipe_fds(int pipe_in, int pipe_out)
+{
+	if (pipe_in != STDIN_FILENO)
+		close(pipe_in);
+	if (pipe_out != STDOUT_FILENO)
+		close(pipe_out);
+}
+
 void	execute_child_process1(t_token *cmd_tokens, t_minishell *shell,
 		int pipe_in, int pipe_out)
 {
@@ -60,20 +83,8 @@ void	execute_child_process1(t_token *cmd_tokens, t_minishell *shell,
 	exit_status = shell->exit_status;
 	if (exec_builtins(&cmd, &(shell->environment), shell) == 0)
 		exec_extercmds(arg, shell, head);
-	if (arg)
-		free_argv(arg);
-	if (head)
-		free_tokens(head);
-	if (shell)
-	{
-		rl_clear_history();
-		cleanup_shell(shell);
-	}
-	if (pipe_in != STDIN_FILENO)
-		close(pipe_in);
-	if (pipe_out != STDOUT_FILENO)
-		close(pipe_out);
-	exit(exit_status);
+	cleanup_pipe_fds(pipe_in, pipe_out);
+	cleanup_and_exit(arg, head, shell, exit_status);
 }
 
 t_token	*find_next_pipe(t_token *current)

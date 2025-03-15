@@ -15,6 +15,26 @@
 
 #include "../include/minishell.h"
 
+static void	cleanup_argv(char **argv, int i)
+{
+	while (--i >= 0)
+	{
+		free(argv[i]);
+		argv[i] = NULL;
+	}
+	free(argv);
+}
+
+static char	**allocate_argv(int token_count)
+{
+	char	**argv;
+
+	argv = malloc(sizeof(char *) * (token_count + 1));
+	if (!argv)
+		return (NULL);
+	return (argv);
+}
+
 char	**convert_tokens_to_argv(t_token *tokens, int token_count)
 {
 	char	**argv;
@@ -22,7 +42,7 @@ char	**convert_tokens_to_argv(t_token *tokens, int token_count)
 
 	if (!tokens || token_count <= 0)
 		return (NULL);
-	argv = malloc(sizeof(char *) * (token_count + 1));
+	argv = allocate_argv(token_count);
 	if (!argv)
 		return (NULL);
 	i = 0;
@@ -31,12 +51,7 @@ char	**convert_tokens_to_argv(t_token *tokens, int token_count)
 		argv[i] = ft_strdup(tokens->value);
 		if (!argv[i])
 		{
-			while (--i >= 0)
-			{
-				free(argv[i]);
-				argv[i] = NULL;
-			}
-			free(argv);
+			cleanup_argv(argv, i);
 			return (NULL);
 		}
 		tokens = tokens->next;

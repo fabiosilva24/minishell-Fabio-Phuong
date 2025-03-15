@@ -137,11 +137,38 @@ static void	wait_for_children(t_minishell *shell)
 	}
 }
 
+static int	handle_pipe_creation(t_pipe_data *pd, t_token *current)
+{
+	pd->is_last = !find_next_pipe(current);
+	if (!create_pipe(pd))
+	{
+		cleanup_pipes(pd);
+		return (0);
+	}
+	return (1);
+}
+
+static int	handle_fork_process(t_pipe_data *pd, t_token *current,
+		t_minishell *shell, int *prev_pipe)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		cleanup_pipes(pd);
+		return (0);
+	}
+	if (pid == 0)
+		handle_child_process(current, shell, *prev_pipe, pd);
+	handle_parent_process(pd, prev_pipe);
+	return (1);
+}
+
 void	process_pipes(t_token *tokens, t_minishell *shell)
 {
 	t_pipe_data	pd;
 	int			prev_pipe;
-	pid_t		pid;
 	t_token		*current;
 
 	init_pipe_data(&pd, tokens);
@@ -149,21 +176,9 @@ void	process_pipes(t_token *tokens, t_minishell *shell)
 	current = tokens;
 	while (current)
 	{
-		pd.is_last = !find_next_pipe(current);
-		if (!create_pipe(&pd))
-		{
-			cleanup_pipes(&pd);
+		if (!handle_pipe_creation(&pd, current)
+			|| !handle_fork_process(&pd, current, shell, &prev_pipe))
 			return ;
-		}
-		pid = fork();
-		if (pid == -1)
-		{
-			cleanup_pipes(&pd);
-			return ;
-		}
-		if (pid == 0)
-			handle_child_process(current, shell, prev_pipe, &pd);
-		handle_parent_process(&pd, &prev_pipe);
 		current = get_next_command(current);
 	}
 	if (prev_pipe != -1)
