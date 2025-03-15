@@ -6,7 +6,7 @@
 /*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:36:37 by fsilva-p          #+#    #+#             */
-/*   Updated: 2025/03/14 20:57:50 by fsilva-p         ###   ########.fr       */
+/*   Updated: 2025/03/15 01:10:11 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	execute_child_process1(t_token *cmd_tokens, t_minishell *shell,
 	free_argv(arg);
 	free_tokens(head);
 	rl_clear_history();
+	cleanup_shell(shell);
 	exit(shell->exit_status);
 }
 
@@ -76,5 +77,14 @@ void	execute_piped_command(t_token *cmd_tokens, t_minishell *shell,
 		return ;
 	}
 	if (pid == 0)
+	{
 		execute_child_process1(cmd_tokens, shell, pipe_in, pipe_out);
+	}
+	else
+	{
+		if (pipe_out != STDOUT_FILENO)
+			close(pipe_out);
+		if (pipe_in != STDIN_FILENO)
+			close(pipe_in);
+	}
 }
