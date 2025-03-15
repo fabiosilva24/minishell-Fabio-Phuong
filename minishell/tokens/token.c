@@ -6,7 +6,7 @@
 /*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 00:49:59 by phoang            #+#    #+#             */
-/*   Updated: 2025/03/15 16:25:09 by fsilva-p         ###   ########.fr       */
+/*   Updated: 2025/03/15 16:33:33 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	count_tokens(t_token *tokens)
 	return (count);
 }
 
-static	enum e_token_type	token_determinator(char *token, int is_first)
+enum e_token_type	token_determinator(char *token, int is_first)
 {
 	if (is_first)
 		return (TOKEN_ARGUMENT);
@@ -53,60 +53,13 @@ t_token	*create_token(char *value, enum e_token_type type)
 t_token	*tokenize_input(char *line)
 {
 	t_token	*head;
-	t_token	*current;
-	enum e_token_type		type;
-	t_token	*new_token;
-	char	*token;
 	int		is_first;
-	int		in_double_quotes;
-	int		in_single_quotes;
 	char	*start;
 
-	current = NULL;
 	head = NULL;
 	is_first = 1;
-	in_double_quotes = 0;
-	in_single_quotes = 0;
 	start = line;
-	while (*line)
-	{
-		if (*line == '\"' && !in_single_quotes)
-		{
-			in_double_quotes = !in_double_quotes;
-		}
-		else if (*line == '\'' && !in_double_quotes)
-		{
-			in_single_quotes = !in_single_quotes;
-		}
-		else if (ft_isspace(*line) && !in_double_quotes && !in_single_quotes)
-		{
-			if (start != line)
-			{
-				*line = '\0';
-				token = start;
-				type = token_determinator(token, is_first);
-				new_token = create_token(token, type);
-				if (!head)
-					head = new_token;
-				else
-					current->next = new_token;
-				current = new_token;
-				is_first = 0;
-			}
-			start = line + 1;
-		}
-		line++;
-	}
-	if (start != line)
-	{
-		token = start;
-		type = token_determinator(token, is_first);
-		new_token = create_token(token, type);
-		if (!head)
-			head = new_token;
-		else
-			current->next = new_token;
-	}
+	head = process_line(line, start, &is_first);
 	return (head);
 }
 

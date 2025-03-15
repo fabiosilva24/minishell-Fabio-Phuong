@@ -6,7 +6,7 @@
 /*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 00:50:53 by phoang            #+#    #+#             */
-/*   Updated: 2025/03/15 16:25:38 by fsilva-p         ###   ########.fr       */
+/*   Updated: 2025/03/15 16:29:03 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,5 +242,9 @@ void	ft_exit(t_minishell *shell);
 void	handle_quotes(char *line, int *in_double_quotes, int *in_single_quotes);
 void    create_and_link_token(char *token, enum e_token_type type);
 t_token *process_token(char **line, char *start, int *is_first, t_token **current, t_token **head);
+t_token	*handle_token(char **line, char *start, t_token **current, int *is_first, t_token *head);
+void	handle_quotes_tk(char *line, int *in_double_quotes, int *in_single_quotes);
+t_token	*process_line(char *line, char *start, int *is_first);
+enum e_token_type	token_determinator(char *token, int is_first);
 
 #endif
