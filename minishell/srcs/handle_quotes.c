@@ -51,8 +51,8 @@ void	handle_dollarsign(char *symbol, int *i, int len, t_minishell *shell)
 	char	var_name[256];
 	char	*env_value;
 
-	memset(var_name, 0, sizeof(var_name));
-	if (*i >= len || !(isalnum(symbol[*i]) || symbol[*i] == '_'))
+	ft_memset(var_name, 0, sizeof(var_name));
+	if (*i >= len || (!isalnum(symbol[*i]) && symbol[*i] == '_'))
 	{
 		printf("$");
 		return ;
@@ -61,8 +61,6 @@ void	handle_dollarsign(char *symbol, int *i, int len, t_minishell *shell)
 	env_value = find_env_value(var_name, shell->environment);
 	if (env_value)
 		printf("%s", env_value);
-	else
-		printf("invalid variable name");
 	(*i)--;
 }
 

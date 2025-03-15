@@ -58,6 +58,6 @@ void	parse_input(char *input, t_minishell *shell)
 			arg++;
 	}
 	if (!handled)
-		printf("%s", input_copy);
+		ft_printf("%s", input_copy);
 	free(input_copy);
 }

@@ -42,23 +42,23 @@ static char	*find_executable2(char *cmd, char *path_env)
 	char		path_env_copy[MAX_PATH_LEN];
 	char		*path;
 
-	if (strchr(cmd, '/'))
+	if (ft_strchr(cmd, '/'))
 	{
 		if (access(cmd, X_OK) == 0)
 			return (cmd);
 		else
 			return (NULL);
 	}
-	strncpy(path_env_copy, path_env, sizeof(path_env_copy));
-	path = strtok(path_env_copy, ":");
+	ft_strncpy(path_env_copy, path_env, sizeof(path_env_copy));
+	path = ft_strtok(path_env_copy, ":");
 	while (path != NULL)
 	{
-		strncpy(full_path, path, sizeof(full_path));
-		strncat(full_path, "/", sizeof(full_path) - strlen(full_path) - 1);
-		strncat(full_path, cmd, sizeof(full_path) - strlen(full_path) - 1);
+		ft_strncpy(full_path, path, sizeof(full_path));
+		ft_strncat(full_path, "/", sizeof(full_path) - ft_strlen(full_path) - 1);
+		ft_strncat(full_path, cmd, sizeof(full_path) - ft_strlen(full_path) - 1);
 		if (access(full_path, X_OK) == 0)
 			return (full_path);
-		path = strtok(NULL, ":");
+		path = ft_strtok(NULL, ":");
 	}
 	return (NULL);
 }

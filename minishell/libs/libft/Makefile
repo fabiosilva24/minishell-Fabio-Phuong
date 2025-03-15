@@ -64,7 +64,8 @@ ft_isspace.c\
 ft_atol.c\
 ft_strcmp.c\
 ft_strndup.c\
-ft_strncpy.c
+ft_strncpy.c\
+ft_strncat.c
 
 BONUS_SRCS = ft_lstnew.c\
 		ft_lstadd_front.c\

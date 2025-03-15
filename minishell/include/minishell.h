@@ -6,7 +6,7 @@
 /*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 00:50:53 by phoang            #+#    #+#             */
-/*   Updated: 2025/03/15 04:11:51 by fsilva-p         ###   ########.fr       */
+/*   Updated: 2025/03/15 16:25:38 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ enum e_token_type
 
 typedef struct s_token
 {
-	char			*value;
-	enum e_token_type	type;
-	struct s_token	*next;
+	char					*value;
+	enum e_token_type		type;
+	struct s_token			*next;
 }	t_token;
 
 typedef struct s_minishell
@@ -239,5 +239,8 @@ void	execute_piped_command(t_token *cmd_tokens, t_minishell *shell,
 void	free_line_andtoken(t_token *tokens, char *line, t_minishell *shell);
 void	line_history(char *line);
 void	ft_exit(t_minishell *shell);
+void	handle_quotes(char *line, int *in_double_quotes, int *in_single_quotes);
+void    create_and_link_token(char *token, enum e_token_type type);
+t_token *process_token(char **line, char *start, int *is_first, t_token **current, t_token **head);
 
 #endif

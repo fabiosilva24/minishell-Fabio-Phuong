@@ -1,25 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_utils.c                                  :+:      :+:    :+:   */
+/*   ft_strncat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/15 04:12:44 by fsilva-p          #+#    #+#             */
-/*   Updated: 2025/03/15 16:07:33 by fsilva-p         ###   ########.fr       */
+/*   Created: 2025/03/15 16:12:18 by fsilva-p          #+#    #+#             */
+/*   Updated: 2025/03/15 16:13:02 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "libft.h"
 
-void	ft_exit(t_minishell *shell)
+char    *ft_strncat(char *dst, const char *src, size_t n)
 {
-	printf("exit\n");
-	cleanup_shell(shell);
-}
+    size_t  i;
+    size_t  j;
 
-void	line_history(char *line)
-{
-	if (*line)
-		add_history(line);
+    i = 0;
+    while (dst[i])
+    {
+        i++;
+    }
+    j = 0;
+    while (j < n && src[j])
+    {
+        dst[i + j] = src[j];
+        j++;
+    }
+    dst[i + j] = '\0';
+    return (dst);
 }
