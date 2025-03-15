@@ -15,7 +15,6 @@
 
 #include "../include/minishell.h"
 
-
 int	is_redirection(char *token)
 {
 	return (strcmp(token, ">") == 0 || strcmp(token, ">>") == 0 || strcmp(token,
@@ -24,24 +23,26 @@ int	is_redirection(char *token)
 
 int	count_tokens_until_pipe(t_token *tokens)
 {
-	int count = 0;
-	t_token *current = tokens;
+	int			count;
+	t_token		*current;
 
+	count = 0;
+	current = tokens;
 	while (current && current->type != TOKEN_PIPE)
 	{
 		count++;
 		current = current->next;
 	}
-
 	return (count);
 }
 
 char	**convert_tokens_to_argv_until_pipe(t_token *tokens, int token_count)
 {
-	char **argv;
-	int i = 0;
-	t_token *current;
+	char	**argv;
+	int		i;
+	t_token	*current;
 
+	i = 0;
 	if (!tokens || token_count <= 0)
 		return (NULL);
 	current = tokens;
@@ -58,126 +59,89 @@ char	**convert_tokens_to_argv_until_pipe(t_token *tokens, int token_count)
 	return (argv);
 }
 
-void process_pipes(t_token *tokens, t_minishell *shell)
+void	process_pipes(t_token *tokens, t_minishell *shell)
 {
-    int pipe_fd[2];
-    int prev_pipe = STDIN_FILENO;
-    t_token *cmd_start = tokens;
-    t_token *current = tokens;
-    pid_t pids[1024]; // Store child PIDs
-    int pid_count = 0;
-    int status;
-    int i;
-    int original_stdin;
-    int original_stdout;
+    int				pipes[2][2];
+    pid_t		pid;
+    t_token		*current;
+    int 			is_first;
+    int				is_last;
+    int				prev_pipe;
+    int				cmd_count;
 
-    original_stdout = dup(STDOUT_FILENO);
-    original_stdin = dup(STDIN_FILENO);
-    i = 0;
-
+	cmd_count = 0;
+	prev_pipe = -1;
+	is_last = 0;
+	is_first = 1;
+	current = tokens;
+;
+    t_token *tmp = tokens;
+    while (tmp)
+    {
+        if (tmp->type == TOKEN_PIPE || !tmp->next)
+            cmd_count++;
+        tmp = tmp->next;
+    }
     while (current)
     {
-        // Find the next pipe token
-        t_token *pipe_token = cmd_start;
+        // Find next pipe token
+        t_token *pipe_token = current;
         while (pipe_token && pipe_token->type != TOKEN_PIPE)
             pipe_token = pipe_token->next;
 
-        if (pipe_token) // There is a pipe, so there's another command
+        is_last = (pipe_token == NULL);
+        if (!is_last)
         {
-            if (pipe(pipe_fd) == -1)
+            if (pipe(pipes[cmd_count % 2]) == -1)
             {
                 perror("pipe");
                 return;
             }
-
-            // Debug print to see the command being processed
-            printf("Forking process for command: %s\n", cmd_start->value);
-
-            pids[pid_count] = fork();
-            if (pids[pid_count] == -1)
-            {
-                perror("fork");
-                return;
-            }
-            if (pids[pid_count] == 0) // Child process
-            {
-                // Redirect input if necessary
-                if (prev_pipe != STDIN_FILENO)
-                {
-                    dup2(prev_pipe, STDIN_FILENO);
-                    close(prev_pipe);
-                }
-
-                // Redirect output to pipe_fd[1]
-                dup2(pipe_fd[1], STDOUT_FILENO);
-                close(pipe_fd[1]);
-                close(pipe_fd[0]); // Close the unused read end
-
-                // Execute the command
-                execute_piped_command(cmd_start, shell, prev_pipe, pipe_fd[1]);
-                exit(shell->exit_status);
-            }
-
-            // Parent process
-            pid_count++;
-            printf("Closing write end of pipe_fd[1] in parent\n");
-            close(pipe_fd[1]); // Close the write end in the parent
-            if (prev_pipe != STDIN_FILENO)
-                close(prev_pipe); // Close the previous read end
-            prev_pipe = pipe_fd[0];
-
-            // Move to the next command in the pipeline
-            cmd_start = pipe_token->next;
-            current = cmd_start;
         }
-        else // Last command, no more pipes
+        pid = fork();
+        if (pid == -1)
         {
-            // Debug print to see the last command being processed
-            printf("Executing last command: %s\n", cmd_start->value);
-
-            pids[pid_count] = fork();
-            if (pids[pid_count] == -1)
-            {
-                perror("fork");
-                return;
-            }
-            if (pids[pid_count] == 0) // Child process
-            {
-                // Redirect input if necessary
-                if (prev_pipe != STDIN_FILENO)
-                {
-                    dup2(prev_pipe, STDIN_FILENO);
-                    close(prev_pipe);
-                }
-
-                // Execute the last command
-                execute_piped_command(cmd_start, shell, prev_pipe, STDOUT_FILENO);
-                exit(shell->exit_status);
-            }
-
-            // Parent process
-            pid_count++;
-            if (prev_pipe != STDIN_FILENO)
-                close(prev_pipe); // Close previous pipe in the parent
-            break; // We don't need to process more commands
+            perror("fork");
+            return;
         }
+
+        if (pid == 0)
+        {
+            signal(SIGPIPE, SIG_DFL);
+            if (!is_first && prev_pipe != -1)
+            {
+                dup2(prev_pipe, STDIN_FILENO);
+                close(prev_pipe);
+            }
+            if (!is_last)
+            {
+                dup2(pipes[cmd_count % 2][1], STDOUT_FILENO);
+                close(pipes[cmd_count % 2][0]);
+                close(pipes[cmd_count % 2][1]);
+            }
+
+            execute_child_process1(current, shell, STDIN_FILENO, STDOUT_FILENO);
+            exit(shell->exit_status);
+        }
+        if (!is_first && prev_pipe != -1)
+            close(prev_pipe);
+
+        if (!is_last)
+        {
+            close(pipes[cmd_count % 2][1]);
+            prev_pipe = pipes[cmd_count % 2][0];
+        }
+        is_first = 0;
+        cmd_count++;
+        // Move to next command
+        current = pipe_token ? pipe_token->next : NULL;
     }
 
     // Wait for all child processes
-    while (i < pid_count)
+    int status;
+    while (wait(&status) > 0)
     {
-        waitpid(pids[i], &status, 0);
         if (WIFEXITED(status))
             shell->exit_status = WEXITSTATUS(status);
-        i++;
     }
-
-    // Restore the original stdin and stdout
-    dup2(original_stdin, STDIN_FILENO);
-    dup2(original_stdout, STDOUT_FILENO);
-    close(original_stdin);
-    close(original_stdout);
 }
-
-
-

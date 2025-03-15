@@ -6,7 +6,7 @@
 /*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:36:37 by fsilva-p          #+#    #+#             */
-/*   Updated: 2025/03/15 01:10:11 by fsilva-p         ###   ########.fr       */
+/*   Updated: 2025/03/15 03:25:40 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,19 @@ void	execute_child_process1(t_token *cmd_tokens, t_minishell *shell,
 	handle_redirectionss(arg, token_count);
 	if (exec_builtins(&cmd, &(shell->environment), shell) == 0)
 		exec_extercmds(arg, shell, head);
-	free_argv(arg);
-	free_tokens(head);
-	rl_clear_history();
-	cleanup_shell(shell);
+	if (arg)
+		free_argv(arg);
+	if (head)
+		free_tokens(head);
+	if (shell)
+	{
+		rl_clear_history();
+		cleanup_shell(shell);
+	}
 	exit(shell->exit_status);
 }
 
-void	execute_piped_command(t_token *cmd_tokens, t_minishell *shell,
+/*void	execute_piped_command(t_token *cmd_tokens, t_minishell *shell,
 		int pipe_in, int pipe_out)
 {
 	pid_t	pid;
@@ -87,4 +92,4 @@ void	execute_piped_command(t_token *cmd_tokens, t_minishell *shell,
 		if (pipe_in != STDIN_FILENO)
 			close(pipe_in);
 	}
-}
+}*/

@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   call_functions.c                                   :+:      :+:    :+:   */
+/*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/14 20:21:44 by fsilva-p          #+#    #+#             */
-/*   Updated: 2025/03/15 03:47:06 by fsilva-p         ###   ########.fr       */
+/*   Created: 2025/03/15 04:12:44 by fsilva-p          #+#    #+#             */
+/*   Updated: 2025/03/15 04:14:40 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	free_line_andtoken(t_token *tokens, char *line, t_minishell *shell)
+void	ft_exit(t_minishell *shell)
 {
-	if (tokens)
-		free_tokens(tokens);
-	if (line)
-		free(line);
-	(void)shell;
+	printf("exit\n");
+	cleanup_shell(shell);
+}
+void    line_history(char *line)
+{
+	if (*line)
+		add_history(line);
 }

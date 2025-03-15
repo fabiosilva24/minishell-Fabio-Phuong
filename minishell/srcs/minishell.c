@@ -131,12 +131,10 @@ int	main(int argc, char **argv)
 		line = readline("\001\033[1;32m\002✨miaoushell > \001\033[0m\002");
 		if (!line)
 		{
-			printf("exit\n");
-			cleanup_shell(&shell);
+			ft_exit(&shell);
 			break ;
 		}
-		if (*line)
-			add_history(line);
+		line_history(line);
 		tokens = tokenize_input(line);
 		if (!tokens)
 		{

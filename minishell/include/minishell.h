@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phoang <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 00:50:53 by phoang            #+#    #+#             */
-/*   Updated: 2025/03/15 00:51:05 by phoang           ###   ########.fr       */
+/*   Updated: 2025/03/15 04:11:51 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,5 +237,7 @@ void	execute_child_process1(t_token *cmd_tokens, t_minishell *shell,
 void	execute_piped_command(t_token *cmd_tokens, t_minishell *shell,
 			int pipe_in, int pipe_out);
 void	free_line_andtoken(t_token *tokens, char *line, t_minishell *shell);
+void	line_history(char *line);
+void	ft_exit(t_minishell *shell);
 
 #endif
