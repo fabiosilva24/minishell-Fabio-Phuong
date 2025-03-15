@@ -46,15 +46,67 @@ char	**convert_tokens_to_argv(t_token *tokens, int token_count)
 	return (argv);
 }
 
+static void	handle_redirection_error(t_token *current)
+{
+	if (!current->next)
+	{
+		perror("Syntax error: missing file for redirection");
+		return ;
+	}
+}
+
+static int	setup_redirection(t_token *current)
+{
+	char	*redir_symbol;
+	char	*filename;
+
+	redir_symbol = current->value;
+	filename = current->next->value;
+	return (apply_redirection(redir_symbol, filename));
+}
+
+static void	restore_io(int original_stdin, int original_stdout)
+{
+	dup2(original_stdin, STDIN_FILENO);
+	dup2(original_stdout, STDOUT_FILENO);
+	close(original_stdin);
+	close(original_stdout);
+}
+
+static void	execute_command(t_token *tokens, t_minishell *shell, int token_count)
+{
+	t_cmd	cmd;
+
+	cmd.args = convert_tokens_to_argv(tokens, token_count);
+	if (exec_builtins(&cmd, &(shell->environment), shell) == 0)
+		exec_extercmds(cmd.args, shell, tokens);
+	free_argv(cmd.args);
+}
+
+static int	process_token(t_token **current, t_minishell *shell,
+		t_token *tokens)
+{
+	if ((*current)->type == TOKEN_PIPE)
+	{
+		process_pipes(tokens, shell);
+		return (1);
+	}
+	else if ((*current)->type == TOKEN_REDIRECT)
+	{
+		handle_redirection_error(*current);
+		if (setup_redirection(*current) == -1)
+			return (1);
+		*current = (*current)->next;
+	}
+	return (0);
+}
+
 static void	process_command(t_token *tokens, t_minishell *shell)
 {
 	t_token	*current;
 	int		token_count;
 	int		original_stdin;
 	int		original_stdout;
-	char	*redir_symbol;
-	char	*filename;
-	t_cmd	cmd;
 
 	current = tokens;
 	original_stdin = dup(STDIN_FILENO);
@@ -62,37 +114,13 @@ static void	process_command(t_token *tokens, t_minishell *shell)
 	token_count = count_tokens(tokens);
 	while (current)
 	{
-		if (current->type == TOKEN_PIPE)
-		{
-			process_pipes(tokens, shell);
-			return ;
-		}
-		else if (current->type == TOKEN_REDIRECT)
-		{
-			if (!current->next)
-			{
-				perror("Syntax error: missing file for redirection");
-				return ;
-			}
-			redir_symbol = current->value;
-			filename = current->next->value;
-			if (apply_redirection(redir_symbol, filename) == -1)
-				break ;
-			current = current->next;
-		}
-		else
-		{
-			current = current->next;
-		}
+		if (process_token(&current, shell, tokens))
+			break ;
+		current = current->next;
 	}
-	cmd.args = convert_tokens_to_argv(tokens, token_count);
-	if (exec_builtins(&cmd, &(shell->environment), shell) == 0)
-		exec_extercmds(cmd.args, shell, tokens);
-	free_argv(cmd.args);
-	dup2(original_stdin, STDIN_FILENO);
-	dup2(original_stdout, STDOUT_FILENO);
-	close(original_stdin);
-	close(original_stdout);
+	if (current == NULL)
+		execute_command(tokens, shell, token_count);
+	restore_io(original_stdin, original_stdout);
 }
 
 void	initialize_shell(t_minishell *shell, int argc, char **argv)

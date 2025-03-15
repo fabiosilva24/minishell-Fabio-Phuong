@@ -2,12 +2,9 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+
-	+:+     */
-/*   By: fsilva-p <fsilva-p@student.42luxembourg.>  +#+  +:+
-	+#+        */
-/*                                                +#+#+#+#+#+
-	+#+           */
+/*                                                    +:+ +:+         +:+      */
+/*   By: fsilva-p <fsilva-p@student.42luxembourg.>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 15:52:49 by fsilva-p          #+#    #+#             */
 /*   Updated: 2025/03/14 16:03:30 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
@@ -20,10 +17,11 @@ int	is_redirection(char *token)
 	return (strcmp(token, ">") == 0 || strcmp(token, ">>") == 0 || strcmp(token,
 			"<") == 0 || strcmp(token, "<<") == 0);
 }
+
 int	count_tokens_until_pipe(t_token *tokens)
 {
-	int count;
-	t_token *current;
+	int		count;
+	t_token	*current;
 
 	count = 0;
 	current = tokens;
@@ -34,11 +32,12 @@ int	count_tokens_until_pipe(t_token *tokens)
 	}
 	return (count);
 }
+
 char	**convert_tokens_to_argv_until_pipe(t_token *tokens, int token_count)
 {
-	char **argv;
-	int i;
-	t_token *current;
+	char	**argv;
+	int		i;
+	t_token	*current;
 
 	i = 0;
 	if (!tokens || token_count <= 0)
@@ -56,90 +55,118 @@ char	**convert_tokens_to_argv_until_pipe(t_token *tokens, int token_count)
 	argv[i] = NULL;
 	return (argv);
 }
-void	process_pipes(t_token *tokens, t_minishell *shell)
+
+static void	handle_child_process(t_token *current, t_minishell *shell,
+		int prev_pipe, t_pipe_data *pd)
 {
-	int pipes[2][2];
-	pid_t pid;
-	t_token *current;
-	int is_first;
-	int is_last;
-	int prev_pipe;
-	int cmd_count;
+	signal(SIGPIPE, SIG_DFL);
+	if (!pd->is_first && prev_pipe != -1)
+	{
+		dup2(prev_pipe, STDIN_FILENO);
+		close(prev_pipe);
+	}
+	if (!pd->is_last)
+	{
+		dup2(pd->pipes[pd->cmd_count % 2][1], STDOUT_FILENO);
+		close(pd->pipes[pd->cmd_count % 2][0]);
+		close(pd->pipes[pd->cmd_count % 2][1]);
+	}
+	execute_child_process1(current, shell, STDIN_FILENO, STDOUT_FILENO);
+	exit(shell->exit_status);
+}
 
-	cmd_count = 0;
-	prev_pipe = -1;
-	is_last = 0;
-	is_first = 1;
-	current = tokens;
+static void	handle_parent_process(t_pipe_data *pd, int *prev_pipe)
+{
+	if (!pd->is_first && *prev_pipe != -1)
+		close(*prev_pipe);
+	if (!pd->is_last)
+	{
+		close(pd->pipes[pd->cmd_count % 2][1]);
+		*prev_pipe = pd->pipes[pd->cmd_count % 2][0];
+	}
+	pd->is_first = 0;
+	pd->cmd_count++;
+}
 
-	t_token *tmp = tokens;
+static int	create_pipe(t_pipe_data *pd)
+{
+	if (!pd->is_last)
+	{
+		if (pipe(pd->pipes[pd->cmd_count % 2]) == -1)
+		{
+			perror("pipe");
+			return (0);
+		}
+	}
+	return (1);
+}
+
+static void	init_pipe_data(t_pipe_data *pd, t_token *tokens)
+{
+	t_token	*tmp;
+
+	pd->cmd_count = 0;
+	pd->is_first = 1;
+	tmp = tokens;
 	while (tmp)
 	{
 		if (tmp->type == TOKEN_PIPE || !tmp->next)
-			cmd_count++;
+			pd->cmd_count++;
 		tmp = tmp->next;
 	}
-	while (current)
+	pd->cmd_count = 0;
+}
+
+static void	cleanup_pipes(t_pipe_data *pd)
+{
+	if (!pd->is_last)
 	{
-		// Find next pipe token
-		t_token *pipe_token = current;
-		while (pipe_token && pipe_token->type != TOKEN_PIPE)
-			pipe_token = pipe_token->next;
-
-		is_last = (pipe_token == NULL);
-		if (!is_last)
-		{
-			if (pipe(pipes[cmd_count % 2]) == -1)
-			{
-				perror("pipe");
-				return ;
-			}
-		}
-		pid = fork();
-		if (pid == -1)
-		{
-			perror("fork");
-			return ;
-		}
-
-		if (pid == 0)
-		{
-			signal(SIGPIPE, SIG_DFL);
-			if (!is_first && prev_pipe != -1)
-			{
-				dup2(prev_pipe, STDIN_FILENO);
-				close(prev_pipe);
-			}
-			if (!is_last)
-			{
-				dup2(pipes[cmd_count % 2][1], STDOUT_FILENO);
-				close(pipes[cmd_count % 2][0]);
-				close(pipes[cmd_count % 2][1]);
-			}
-
-			execute_child_process1(current, shell, STDIN_FILENO,
-				STDOUT_FILENO);
-			exit(shell->exit_status);
-		}
-		if (!is_first && prev_pipe != -1)
-			close(prev_pipe);
-
-		if (!is_last)
-		{
-			close(pipes[cmd_count % 2][1]);
-			prev_pipe = pipes[cmd_count % 2][0];
-		}
-		is_first = 0;
-		cmd_count++;
-		// Move to next command
-		current = pipe_token ? pipe_token->next : NULL;
+		close(pd->pipes[pd->cmd_count % 2][0]);
+		close(pd->pipes[pd->cmd_count % 2][1]);
 	}
+}
 
-	// Wait for all child processes
-	int status;
+static void	wait_for_children(t_minishell *shell)
+{
+	int	status;
+
 	while (wait(&status) > 0)
 	{
 		if (WIFEXITED(status))
 			shell->exit_status = WEXITSTATUS(status);
 	}
+}
+
+void	process_pipes(t_token *tokens, t_minishell *shell)
+{
+	t_pipe_data	pd;
+	int			prev_pipe;
+	pid_t		pid;
+	t_token		*current;
+
+	init_pipe_data(&pd, tokens);
+	prev_pipe = -1;
+	current = tokens;
+	while (current)
+	{
+		pd.is_last = !find_next_pipe(current);
+		if (!create_pipe(&pd))
+		{
+			cleanup_pipes(&pd);
+			return ;
+		}
+		pid = fork();
+		if (pid == -1)
+		{
+			cleanup_pipes(&pd);
+			return ;
+		}
+		if (pid == 0)
+			handle_child_process(current, shell, prev_pipe, &pd);
+		handle_parent_process(&pd, &prev_pipe);
+		current = get_next_command(current);
+	}
+	if (prev_pipe != -1)
+		close(prev_pipe);
+	wait_for_children(shell);
 }

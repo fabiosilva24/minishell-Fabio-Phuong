@@ -118,6 +118,14 @@ typedef struct s_replace_data
 	char				*new;
 }						t_replace_data;
 
+typedef struct s_pipe_data
+{
+	int		pipes[2][2];
+	int		cmd_count;
+	int		is_first;
+	int		is_last;
+}	t_pipe_data;
+
 void					print_banner(void);
 void					double_quotes(char *symbol, t_minishell *shell);
 char					**get_environment(void);
@@ -267,5 +275,8 @@ enum e_token_type		token_determinator(char *token, int is_first);
 t_token					*create_and_link_token(char **line, char *start,
 							t_token **current, int *is_first);
 
+// Pipe helper functions
+t_token	*find_next_pipe(t_token *current);
+t_token	*get_next_command(t_token *current);
 
 #endif

@@ -49,6 +49,7 @@ void	execute_child_process1(t_token *cmd_tokens, t_minishell *shell,
 	t_cmd	cmd;
 	t_token	*head;
 	int		token_count;
+	int		exit_status;
 
 	head = cmd_tokens;
 	token_count = count_tokens_until_pipe(cmd_tokens);
@@ -56,6 +57,7 @@ void	execute_child_process1(t_token *cmd_tokens, t_minishell *shell,
 	arg = convert_tokens_to_argv_until_pipe(cmd_tokens, token_count);
 	cmd.args = arg;
 	handle_redirectionss(arg, token_count);
+	exit_status = shell->exit_status;
 	if (exec_builtins(&cmd, &(shell->environment), shell) == 0)
 		exec_extercmds(arg, shell, head);
 	if (arg)
@@ -67,5 +69,29 @@ void	execute_child_process1(t_token *cmd_tokens, t_minishell *shell,
 		rl_clear_history();
 		cleanup_shell(shell);
 	}
-	exit(shell->exit_status);
+	if (pipe_in != STDIN_FILENO)
+		close(pipe_in);
+	if (pipe_out != STDOUT_FILENO)
+		close(pipe_out);
+	exit(exit_status);
+}
+
+t_token	*find_next_pipe(t_token *current)
+{
+	t_token	*pipe_token;
+
+	pipe_token = current;
+	while (pipe_token && pipe_token->type != TOKEN_PIPE)
+		pipe_token = pipe_token->next;
+	return (pipe_token);
+}
+
+t_token	*get_next_command(t_token *current)
+{
+	t_token	*pipe_token;
+
+	pipe_token = find_next_pipe(current);
+	if (pipe_token)
+		return (pipe_token->next);
+	return (NULL);
 }
