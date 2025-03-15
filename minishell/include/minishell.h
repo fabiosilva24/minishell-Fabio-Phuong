@@ -6,7 +6,7 @@
 /*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 00:50:53 by phoang            #+#    #+#             */
-/*   Updated: 2025/03/15 17:29:59 by fsilva-p         ###   ########.fr       */
+/*   Updated: 2025/03/15 18:18:35 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,5 +266,6 @@ t_token					*process_line(char *line, char *start, int *is_first);
 enum e_token_type		token_determinator(char *token, int is_first);
 t_token					*create_and_link_token(char **line, char *start,
 							t_token **current, int *is_first);
+
 
 #endif

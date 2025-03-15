@@ -82,6 +82,8 @@ static void	execute_child_process2(char **argv, t_minishell *shell,
 	}
 	free_argv(argv);
 	free_tokens(tokens);
+	clear_history();
+	cleanup_shell(shell);
 	exit(127);
 }
 

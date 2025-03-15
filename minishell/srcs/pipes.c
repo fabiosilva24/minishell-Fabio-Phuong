@@ -71,7 +71,7 @@ void	process_pipes(t_token *tokens, t_minishell *shell)
 	is_last = 0;
 	is_first = 1;
 	current = tokens;
-	;
+
 	t_token *tmp = tokens;
 	while (tmp)
 	{
