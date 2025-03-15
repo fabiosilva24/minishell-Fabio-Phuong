@@ -63,7 +63,9 @@ SRCS = ./srcs/minishell.c\
        ./srcs/call_functions.c\
        ./srcs/minishell_utils.c\
        ./tokens/tokens_utils.c\
-       ./srcs/pipes_utils2.c
+       ./srcs/pipes_utils2.c\
+       ./srcs/minishell_utils2.c\
+       ./srcs/minishell_utils3.c
 OBJS = $(SRCS:.c=.o)
 
 COUNT = 0

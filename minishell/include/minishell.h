@@ -274,6 +274,16 @@ t_token					*process_line(char *line, char *start, int *is_first);
 enum e_token_type		token_determinator(char *token, int is_first);
 t_token					*create_and_link_token(char **line, char *start,
 							t_token **current, int *is_first);
+void	cleanup_argv(char **argv, int i);
+char	**allocate_argv(int token_count);
+void	handle_redirection_error(t_token *current);
+int	setup_redirection(t_token *current);
+void	restore_io(int original_stdin, int original_stdout);
+void	execute_command(t_token *tokens, t_minishell *shell, int token_count);
+
+
+
+
 
 // Pipe helper functions
 t_token	*find_next_pipe(t_token *current);
