@@ -6,7 +6,7 @@
 /*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:36:37 by fsilva-p          #+#    #+#             */
-/*   Updated: 2025/03/15 15:08:06 by fsilva-p         ###   ########.fr       */
+/*   Updated: 2025/03/15 16:48:04 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,3 @@ void	execute_child_process1(t_token *cmd_tokens, t_minishell *shell,
 	}
 	exit(shell->exit_status);
 }
-

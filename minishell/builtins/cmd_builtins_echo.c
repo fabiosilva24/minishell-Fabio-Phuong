@@ -6,7 +6,7 @@
 /*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 20:03:38 by phoang            #+#    #+#             */
-/*   Updated: 2025/03/15 14:58:23 by fsilva-p         ###   ########.fr       */
+/*   Updated: 2025/03/15 17:31:20 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,35 +28,34 @@ static int	handle_n_option(char **args, int *i)
 	int	newline;
 
 	newline = 1;
-	while (args[*i] && args[*i][0] == '-'
-		&& is_only_that_char(args[*i] + 1, 'n'))
+	while (args[*i] && args[*i][0] == '-' && is_only_that_char(args[*i] + 1,
+			'n'))
 	{
 		newline = 0;
 		(*i)++;
 	}
 	return (newline);
 }
+
 static void	print_arguments(char **args, int i, t_minishell *shell)
 {
 	while (args[i])
 	{
-		// If `>` or `>>` is found, skip the filename (args[i + 1])
 		if (!ft_strcmp(args[i], ">") || !ft_strcmp(args[i], ">>"))
 		{
-			if (args[i + 1]) // Ensure there is a filename to skip
+			if (args[i + 1])
 				i += 2;
 			else
-				break; // Avoid reading out of bounds
-			continue;
+				break ;
+			continue ;
 		}
-
 		parse_input(args[i], shell);
-		if (args[i + 1] && ft_strcmp(args[i + 1], ">") && ft_strcmp(args[i + 1], ">>"))
+		if (args[i + 1] && ft_strcmp(args[i + 1], ">") && ft_strcmp(args[i + 1],
+				">>"))
 			printf(" ");
 		i++;
 	}
 }
-
 
 void	builtin_echo(t_cmd *cmd, int *status, t_minishell *shell)
 {

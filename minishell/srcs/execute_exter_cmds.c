@@ -54,8 +54,10 @@ static char	*find_executable2(char *cmd, char *path_env)
 	while (path != NULL)
 	{
 		ft_strncpy(full_path, path, sizeof(full_path));
-		ft_strncat(full_path, "/", sizeof(full_path) - ft_strlen(full_path) - 1);
-		ft_strncat(full_path, cmd, sizeof(full_path) - ft_strlen(full_path) - 1);
+		ft_strncat(full_path, "/",
+			sizeof(full_path) - ft_strlen(full_path) - 1);
+		ft_strncat(full_path, cmd,
+			sizeof(full_path) - ft_strlen(full_path) - 1);
 		if (access(full_path, X_OK) == 0)
 			return (full_path);
 		path = ft_strtok(NULL, ":");
