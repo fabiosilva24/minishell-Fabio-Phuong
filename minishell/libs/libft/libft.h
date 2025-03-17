@@ -81,6 +81,6 @@ long	ft_atol(const char *str);
 int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strndup(const char *s1, size_t n);
 char	*ft_strncpy(char *dst, const char *src, size_t len);
-char    *ft_strncat(char *dst, const char *src, size_t n);
+char	*ft_strncat(char *dst, const char *src, size_t n);
 
 #endif

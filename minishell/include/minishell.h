@@ -6,7 +6,7 @@
 /*   By: fsilva-p <fsilva-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 00:50:53 by phoang            #+#    #+#             */
-/*   Updated: 2025/03/15 18:18:35 by fsilva-p         ###   ########.fr       */
+/*   Updated: 2025/03/15 19:57:50 by fsilva-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,11 @@ typedef struct s_replace_data
 
 typedef struct s_pipe_data
 {
-	int		pipes[2][2];
-	int		cmd_count;
-	int		is_first;
-	int		is_last;
-}	t_pipe_data;
+	int					pipes[2][2];
+	int					cmd_count;
+	int					is_first;
+	int					is_last;
+}						t_pipe_data;
 
 void					print_banner(void);
 void					double_quotes(char *symbol, t_minishell *shell);
@@ -274,29 +274,26 @@ t_token					*process_line(char *line, char *start, int *is_first);
 enum e_token_type		token_determinator(char *token, int is_first);
 t_token					*create_and_link_token(char **line, char *start,
 							t_token **current, int *is_first);
-void	cleanup_argv(char **argv, int i);
-char	**allocate_argv(int token_count);
-void	handle_redirection_error(t_token *current);
-int	setup_redirection(t_token *current);
-void	restore_io(int original_stdin, int original_stdout);
-void	execute_command(t_token *tokens, t_minishell *shell, int token_count);
-void	handle_child_process(t_token *current, t_minishell *shell,
-		int prev_pipe, t_pipe_data *pd);
-void	handle_parent_process(t_pipe_data *pd, int *prev_pipe);
-int	create_pipe(t_pipe_data *pd);
-void	init_pipe_data(t_pipe_data *pd, t_token *tokens);
-void	cleanup_pipes(t_pipe_data *pd);
-void	wait_for_children(t_minishell *shell);
-int	handle_pipe_creation(t_pipe_data *pd, t_token *current);
-int	handle_fork_process(t_pipe_data *pd, t_token *current,
-		t_minishell *shell, int *prev_pipe);
-
-
-
-
+void					cleanup_argv(char **argv, int i);
+char					**allocate_argv(int token_count);
+void					handle_redirection_error(t_token *current);
+int						setup_redirection(t_token *current);
+void					restore_io(int original_stdin, int original_stdout);
+void					execute_command(t_token *tokens, t_minishell *shell,
+							int token_count);
+void					handle_child_process(t_token *current,
+							t_minishell *shell, int prev_pipe, t_pipe_data *pd);
+void					handle_parent_process(t_pipe_data *pd, int *prev_pipe);
+int						create_pipe(t_pipe_data *pd);
+void					init_pipe_data(t_pipe_data *pd, t_token *tokens);
+void					cleanup_pipes(t_pipe_data *pd);
+void					wait_for_children(t_minishell *shell);
+int						handle_pipe_creation(t_pipe_data *pd, t_token *current);
+int						handle_fork_process(t_pipe_data *pd, t_token *current,
+							t_minishell *shell, int *prev_pipe);
 
 // Pipe helper functions
-t_token	*find_next_pipe(t_token *current);
-t_token	*get_next_command(t_token *current);
+t_token					*find_next_pipe(t_token *current);
+t_token					*get_next_command(t_token *current);
 
 #endif
