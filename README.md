@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./minishell/image/minishell.png" alt="Minishell Banner">
+  <img src="./minishell/minishell.png" alt="Minishell Banner">
 </p>
 
 
