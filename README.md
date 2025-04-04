@@ -1,3 +1,8 @@
+<p align="center">
+  <img src="./minishell/image/minishell.png" alt="Minishell Banner">
+</p>
+
+
 🐚 Minishell: The Terminal Has Awakened
 Welcome to Minishell, where the terminal isn't just a tool — it's a battlefield of logic, syntax, and brain-bending bugs. Forged from pure C, sleepless nights, and a hint of desperation, this shell is your loyal sidekick through the dark corridors of the Unix world.
 
