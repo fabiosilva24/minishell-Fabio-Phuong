@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./minishell/minishell.png" alt="Minishell Banner">
+  <img src="./minishell/ChatGPT Image 4_04_2025, 23_28_55.png" alt="Minishell Banner">
 </p>
 
 
